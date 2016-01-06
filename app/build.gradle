@@ -25,6 +25,8 @@ dependencies {
     ext {
         supportVersion = "23.1.1"
         retrofitVersion = "2.0.0-beta2"
+        leakcanaryVersion = "1.3.1"
+        reactivexVersion = "1.1.0"
     }
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
@@ -35,16 +37,15 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit:converter-gson:$retrofitVersion"
     compile "com.squareup.retrofit:adapter-rxjava:$retrofitVersion"
-    compile 'com.squareup.okhttp:okhttp:2.6.0'
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
+
+    compile "io.reactivex:rxandroid:$reactivexVersion"
+    compile "io.reactivex:rxjava:$reactivexVersion"
 
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-
+    compile 'com.squareup.okhttp:okhttp:2.6.0'
     compile 'com.facebook.fresco:fresco:0.8.1'
-
     compile 'com.pgyersdk:sdk:2.2.2'
 }
