@@ -7,15 +7,15 @@ This will be a android pad app ,It's started now for my personel use,So,I think 
 
 ###thinks to 
 
-[square](!https://github.com/square)
+[square](https://github.com/square)
 
-[ReactiveX](!https://github.com/ReactiveX)
+[ReactiveX](https://github.com/ReactiveX)
 
-[jakewharton`s butterknife](!https://github.com/JakeWharton/butterknife)
+[jakewharton`s butterknife](https://github.com/JakeWharton/butterknife)
 
-[facebook`s fresco](!https://github.com/facebook/fresco)
+[facebook`s fresco](https://github.com/facebook/fresco)
 
-[pgyersdk 国内蒲公英免费内测分发平台](!http://www.pgyer.com/)
+[pgyersdk 国内蒲公英免费内测分发平台](http://www.pgyer.com/)
 
 
 
