@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.fengx.railtool.util.FrescoConfig;
+import com.fengx.railtool.util.common.L;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -36,6 +37,7 @@ public class AppClient extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        L.isDebug = true;
         sInstance = this;
         PgyCrashManager.register(sInstance);
         refWatcher = LeakCanary.install(sInstance);

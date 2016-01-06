@@ -18,7 +18,6 @@ public class SysUtils {
 
     /**
      * 滑动改变亮度
-     *
      */
     public static float onBrightnessSlide(Activity activity, float change) {
         Window window = activity.getWindow();

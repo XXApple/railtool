@@ -34,7 +34,6 @@ import com.fengx.railtool.po.Result;
 import com.fengx.railtool.util.Api.Config;
 import com.fengx.railtool.util.Api.RtApi;
 import com.fengx.railtool.util.common.GlobalUtils;
-import com.fengx.railtool.util.common.LogUtils;
 import com.fengx.railtool.util.retrofit.RxUtils;
 
 import java.util.ArrayList;
@@ -267,7 +266,6 @@ public class LoginActivity extends BaseActivity {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtils.d(throwable.toString());
                         GlobalUtils.showToastShort(LoginActivity.this, getString(R.string.net_error));
                         showProgress(false);
                     }
