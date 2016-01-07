@@ -10,7 +10,7 @@ import retrofit.http.POST;
 import rx.Observable;
 
 /**
- * 项目名称：jianyue
+ * 项目名称：railtool
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34
@@ -26,5 +26,10 @@ public interface RtApi {
 
     @GET(Config.HOME_INDEX)
     Observable<Result<String>> getHomeList();
+
+    @GET(Config.MODULE_LIST)
+    Observable<Result<String>> getModuleList();
+
+
 
 }
