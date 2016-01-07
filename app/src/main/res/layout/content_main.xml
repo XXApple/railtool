@@ -12,10 +12,19 @@
     tools:context="com.fengx.railtool.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_vector_demo" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layoutManager="LinearLayoutManager" />
 
 

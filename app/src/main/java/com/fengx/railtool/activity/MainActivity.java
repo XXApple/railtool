@@ -2,6 +2,8 @@ package com.fengx.railtool.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,14 +12,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fengx.railtool.R;
 import com.fengx.railtool.base.BaseActivity;
 import com.fengx.railtool.util.common.ChannelUtil;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    @Bind(R.id.img)
+    ImageView img;
+
     @Override
     public int getLayoutRes() {
         return R.layout.activity_main;
@@ -50,6 +59,19 @@ public class MainActivity extends BaseActivity
             }
         });
         navigationView.setNavigationItemSelectedListener(this);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animate();
+            }
+        });
+    }
+
+    private void animate() {
+        Drawable drawable = img.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
+        }
     }
 
     @Override
@@ -107,5 +129,12 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
