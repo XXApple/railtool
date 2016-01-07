@@ -11,9 +11,15 @@ package com.fengx.railtool.util.Api;
  */
 public interface Config {
     String BASE_URL = "http://api.gongguizhijia.com/railtool/";
-    String USER_LOGIN = "/user/login";
+    String USER_LOGIN = "user/login";//用户登录
+    String HOME_INDEX = "auth/getIndexList";//获取首页列表
+    String MODULE_LIST = "auth/getModuleList";//获取模块列表
+    String SEARCH_BOSCH = "auth/searchBosch";//查询喷油器信息
+    String REPAIR_STEP = "auth/getRepairStep";//获取维修操作步骤
+    String UPLOAD_MES_RESULT = "auth/uploadMesResult";//上传测量结果
+    String UPDATE_VERSION = "appVersion";//APP版本更新
+    String UPDATE_FILE = "updateFile";
     String SID = "sid";
-
 
 
 }

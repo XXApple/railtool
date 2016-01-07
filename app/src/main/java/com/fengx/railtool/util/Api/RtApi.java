@@ -5,6 +5,7 @@ import com.fengx.railtool.po.Result;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import rx.Observable;
 
@@ -22,4 +23,8 @@ public interface RtApi {
     @FormUrlEncoded
     @POST(Config.USER_LOGIN)
     Observable<Result<String>> login(@Field("username") String username, @Field("password") String password);
+
+    @GET(Config.HOME_INDEX)
+    Observable<Result<String>> getHomeList();
+
 }
