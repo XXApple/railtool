@@ -61,6 +61,8 @@ public class OkHttpClientManager {
                     .method(original.method(), original.body())
                     .build();
 
+            String userAgent = System.getProperty("http.agent");
+
             long t1 = System.nanoTime();
             Log.v("OkHttp", String.format("Sending request %s on %s%n%s",
                     request.url(), chain.connection(), request.headers()));
