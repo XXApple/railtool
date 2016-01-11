@@ -1,10 +1,14 @@
 package com.fengx.railtool.util.retrofit;
 
-import android.util.Log;
+import android.content.pm.PackageManager;
 
-import com.fengx.railtool.util.common.GlobalUtils;
+import com.fengx.railtool.AppClient;
+import com.fengx.railtool.util.common.AppUtils;
+import com.fengx.railtool.util.common.L;
 import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -45,32 +49,50 @@ public class OkHttpClientManager {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request original = chain.request();
+            String deviceId = AppUtils.getLocaldeviceId();
+            String deviceMac = AppUtils.getLocalMacAddress();
+            String osName = "android" + android.os.Build.VERSION.RELEASE;
+            PackageManager pm = AppClient.getInstance().getPackageManager();
+            String appName = AppClient.getInstance().getApplicationInfo().loadLabel(pm).toString();
+
+
+            L.e("deviceMac：" + "123456");
+            L.e("osName" + osName);
+            L.e("appName" + appName);
+
+
             Request request = original.newBuilder()
-                    .header("terminal-type", "pad")
-                    .header("device-number", "deviceNum")
-                    .header("device-mac", "device-mac")
-                    .header("device-imei", "deviceNum")
-                    .header("device-model", "deviceNum")
-                    .header("os-name", "deviceNum")
-                    .header("os-version", "deviceNum")
-                    .header("app-name", "deviceNum")
-                    .header("app-id", "deviceNum")
-                    .header("app-version-code", "deviceNum")
-                    .header("app-version-name", "deviceNum")
-                    .header("sid", GlobalUtils.getSid())
+//                    .header("terminal-type", "pad")
+
+//                    .header("device-number", deviceId)
+                    .header("device-mac", "123456")
+//                    .header("device-imei", deviceId)
+//                    .header("device-model", deviceId)
+//                    .header("os-name",osName)
+//                    .header("os-version", android.os.Build.VERSION.RELEASE)
+//                    .header("app-name", appName)
+//                    .header("app-id", deviceId)
+//                    .header("app-version-code", String.valueOf(AppUtils.getVersionCode()))
+//                    .header("app-version-name",AppUtils.getVersionName())
+                    .header("Content-Type", "application-json")
+//                    .header("sid", GlobalUtils.getSid())
                     .method(original.method(), original.body())
                     .build();
 
-            String userAgent = System.getProperty("http.agent");
+
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody body = RequestBody.create(mediaType, "{\"language\":\"zh_CN\"}");
+            
+            
 
             long t1 = System.nanoTime();
-            Log.v("OkHttp", String.format("Sending request %s on %s%n%s",
+            L.e(String.format("Sending request %s on %s%n%s",
                     request.url(), chain.connection(), request.headers()));
 
             Response response = chain.proceed(request);
 
             long t2 = System.nanoTime();
-            Log.v("OkHttp", String.format("Received response for %s in %.1fms%n%s",
+            L.e(String.format("Received response for %s in %.1fms%n%s",
                     response.request().url(), (t2 - t1) / 1e6d, response.headers()));
 
             return response;

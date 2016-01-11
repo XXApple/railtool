@@ -2,30 +2,56 @@ package com.fengx.railtool.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fengx.railtool.R;
+import com.fengx.railtool.adapter.IndexAdapter;
 import com.fengx.railtool.base.BaseActivity;
+import com.fengx.railtool.po.Injector;
+import com.fengx.railtool.po.Language;
+import com.fengx.railtool.po.Result;
+import com.fengx.railtool.po.User;
+import com.fengx.railtool.util.Api.Config;
+import com.fengx.railtool.util.Api.RtApi;
 import com.fengx.railtool.util.common.ChannelUtil;
+import com.fengx.railtool.util.common.GlobalUtils;
+import com.fengx.railtool.util.common.L;
+import com.fengx.railtool.util.retrofit.RxUtils;
+
+import org.json.JSONException;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    @Bind(R.id.img)
-    ImageView img;
+
+    @Bind(R.id.wendu)
+    TextView wendu;
+    @Bind(R.id.item_list)
+    RecyclerView itemList;
+    @Bind(R.id.uname)
+    TextView uname;
+    private RtApi api;
+    private IndexAdapter mIndexAdapter;
+    private CompositeSubscription subscription = new CompositeSubscription();
+
 
     @Override
     public int getLayoutRes() {
@@ -59,18 +85,13 @@ public class MainActivity extends BaseActivity
             }
         });
         navigationView.setNavigationItemSelectedListener(this);
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animate();
-            }
-        });
-    }
+        api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+        doLogin("");
 
-    private void animate() {
-        Drawable drawable = img.getDrawable();
-        if (drawable instanceof Animatable) {
-            ((Animatable) drawable).start();
+        try {
+            getIndexList("zh_CN");
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -131,10 +152,77 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+
+    private void doLogin(final String username) {
+        subscription.add(api.getUserInfo(username)
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Result<User>>() {
+                    @Override
+                    public void call(Result<User> t) {
+                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                            String name = t.getData().getUname();
+                            uname.setText(t.getData().getUname());
+                            L.e("uname: ", name);
+                        } else {
+                            uname.setText(t.getMsg());
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        toolbar.setTitle(getString(R.string.net_error));
+                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                    }
+                }));
+    }
+
+
+    private void getIndexList(final String language) throws JSONException {
+//        MediaType mediaType = MediaType.parse("application/json");
+//        RequestBody body = RequestBody.create(mediaType, "{\"language\":\"zh_CN\"}");
+//        HashMap<String, Object> mHashMap = new HashMap<String, Object>();
+//        mHashMap.put("language", language);
+
+        Language mLanguage = new Language(language);
+
+
+        subscription.add(api.getIndexList(mLanguage)
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Result<List<Injector>>>() {
+                    @Override
+                    public void call(Result<List<Injector>> t) {
+                        L.e("getIndexList " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                            mIndexAdapter = new IndexAdapter(t.getData());
+                            itemList.setAdapter(mIndexAdapter);
+                            mIndexAdapter.notifyDataSetChanged();
+                        } else {
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        toolbar.setTitle(getString(R.string.net_error));
+                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                    }
+                }));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
+
 }

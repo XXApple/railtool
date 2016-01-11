@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.fengx.railtool.R;
 import com.fengx.railtool.base.BaseActivity;
 import com.fengx.railtool.po.Result;
+import com.fengx.railtool.po.User;
 import com.fengx.railtool.util.Api.Config;
 import com.fengx.railtool.util.Api.RtApi;
 import com.fengx.railtool.util.common.GlobalUtils;
@@ -249,17 +250,17 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void doLogin(final String username, String password) {
-        subscription.add(api.login(username, password)
+        subscription.add(api.getUserInfo(username)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<String>>() {
+                .subscribe(new Action1<Result<User>>() {
                     @Override
-                    public void call(Result<String> t) {
+                    public void call(Result<User> t) {
                         showProgress(false);
                         if (t.getStatus() == 200) {
                             Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            String sid = t.getData();
+                            String sid = t.getData().getUname();
 
                         }
                     }

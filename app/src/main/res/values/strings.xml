@@ -20,7 +20,8 @@
     <string name="permission_rationale">"联系人权限用于帮助登录"
     </string>
     <string name="net_error">网络连接异常</string>
-
-    <string name="svg_pathdata_star">M 48,54 L 31,42 15,54 21,35 6,23 25,23 32,4 40,23 58,23 42,35 z</string>
-    <string name="svg_pathdata_pentagon">M 48,54 L 31,54 15,54 10,35 6,23 25,10 32,4 40,10 58,23 54,35 z</string>
+    <string name="title_items_list">Items</string>
+    <string name="title_items_detail">items Detail</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>

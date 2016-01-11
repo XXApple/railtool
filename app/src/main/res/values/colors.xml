@@ -6,13 +6,33 @@
 
     <color name="touming">#00000000</color>
 
-    <!--白色-->
-    <color name="white">#FFFFFF</color>
     <!--黑色-->
     <color name="black">#000000</color>
     <!--灰色 -->
     <color name="gray">#808080</color>
 
+
+    <color name="menu_bg">#ff333237</color>
+    <color name="menu_selected">#ff26252a</color>
+    <color name="white">#fffdfdfd</color>
+    <color name="white_bg">#fffdfdfd</color>
+    <!-- 功能色 -->
+    <color name="edit_bg">#f4f5f7</color>
+    <color name="page_bg">#ffefeff4</color>
+    <color name="content_text">#ff454545</color>
+    <color name="tips_text">#ff9f9f9f</color>
+    <color name="divider">#ffc8c8cc</color>
+    <color name="grey">#ffefefef</color>
+    <color name="disable">#ffc8c8cc</color>
+
+    <color name="comment_bg">#fffbfbfb</color>
+
+    <color name="bg_line_one">#f0f0f0</color>
+    <color name="bg_line_two">#f5f5f5</color>
+
+    <color name="section_bg">#fff3f6f6</color>
+    <color name="search_bg">#ffe2e5e5</color>
+    <color name="search_text">#ff9f9fa0</color>
 
     <color name="video_background">#B3000000</color>
 
