@@ -18,8 +18,6 @@ import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -135,9 +133,9 @@ public class GlobalUtils {
 
         // 初始化图片设置
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_home)
-                .showImageForEmptyUri(R.drawable.ic_home)
-                .showImageOnFail(R.drawable.ic_home)
+                .showImageOnLoading(R.drawable.ic_launcher)
+                .showImageForEmptyUri(R.drawable.ic_launcher)
+                .showImageOnFail(R.drawable.ic_launcher)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
@@ -152,12 +150,12 @@ public class GlobalUtils {
 //                .considerExifParams(true)
 //                .displayer(new RoundedBitmapDisplayer(20)).build();
         // 初始化正方形图片设置
-        setSquareOptions(new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_home)
-                .showImageForEmptyUri(R.drawable.ic_home).showImageOnFail(R.drawable.ic_home).cacheInMemory(true)
+        setSquareOptions(new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_launcher)
+                .showImageForEmptyUri(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher).cacheInMemory(true)
                 .cacheOnDisk(true).considerExifParams(true).bitmapConfig(Bitmap.Config.ARGB_4444).build());
         // 初始化头像
-        headOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_home)
-                .showImageForEmptyUri(R.drawable.ic_home).showImageOnFail(R.drawable.ic_home)
+        headOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_launcher)
+                .showImageForEmptyUri(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher)
                 .cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.ARGB_4444).build();
     }
 
@@ -198,7 +196,6 @@ public class GlobalUtils {
         imageLoader.init(config);
         return imageLoader;
     }
-
 
 
     /**

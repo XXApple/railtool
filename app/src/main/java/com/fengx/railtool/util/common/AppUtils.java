@@ -11,6 +11,8 @@ import android.telephony.TelephonyManager;
 
 import com.fengx.railtool.AppClient;
 
+import java.util.HashMap;
+
 /**
  * 跟App相关的辅助类
  *
@@ -124,5 +126,12 @@ public class AppUtils {
         return androidId;
     }
 
+
+    public static HashMap<String, String> getMap(String key, String value) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(key, value);
+        L.e(map.toString());
+        return map;
+    }
 
 }

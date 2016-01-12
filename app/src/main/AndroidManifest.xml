@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.fengx.railtool"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="com.fengx.railtool"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -44,33 +45,14 @@
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login"/>
         <activity
-            android:name=".activity.itemsListActivity"
-            android:label="@string/title_items_list"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:name=".activity.ModuleListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_activity_module_list"/>
         <activity
-            android:name=".activity.itemsDetailActivity"
-            android:label="@string/title_items_detail"
-            android:parentActivityName=".activity.itemsListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fengx.railtool.activity.itemsListActivity"/>
-        </activity>
-        <activity
-            android:name=".activity.ItemListActivity"
-            android:label="@string/title_item_list"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".activity.ItemDetailActivity"
-            android:label="@string/title_item_detail"
-            android:parentActivityName=".activity.ItemListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fengx.railtool.activity.ItemListActivity"/>
-        </activity>
+            android:name=".activity.StepActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_activity_module_list"/>
+        
     </application>
 
 </manifest>

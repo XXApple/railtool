@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">共轨喷油器精密维修系统</string>
-    <string name="title_activity_main">共轨喷油器精密维修系统</string>
+    <string name="title_activity_main">Common Rail Injector Precision Repair System</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -24,4 +24,6 @@
     <string name="title_items_detail">items Detail</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="title_activity_module_list">共轨喷油器精密维修系统</string>
+    <string name="module_list_tips">请点击选中维修类别</string>
 </resources>

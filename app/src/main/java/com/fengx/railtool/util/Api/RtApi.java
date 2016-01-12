@@ -3,13 +3,13 @@ package com.fengx.railtool.util.Api;
 
 import com.fengx.railtool.po.Bosch;
 import com.fengx.railtool.po.Injector;
-import com.fengx.railtool.po.Language;
 import com.fengx.railtool.po.Module;
 import com.fengx.railtool.po.Result;
 import com.fengx.railtool.po.StepList;
 import com.fengx.railtool.po.Update;
 import com.fengx.railtool.po.User;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.http.Body;
@@ -34,33 +34,27 @@ public interface RtApi {
 
 
     @POST(Config.HOME_INDEX)
-    Observable<Result<List<Injector>>> getIndexList(@Body Language body);
+    Observable<Result<List<Injector>>> getIndexList(@Body HashMap<String,String> body);
 
-    @FormUrlEncoded
     @POST(Config.MODULE_LIST)
-    Observable<Result<List<Module>>> getModuleList(@Field("language") String language, @Field("injectorType") String injectorType);
+    Observable<Result<List<Module>>> getModuleList(@Body HashMap<String,String> body);
 
-    @FormUrlEncoded
     @POST(Config.SEARCH_BOSCH)
-    Observable<Result<Bosch>> searchBosch(@Field("xh") String xh);
+    Observable<Result<Bosch>> searchBosch(@Body HashMap<String,String> body);
 
 
-    @FormUrlEncoded
     @POST(Config.REPAIR_STEP)
-    Observable<Result<StepList>> getRepairStep(@Field("injectorType") String injectorType, @Field("moduleId") String moduleId, @Field("xh") String xh, @Field("language") String language);
+    Observable<Result<StepList>> getRepairStep(@Body HashMap<String,String> body);
 
 
-    @FormUrlEncoded
     @POST(Config.UPLOAD_MESRESULT)
     Observable<Result<StepList>> uploadMesResult(@Field("injectorType") String injectorType, @Field("moduleId") String moduleId, @Field("values") String values);
 
 
-    @FormUrlEncoded
     @POST(Config.APP_VERSION)
     Observable<Result<Update>> appVersion(@Field("") String injectorType);
 
 
-    @FormUrlEncoded
     @POST(Config.UPDATE_FILE)
     Observable<Result<StepList>> updateFile(@Field("") String injectorType);
 

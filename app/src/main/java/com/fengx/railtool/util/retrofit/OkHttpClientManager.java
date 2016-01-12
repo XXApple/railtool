@@ -6,9 +6,7 @@ import com.fengx.railtool.AppClient;
 import com.fengx.railtool.util.common.AppUtils;
 import com.fengx.railtool.util.common.L;
 import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -63,7 +61,6 @@ public class OkHttpClientManager {
 
             Request request = original.newBuilder()
 //                    .header("terminal-type", "pad")
-
 //                    .header("device-number", deviceId)
                     .header("device-mac", "123456")
 //                    .header("device-imei", deviceId)
@@ -79,11 +76,6 @@ public class OkHttpClientManager {
                     .method(original.method(), original.body())
                     .build();
 
-
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, "{\"language\":\"zh_CN\"}");
-            
-            
 
             long t1 = System.nanoTime();
             L.e(String.format("Sending request %s on %s%n%s",

@@ -30,7 +30,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract Activity getActivity();
 
-    public abstract void initView(Bundle savedInstanceState);
 
     protected Toolbar toolbar;
 
@@ -41,7 +40,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         TAG = getActivity().getClass().getSimpleName();
         ButterKnife.bind(getActivity());
         initToolBar();
-        initView(savedInstanceState);
     }
 
     private void initToolBar() {
