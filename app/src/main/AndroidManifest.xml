@@ -56,7 +56,14 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape"
             android:label="@string/title_activity_module_list"/>
-        
+
+        <activity
+            android:name=".activity.VideoPlayActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_module_list"/>
+
     </application>
 
 </manifest>

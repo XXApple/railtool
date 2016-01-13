@@ -11,6 +11,7 @@ import com.fengx.railtool.po.Result;
 import com.fengx.railtool.po.StepList;
 import com.fengx.railtool.util.Api.Config;
 import com.fengx.railtool.util.Api.RtApi;
+import com.fengx.railtool.util.IntentUtils;
 import com.fengx.railtool.util.common.GlobalUtils;
 import com.fengx.railtool.util.common.L;
 import com.fengx.railtool.util.retrofit.RxUtils;
@@ -60,6 +61,7 @@ public class StepActivity extends BaseActivity {
         int moduleId = getIntent().getIntExtra("moduleId", 0);
         String xh = getIntent().getStringExtra("xh");
         getRepairStep(injectorType, language, moduleId, xh);
+        IntentUtils.enterVideoPlayActivity(this,"");
 
     }
 

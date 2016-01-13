@@ -1,12 +1,14 @@
 package com.fengx.railtool.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.fengx.railtool.R;
 import com.fengx.railtool.activity.MainActivity;
 import com.fengx.railtool.activity.ModuleListActivity;
 import com.fengx.railtool.activity.StepActivity;
+import com.fengx.railtool.activity.VideoPlayActivity;
 
 /*********
  *********/
@@ -36,5 +38,11 @@ public class IntentUtils {
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
 
+
+    public static void enterVideoPlayActivity(Context activity,String sourceId) {
+        Intent intent = new Intent(activity, VideoPlayActivity.class);
+
+        activity.startActivity(intent);
+    }
 
 }
