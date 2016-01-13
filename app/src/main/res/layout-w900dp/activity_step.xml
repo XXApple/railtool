@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:fitsSystemWindows="true"
-             android:orientation="vertical"
-             tools:context="com.fengx.railtool.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.fengx.railtool.activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/sub_toolbar"/>
+        <include layout="@layout/sub_toolbar" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/md_white"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
 
         </LinearLayout>
@@ -41,7 +39,7 @@
             android:gravity="center"
             android:text="上海星融汽车科技有限公司@2016"
             android:textColor="@color/md_white"
-            android:textSize="17dp"/>
+            android:textSize="17dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -50,7 +48,7 @@
             android:gravity="center"
             android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
             android:textColor="@color/md_white"
-            android:textSize="17dp"/>
+            android:textSize="17dp" />
 
     </LinearLayout>
 

@@ -87,10 +87,6 @@ public class StepActivity extends BaseActivity {
                             StepList mStepList = t.getData();
                             if (mStepList != null) {
                                 L.v("ModuleName:" + mStepList.getModule().getModuleName() + "\n StepList size:" + mStepList.getStepList().size() + "");
-                                toolbar.setTitle("ModuleName:" + mStepList.getModule().getModuleName());
-                                toolbar.setSubtitle("StepList size:" + mStepList.getStepList().size() + "");
-                            } else {
-                                toolbar.setTitle("mStepList=null");
                             }
                         } else {
                             GlobalUtils.showToastShort(StepActivity.this, getString(R.string.net_error));
