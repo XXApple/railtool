@@ -132,6 +132,9 @@ public class ModuleListActivity extends BaseActivity {
                 }
             });
 
+            //this line is for test
+            getBoschInfo(mInjectorType);
+
         } else {
             isBosch = false;
             leftTips.setVisibility(View.VISIBLE);

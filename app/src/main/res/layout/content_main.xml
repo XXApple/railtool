@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.fengx.railtool.activity.MainActivity">
+    tools:context="com.fengx.railtool.activity.MainActivity"
+    tools:showIn="@layout/app_bar_main">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@color/colorPrimaryDark"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.fengx.railtool.activity.MainActivity"
-        tools:showIn="@layout/app_bar_main">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -30,7 +27,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="48dp"
             android:layout_weight="1"
             android:background="@color/md_blue_300"
             android:orientation="horizontal">
@@ -112,8 +108,6 @@
                         android:paddingTop="16dp"
                         app:layoutManager="GridLayoutManager"
                         app:spanCount="3" />
-
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -139,7 +133,6 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical">
-
 
                 <TextView
                     android:layout_width="wrap_content"

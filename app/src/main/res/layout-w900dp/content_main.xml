@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             tools:context="com.fengx.railtool.activity.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.fengx.railtool.activity.MainActivity">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
@@ -29,21 +27,19 @@
             android:padding="20dp"
             android:text="欢迎使用共轨之家喷油器智能精密维修系统"
             android:textColor="@color/md_white"
-            android:textSize="17dp"/>
+            android:textSize="17dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/md_blue_300"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -54,7 +50,7 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <include layout="@layout/left_tips"/>
+                    <include layout="@layout/left_tips" />
 
                 </LinearLayout>
 
@@ -76,7 +72,7 @@
                         android:padding="8dp"
                         android:text="请选择厂商"
                         android:textColor="@color/black"
-                        android:textSize="17dp"/>
+                        android:textSize="17dp" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/item_list"
@@ -84,7 +80,7 @@
                         android:layout_height="match_parent"
                         android:paddingTop="32dp"
                         app:layoutManager="GridLayoutManager"
-                        app:spanCount="3"/>
+                        app:spanCount="3" />
 
 
                 </LinearLayout>
@@ -106,7 +102,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="021-311033839"
-                android:textColor="@color/md_white"/>
+                android:textColor="@color/md_white" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,7 +119,7 @@
                     android:gravity="center"
                     android:text="上海星融汽车科技有限公司@2016"
                     android:textColor="@color/md_white"
-                    android:textSize="17dp"/>
+                    android:textSize="17dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,7 +128,7 @@
                     android:gravity="center"
                     android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
                     android:textColor="@color/md_white"
-                    android:textSize="17dp"/>
+                    android:textSize="17dp" />
 
             </LinearLayout>
 
