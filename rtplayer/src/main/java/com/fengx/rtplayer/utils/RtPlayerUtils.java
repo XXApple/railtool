@@ -10,7 +10,7 @@ import com.fengx.rtplayer.builder.HlsRendererBuilder;
 import com.fengx.rtplayer.builder.RendererBuilder;
 
 /**
- * 项目名称：OKPlayer
+ * 项目名称：rtplayer
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34

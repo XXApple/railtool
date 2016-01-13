@@ -2,7 +2,6 @@ package com.fengx.rtplayer.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -24,11 +23,10 @@ import com.google.android.exoplayer.audio.AudioCapabilities;
 import com.google.android.exoplayer.audio.AudioCapabilitiesReceiver;
 import com.google.android.exoplayer.text.Cue;
 
-
 import java.util.List;
 
 /**
- * 项目名称：OKPlayer
+ * 项目名称：rtplayer
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34
@@ -128,9 +126,9 @@ public class RtVideoView extends FrameLayout implements
      * 读取自定义配置
      */
     private void readAttributes(Context context, AttributeSet attrs) {
-        if (attrs == null || isInEditMode()) {
-            return;
-        }
+//        if (attrs == null || isInEditMode()) {
+//            return;
+//        }
 
 //        TypedArray typedArray = context.obtainStyledAttributes(attrs, (int[]) ResourceUtils.getStyleableId(context, "RtExoPlayerVideoView"));
 //        if (typedArray == null) {
@@ -244,10 +242,7 @@ public class RtVideoView extends FrameLayout implements
     }
 
     public boolean getPlayWhenReady() {
-        if (okPlayer == null) {
-            return false;
-        }
-        return okPlayer.getPlayWhenReady();
+        return okPlayer != null && okPlayer.getPlayWhenReady();
     }
 
     public void setPlayWhenReady(boolean playWhenReady) {

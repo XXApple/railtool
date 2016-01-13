@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 项目名称：OKPlayer
+ * 项目名称：rtplayer
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34
@@ -145,6 +145,7 @@ public class RtPlayer implements
         listeners.add(listener);
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     public void removeListener(ExoPlayer.Listener listener) {
         listeners.remove(listener);
     }
@@ -308,8 +309,8 @@ public class RtPlayer implements
     /**
      * 如果播放器状态是STATE_READY,准备好,那么此方法可以用于暂停和恢复
      *
-     * @param playWhenReady
-     */
+     * @param playWhenReady playWhenReady
+     */ 
     public void setPlayWhenReady(boolean playWhenReady) {
         player.setPlayWhenReady(playWhenReady);
     }
@@ -513,7 +514,7 @@ public class RtPlayer implements
     /**
      * 绘制到surface上
      *
-     * @param surface
+     * @param surface surface
      */
     @Override
     public void onDrawnToSurface(Surface surface) {
