@@ -26,7 +26,7 @@ public class IntentUtils {
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
-    public static void enterStepActivity(Activity context, String injectorType, String language, String moduleId, String xh) {
+    public static void enterStepActivity(Activity context, String injectorType, String language, int moduleId, String xh) {
         Intent intent = new Intent(context, StepActivity.class);
         intent.putExtra("injectorType", injectorType);
         intent.putExtra("language", language);

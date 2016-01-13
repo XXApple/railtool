@@ -16,6 +16,7 @@ import com.fengx.railtool.util.common.L;
 import com.fengx.railtool.util.retrofit.RxUtils;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -56,15 +57,15 @@ public class StepActivity extends BaseActivity {
 
         String injectorType = getIntent().getStringExtra("injectorType");
         String language = getIntent().getStringExtra("language");
-        String moduleId = getIntent().getStringExtra("moduleId");
+        int moduleId = getIntent().getIntExtra("moduleId", 0);
         String xh = getIntent().getStringExtra("xh");
         getRepairStep(injectorType, language, moduleId, xh);
 
     }
 
 
-    private void getRepairStep(String injectorType, String language, String moduleId, String xh) {
-        HashMap<String, String> map = new HashMap<>();
+    private void getRepairStep(String injectorType, String language, int moduleId, String xh) {
+        HashMap<String, Object> map = new HashMap<>();
         map.put("injectorType", injectorType);
         map.put("language", language);
         map.put("moduleId", moduleId);

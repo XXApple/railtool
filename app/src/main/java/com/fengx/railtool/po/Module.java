@@ -19,16 +19,16 @@ import java.io.Serializable;
  * 修改备注：
  */
 public class Module implements Serializable {
-    private String id = "";
+    private int id = 0;
     private String injectorType = "";
     private String moduleName = "";
     private String moduleOrder = "";
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(final String mId) {
+    public void setId(final int mId) {
         id = mId;
     }
 

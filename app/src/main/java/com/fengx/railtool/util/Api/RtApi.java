@@ -44,7 +44,7 @@ public interface RtApi {
 
 
     @POST(Config.REPAIR_STEP)
-    Observable<Result<StepList>> getRepairStep(@Body HashMap<String,String> body);
+    Observable<Result<StepList>> getRepairStep(@Body HashMap<String,Object> body);
 
 
     @POST(Config.UPLOAD_MESRESULT)
