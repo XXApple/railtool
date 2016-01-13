@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <com.fengx.rtplayer.view.RtVideoView
-        android:id="@+id/ok_video_view"
+        android:id="@+id/rt_video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

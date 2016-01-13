@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.fengx.railtool.R;
 import com.fengx.railtool.base.BaseActivity;
 import com.fengx.railtool.util.common.GlobalUtils;
+import com.fengx.railtool.util.common.SDCardUtils;
 import com.fengx.railtool.util.common.SysUtils;
 import com.fengx.railtool.util.common.ViewUtils;
 import com.fengx.rtplayer.RtPlayer;
@@ -123,15 +124,8 @@ public class VideoPlayActivity extends BaseActivity {
 
         if (TextUtils.isEmpty(mSourceType)) {
             GlobalUtils.showToastShort(this, "读取视频源出错");
-            return;
         }
 
-
-        if (TextUtils.equals(mSourceType, "zhuzhan")) {
-//            videoFormZhuZhan();
-        } else {
-            GlobalUtils.showToastShort(this, "非主站");
-        }
     }
 
     @Override
@@ -233,7 +227,9 @@ public class VideoPlayActivity extends BaseActivity {
                 }
             }
         });
-        String videourl = "";
+//        String videourl = "http://7xkbzx.com1.z0.glb.clouddn.com/SampleVideo_1080x720_20mb.mp4";
+
+        String videourl = SDCardUtils.getSDCardPath() + "SampleVideo_1080x720_20mb.mp4";
         mUri = Uri.parse(videourl);
         mOkVideoView.setVideoUri(mUri);
 
@@ -358,8 +354,6 @@ public class VideoPlayActivity extends BaseActivity {
 
     @OnClick(R.id.iv_play)
     void onPlayClick(View v) {
-//        View decorView = getWindow().getDecorView();
-//        ViewUtils.toggleHideyBar(decorView);
         if (mOkVideoView.getPlaybackState() == RtPlayer.STATE_READY) {
             boolean playWhenReady = mOkVideoView.getPlayWhenReady();
             if (playWhenReady) {

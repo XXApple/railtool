@@ -20,7 +20,10 @@
             android:background="@color/md_white"
             android:orientation="vertical">
 
-
+            <com.fengx.rtplayer.view.RtVideoView
+                android:id="@+id/rt_video_view"
+                android:layout_width="400dp"
+                android:layout_height="300dp" />
         </LinearLayout>
     </LinearLayout>
 

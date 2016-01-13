@@ -1,8 +1,13 @@
 package com.fengx.railtool.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.fengx.railtool.R;
@@ -14,11 +19,16 @@ import com.fengx.railtool.util.Api.RtApi;
 import com.fengx.railtool.util.IntentUtils;
 import com.fengx.railtool.util.common.GlobalUtils;
 import com.fengx.railtool.util.common.L;
+import com.fengx.railtool.util.common.SDCardUtils;
 import com.fengx.railtool.util.retrofit.RxUtils;
+import com.fengx.rtplayer.RtPlayer;
+import com.fengx.rtplayer.listener.RtPlayerListener;
+import com.fengx.rtplayer.view.RtVideoView;
 
 import java.util.HashMap;
-import java.util.Objects;
 
+import butterknife.Bind;
+import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -34,6 +44,15 @@ import rx.subscriptions.CompositeSubscription;
  * 修改备注：
  */
 public class StepActivity extends BaseActivity {
+    @Bind(R.id.iv_play)
+    ImageView mIvPlay;
+
+    @Bind(R.id.rt_video_view)
+    RtVideoView mOkVideoView;
+
+    private boolean isPlayOver = false;
+    private Uri mUri;
+
 
     private RtApi api;
     private CompositeSubscription subscription = new CompositeSubscription();
@@ -61,8 +80,64 @@ public class StepActivity extends BaseActivity {
         int moduleId = getIntent().getIntExtra("moduleId", 0);
         String xh = getIntent().getStringExtra("xh");
         getRepairStep(injectorType, language, moduleId, xh);
-        IntentUtils.enterVideoPlayActivity(this,"");
 
+
+        danmuku();
+    }
+
+
+    private void danmuku() {
+
+        mOkVideoView.addListener(new RtPlayerListener() {
+            @Override
+            public void onStateChanged(boolean playWhenReady, int playbackState) {
+                if (playbackState == RtPlayer.STATE_ENDED) {
+                    isPlayOver = true;
+
+                } 
+//                else if (playbackState == RtPlayer.STATE_READY) {
+//                } else if (playbackState == RtPlayer.STATE_BUFFERING) {
+//                }
+                Log.w(TAG, "" + playWhenReady + "/" + playbackState);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+
+            }
+        });
+//        String videourl = "http://7xkbzx.com1.z0.glb.clouddn.com/SampleVideo_1080x720_20mb.mp4";
+
+        String videourl = SDCardUtils.getSDCardPath() + "/preinstall/video/Honor.mp4";
+        mUri = Uri.parse(videourl);
+        mOkVideoView.setVideoUri(mUri);
+
+
+    }
+
+
+    @OnClick(R.id.iv_play)
+    void onPlayClick(View v) {
+        if (mOkVideoView.getPlaybackState() == RtPlayer.STATE_READY) {
+            boolean playWhenReady = mOkVideoView.getPlayWhenReady();
+            if (playWhenReady) {
+                mOkVideoView.setPlayWhenReady(false);
+                mIvPlay.setBackgroundResource(android.R.drawable.ic_media_pause);
+            } else {
+                mOkVideoView.setPlayWhenReady(true);
+                mIvPlay.setBackgroundResource(android.R.drawable.ic_media_play);
+            }
+        }
+    }
+
+    @OnClick(R.id.rt_video_view)
+    void onVideoViewClick(View v) {
+        IntentUtils.enterVideoPlayActivity(this, "");
     }
 
 
@@ -102,5 +177,33 @@ public class StepActivity extends BaseActivity {
                     }
                 }));
     }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        mOkVideoView.onNewIntent();
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mOkVideoView.onResume(mUri);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mOkVideoView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mOkVideoView != null) {
+            mOkVideoView.onDestroy();
+        }
+        isPlayOver = true;
+    }
+
 
 }
