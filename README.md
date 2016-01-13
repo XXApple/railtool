@@ -11,12 +11,15 @@ This will be a android pad app ,It's started now for my personel use,So,I think 
 ###Update Log
 
 2016/1/6 init project  
+2016/1/13 write layouts and video-player
 
 
 
 
 
-###thinks to 
+###thanks to 
+
+[ExoPlayer](https://github.com/google/ExoPlayer)
 
 [square](https://github.com/square)
 
