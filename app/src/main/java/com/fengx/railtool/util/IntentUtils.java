@@ -9,6 +9,7 @@ import com.fengx.railtool.activity.MainActivity;
 import com.fengx.railtool.activity.ModuleListActivity;
 import com.fengx.railtool.activity.StepActivity;
 import com.fengx.railtool.activity.VideoPlayActivity;
+import com.fengx.railtool.activity.bluetooth.DeviceScanActivity;
 
 /*********
  *********/
@@ -41,6 +42,12 @@ public class IntentUtils {
 
     public static void enterVideoPlayActivity(Context activity,String sourceId) {
         Intent intent = new Intent(activity, VideoPlayActivity.class);
+
+        activity.startActivity(intent);
+    }
+
+    public static void enterDeviceScanActivity(Context activity) {
+        Intent intent = new Intent(activity, DeviceScanActivity.class);
 
         activity.startActivity(intent);
     }

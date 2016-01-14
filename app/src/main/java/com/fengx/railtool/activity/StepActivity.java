@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.fengx.railtool.R;
@@ -49,6 +50,8 @@ public class StepActivity extends BaseActivity {
 
     @Bind(R.id.rt_video_view)
     RtVideoView mOkVideoView;
+    @Bind(R.id.home_btn)
+    LinearLayout homeBtn;
 
     private boolean isPlayOver = false;
     private Uri mUri;
@@ -94,7 +97,7 @@ public class StepActivity extends BaseActivity {
                 if (playbackState == RtPlayer.STATE_ENDED) {
                     isPlayOver = true;
 
-                } 
+                }
 //                else if (playbackState == RtPlayer.STATE_READY) {
 //                } else if (playbackState == RtPlayer.STATE_BUFFERING) {
 //                }
@@ -203,6 +206,11 @@ public class StepActivity extends BaseActivity {
             mOkVideoView.onDestroy();
         }
         isPlayOver = true;
+    }
+
+    @OnClick(R.id.home_btn)
+    public void homeBtn(View view) {
+        IntentUtils.enterDeviceScanActivity(this);
     }
 
 
