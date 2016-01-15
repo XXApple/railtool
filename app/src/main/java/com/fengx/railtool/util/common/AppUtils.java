@@ -14,9 +14,13 @@ import com.fengx.railtool.AppClient;
 import java.util.HashMap;
 
 /**
- * 跟App相关的辅助类
- *
- * @author eming
+ * 项目名称：railtool
+ * 类描述：
+ * 创建人：wengyiming
+ * 创建时间：15/11/16 下午10:34
+ * 修改人：wengyiming
+ * 修改时间：15/11/16 下午10:34
+ * 修改备注：
  */
 public class AppUtils {
 
@@ -78,7 +82,7 @@ public class AppUtils {
                     versionCode = packageInfo.versionCode;
                 }
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException ignored) {
         }
 
         return versionCode;
@@ -87,7 +91,7 @@ public class AppUtils {
     /**
      * 获取机器唯一标识
      *
-     * @return
+     * @return String
      */
     public static String getLocaldeviceId() {
         TelephonyManager tm = (TelephonyManager) AppClient.getInstance()
@@ -104,7 +108,7 @@ public class AppUtils {
     /**
      * 获取mac地址
      *
-     * @return
+     * @return String
      */
     public static String getLocalMacAddress() {
         WifiManager wifi = (WifiManager) AppClient.getInstance().getSystemService(

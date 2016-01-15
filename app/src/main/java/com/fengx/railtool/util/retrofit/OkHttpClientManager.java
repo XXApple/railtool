@@ -17,8 +17,15 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.concurrent.TimeUnit;
 
+
 /**
- * Created by succlz123 on 15/9/15.
+ * 项目名称：railtool
+ * 类描述：
+ * 创建人：wengyiming
+ * 创建时间：15/11/16 下午10:34
+ * 修改人：wengyiming
+ * 修改时间：15/11/16 下午10:34
+ * 修改备注：
  */
 public class OkHttpClientManager {
     private static final String TAG = "OkHttpClientManager";

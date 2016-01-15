@@ -13,6 +13,15 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * 项目名称：railtool
+ * 类描述：
+ * 创建人：wengyiming
+ * 创建时间：15/11/16 下午10:34
+ * 修改人：wengyiming
+ * 修改时间：15/11/16 下午10:34
+ * 修改备注：
+ */
 public class ChannelUtil {
 
     private static final String CHANNEL_KEY = "cztchannel";
@@ -22,8 +31,8 @@ public class ChannelUtil {
     /**
      * 返回市场。  如果获取失败返回""
      *
-     * @param context
-     * @return
+     * @param context context
+     * @return String
      */
     public static String getChannel(Context context) {
         return getChannel(context, "");
@@ -32,9 +41,9 @@ public class ChannelUtil {
     /**
      * 返回市场。  如果获取失败返回defaultChannel
      *
-     * @param context
-     * @param defaultChannel
-     * @return
+     * @param context context
+     * @param defaultChannel defaultChannel
+     * @return String
      */
     public static String getChannel(Context context, String defaultChannel) {
         //内存中获取
@@ -60,9 +69,9 @@ public class ChannelUtil {
     /**
      * 从apk中获取版本信息
      *
-     * @param context
-     * @param channelKey
-     * @return
+     * @param context context
+     * @param channelKey channelKey
+     * @return String
      */
     private static String getChannelFromApk(Context context, String channelKey) {
         //从apk包中获取
@@ -96,7 +105,7 @@ public class ChannelUtil {
         }
         String[] split = ret.split("_");
         String channel = "";
-        if (split != null && split.length >= 2) {
+        if (split.length >= 2) {
             channel = ret.substring(split[0].length() + 1);
         }
         return channel;
@@ -105,21 +114,21 @@ public class ChannelUtil {
     /**
      * 本地保存channel & 对应版本号
      *
-     * @param context
-     * @param channel
+     * @param context context
+     * @param channel channel
      */
     private static void saveChannelBySharedPreferences(Context context, String channel) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         Editor editor = sp.edit();
         editor.putString(CHANNEL_KEY, channel);
         editor.putInt(CHANNEL_VERSION_KEY, getVersionCode(context));
-        editor.commit();
+        editor.apply();
     }
 
     /**
      * 从sp中获取channel
      *
-     * @param context
+     * @param context context
      * @return 为空表示获取异常、sp中的值已经失效、sp中没有此值
      */
     private static String getChannelBySharedPreferences(Context context) {
@@ -144,8 +153,8 @@ public class ChannelUtil {
     /**
      * 从包信息中获取版本号
      *
-     * @param context
-     * @return
+     * @param context context
+     * @return int
      */
     private static int getVersionCode(Context context) {
         try {
