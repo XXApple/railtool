@@ -1,6 +1,5 @@
 package com.fengx.railtool.adapter;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fengx.railtool.R;
 import com.fengx.railtool.po.Injector;
+import com.fengx.railtool.util.common.AppUtils;
 import com.fengx.railtool.util.common.L;
-import com.fengx.railtool.util.common.SDCardUtils;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class IndexAdapter
         holder.mItem = mInjectors.get(position);
         holder.mContentView.setText(mInjectors.get(position).getInjectorName());
         holder.mIdView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        holder.mIdView.setImageURI(Uri.parse("file://" + SDCardUtils.getSDCardPath() + "rtimage/logo0" + (position +1)+ ".png"));
+        holder.mIdView.setImageURI(AppUtils.getFileFrescoUri("/images/logo0" + (position + 1) + ".png"));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

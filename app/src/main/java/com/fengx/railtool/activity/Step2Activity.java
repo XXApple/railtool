@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,6 @@ import com.fengx.railtool.util.IntentUtils;
 import com.fengx.railtool.util.common.AppUtils;
 import com.fengx.railtool.util.common.GlobalUtils;
 import com.fengx.railtool.util.common.L;
-import com.fengx.railtool.util.common.SDCardUtils;
 import com.fengx.railtool.util.retrofit.RxUtils;
 import com.fengx.rtplayer.RtPlayer;
 import com.fengx.rtplayer.listener.RtPlayerListener;
@@ -51,19 +51,16 @@ import rx.subscriptions.CompositeSubscription;
  * 修改时间：16/1/12 下午10:48
  * 修改备注：
  */
-public class StepActivity extends BaseActivity {
+public class Step2Activity extends BaseActivity {
 
-    @Bind(R.id.iv_play)
-    ImageView mIvPlay;
+    @Bind(R.id.rightImg)
+    ImageView rightImg;
+    @Bind(R.id.rightBtn)
+    TextView rightBtn;
     @Bind(R.id.home_btn)
     LinearLayout homeBtn;
     @Bind(R.id.app_bar)
     AppBarLayout appBar;
-
-    @Bind(R.id.rt_video_view)
-    RtVideoView mOkVideoView;
-    @Bind(R.id.rightBtn)
-    TextView rightBtn;
     @Bind(R.id.videoPicUrl)
     SimpleDraweeView videoPicUrl;
     @Bind(R.id.injectorTv)
@@ -72,18 +69,58 @@ public class StepActivity extends BaseActivity {
     TextView xhTv;
     @Bind(R.id.dispStepNameTv)
     TextView dispStepNameTv;
+    @Bind(R.id.chooseTv)
+    TextView chooseTv;
+    @Bind(R.id.iv_play)
+    ImageView mIvPlay;
+    @Bind(R.id.rt_video_view)
+    RtVideoView mOkVideoView;
+    @Bind(R.id.testSpecTv2)
+    TextView testSpecTv2;
+    @Bind(R.id.angleTv)
+    TextView angleTv;
+    @Bind(R.id.mkzTv)
+    TextView mkzTv;
+    @Bind(R.id.ljfwTv)
+    TextView ljfwTv;
+    @Bind(R.id.ljTv)
+    TextView ljTv;
+    @Bind(R.id.preBtn)
+    TextView preBtn;
+    @Bind(R.id.nextBtn)
+    TextView nextBtn;
+
+    @Bind(R.id.measDisp)
+    TextView measDisp;
+    @Bind(R.id.suggestDisp)
+    TextView suggestDisp;
+
     @Bind(R.id.measToolNumEt)
-    EditText measToolNum;
+    TextView measToolNumEt;
     @Bind(R.id.measToolPic)
     SimpleDraweeView measToolPic;
-    @Bind(R.id.testSpecTv)
-    TextView testSpecTv;
-    @Bind(R.id.picUrlImg)
-    SimpleDraweeView picUrlImg;
-   
+    @Bind(R.id.picUrl)
+    SimpleDraweeView picUrl;
+    @Bind(R.id.type2Line)
+    LinearLayout type2Line;
+    @Bind(R.id.type1Line)
+    LinearLayout type1Line;
+    @Bind(R.id.testSpecTv1)
+    TextView testSpecTv1;
+
+    @Bind(R.id.testResultLine)
+    LinearLayout testResultLine;
+
+
+    @Bind(R.id.progress)
+    ProgressBar progress;
+    @Bind(R.id.rootLine)
+    LinearLayout rootLine;
+
     private boolean isPlayOver = false;
     private Uri mUri;
 
+    private StepList mStepList;
 
     private int curStepOrder = 0;
     private RtApi api;
@@ -91,7 +128,7 @@ public class StepActivity extends BaseActivity {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.activity_step;
+        return R.layout.activity_step2;
     }
 
     @Override
@@ -104,13 +141,14 @@ public class StepActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
-        measToolNum.clearFocus();
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
 
         String injectorType = getIntent().getStringExtra("injectorType");
         String language = getIntent().getStringExtra("language");
         int moduleId = getIntent().getIntExtra("moduleId", 0);
         String xh = getIntent().getStringExtra("xh");
+        progress.setVisibility(View.VISIBLE);
+        rootLine.setVisibility(View.GONE);
         getRepairStep(injectorType, language, moduleId, xh);
 
 
@@ -118,7 +156,7 @@ public class StepActivity extends BaseActivity {
     }
 
 
-    private void danmuku() {
+    private void startVideo(String videoName) {
 
         mOkVideoView.addListener(new RtPlayerListener() {
             @Override
@@ -143,12 +181,8 @@ public class StepActivity extends BaseActivity {
 
             }
         });
-//        String videourl = "http://7xkbzx.com1.z0.glb.clouddn.com/SampleVideo_1080x720_20mb.mp4";
-
-        String videourl = SDCardUtils.getSDCardPath() + "/preinstall/video/Honor.mp4";
-        mUri = Uri.parse(videourl);
+        mUri = Uri.parse(AppUtils.getVideoPath(videoName));
         mOkVideoView.setVideoUri(mUri);
-
 
     }
 
@@ -195,33 +229,92 @@ public class StepActivity extends BaseActivity {
                         L.e("getRepairStep " + t.getStatus() + t.getMsg() + "" + t.getData().toString());
                         if (t.getStatus() == 200) {
                             Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            StepList mStepList = t.getData();
+                            mStepList = t.getData();
                             if (mStepList != null) {
-                                L.v("ModuleName:" + mStepList.getModule().getModuleName());
                                 ModuleItem mItem = mStepList.getModule();
-
-
-                                Step mStep = mStepList.getStepList().get(curStepOrder);
-                                if (mStep == null) {
-                                    return;
-                                }
-                                dispStepNameTv.setText(mStep.getDispStepName());
-                                measToolNum.setText(mStep.getMeasToolNum());
-                                videoPicUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getVideoPicUrl()));
-                                measToolPic.setImageURI(AppUtils.getFileFrescoUri(mStep.getMeasToolPic()));
-                                testSpecTv.setText(mStep.getTestSpec());
+                                L.v("ModuleName:" + mItem.getModuleName());
+                                progress.setVisibility(View.GONE);
+                                rootLine.setVisibility(View.VISIBLE);
+                                Step mStep = checkStep(curStepOrder);
+                                if (mStep == null) return;
+                                startVideo(mStep.getVideoUrl());
+                                setStepOrderInfo(curStepOrder);
                             }
                         } else {
-                            GlobalUtils.showToastShort(StepActivity.this, getString(R.string.net_error));
+                            GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
                         }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
+                        progress.setVisibility(View.GONE);
+                        rootLine.setVisibility(View.GONE);
                         L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(StepActivity.this, getString(R.string.net_error));
+                        GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
                     }
                 }));
+    }
+
+    private void setStepOrderInfo(final int curStepOrder) {
+        Step mStep = checkStep(curStepOrder);
+        if (mStep == null) return;
+        if (TextUtils.equals(mStep.getPageType(), "1")) {
+            measDisp.setVisibility(View.VISIBLE);
+            suggestDisp.setVisibility(View.VISIBLE);
+            measToolNumEt.setVisibility(View.VISIBLE);
+            measToolPic.setVisibility(View.VISIBLE);
+            picUrl.setVisibility(View.VISIBLE);
+            measToolNumEt.setVisibility(View.VISIBLE);
+            type1Line.setVisibility(View.VISIBLE);
+            testSpecTv1.setVisibility(View.VISIBLE);
+            testResultLine.setVisibility(View.VISIBLE);
+            chooseTv.setVisibility(View.VISIBLE);
+            type2Line.setVisibility(View.GONE);
+
+            measToolNumEt.setText(mStep.getMeasToolNum());
+            measToolPic.setImageURI(AppUtils.getFileFrescoUri(mStep.getMeasToolPic()));
+            picUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getPicUrl()));
+            measDisp.setText(mStep.getMeasDisp());
+            suggestDisp.setText(mStep.getSuggestDisp());
+            testSpecTv1.setText(mStep.getTestSpec());
+        } else {
+            measDisp.setVisibility(View.GONE);
+            suggestDisp.setVisibility(View.GONE);
+            chooseTv.setVisibility(View.GONE);
+            measToolNumEt.setVisibility(View.GONE);
+            measToolPic.setVisibility(View.GONE);
+            picUrl.setVisibility(View.GONE);
+            type1Line.setVisibility(View.GONE);
+            picUrl.setVisibility(View.GONE);
+            testResultLine.setVisibility(View.GONE);
+            testSpecTv2.setVisibility(View.VISIBLE);
+            type2Line.setVisibility(View.VISIBLE);
+
+
+            angleTv.setText(mStep.getAngle());
+            mkzTv.setText(mStep.getMkz());
+            ljfwTv.setText(mStep.getLjfw());
+            ljTv.setText(mStep.getLj());
+            testSpecTv2.setText(mStep.getTestSpec());
+        }
+
+
+        dispStepNameTv.setText(mStep.getDispStepName());
+        videoPicUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getVideoPicUrl()));
+
+
+    }
+
+    @Nullable
+    private Step checkStep(final int curStepOrder) {
+        if (mStepList == null) {
+            return null;
+        }
+        Step mStep = mStepList.getStepList().get(curStepOrder);
+        if (mStep == null) {
+            return null;
+        }
+        return mStep;
     }
 
     @Override
@@ -254,6 +347,30 @@ public class StepActivity extends BaseActivity {
     @OnClick(R.id.home_btn)
     public void homeBtn(View view) {
         IntentUtils.enterDeviceScanActivity(this);
+    }
+
+    @OnClick(R.id.preBtn)
+    public void setPreBtn(View mView) {
+        int maxSteps = mStepList.getStepList().size();
+        --curStepOrder;
+        if (curStepOrder < 0) {
+            curStepOrder = maxSteps - 1;
+        }
+
+        if (curStepOrder >= maxSteps) {
+            curStepOrder = 0;
+        }
+        setStepOrderInfo(curStepOrder);
+    }
+
+    @OnClick(R.id.nextBtn)
+    public void setNxtBtn(View mView) {
+        ++curStepOrder;
+        int maxSteps = mStepList.getStepList().size();
+        if (curStepOrder > maxSteps - 1) {
+            curStepOrder = 0;
+        }
+        setStepOrderInfo(curStepOrder);
     }
 
 

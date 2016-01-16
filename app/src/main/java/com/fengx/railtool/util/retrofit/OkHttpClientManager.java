@@ -123,8 +123,9 @@ public class OkHttpClientManager {
             long t2 = System.nanoTime();
             L.e(String.format("Received response for %s in %.1fms%n%s",
                     response.request().url(), (t2 - t1) / 1e6d, response.headers()));
-
-
+//            final Response response1 = response;
+//            System.out.println(response1.body().string());
+     
             return response;
         }
     }

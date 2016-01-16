@@ -64,6 +64,12 @@
             android:label="@string/title_activity_module_list"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.Step2Activity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_module_list"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".activity.VideoPlayActivity"
@@ -81,6 +87,11 @@
         <service
             android:name=".activity.bluetooth.BluetoothLeService"
             android:enabled="true"/>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
     </application>
 

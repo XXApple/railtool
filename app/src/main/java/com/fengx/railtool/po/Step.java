@@ -57,6 +57,31 @@ public class Step implements Serializable {
     private String suggestCalcFun = "";
     private String pageType = "";
 
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "stepId='" + stepId + '\'' +
+                ", stepOrder='" + stepOrder + '\'' +
+                ", stepName='" + stepName + '\'' +
+                ", dispStepName='" + dispStepName + '\'' +
+                ", measToolNum='" + measToolNum + '\'' +
+                ", measToolPic='" + measToolPic + '\'' +
+                ", picUrl='" + picUrl + '\'' +
+                ", videoPicUrl='" + videoPicUrl + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", testSpec='" + testSpec + '\'' +
+                ", measDisp='" + measDisp + '\'' +
+                ", suggestDisp='" + suggestDisp + '\'' +
+                ", angle='" + angle + '\'' +
+                ", mkz='" + mkz + '\'' +
+                ", ljfw='" + ljfw + '\'' +
+                ", lj='" + lj + '\'' +
+                ", suggestCalcFun='" + suggestCalcFun + '\'' +
+                ", pageType='" + pageType + '\'' +
+                '}';
+    }
+
     public String getStepId() {
         return stepId;
     }

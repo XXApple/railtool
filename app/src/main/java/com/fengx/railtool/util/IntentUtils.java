@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.fengx.railtool.R;
 import com.fengx.railtool.activity.MainActivity;
 import com.fengx.railtool.activity.ModuleListActivity;
+import com.fengx.railtool.activity.Step2Activity;
 import com.fengx.railtool.activity.StepActivity;
 import com.fengx.railtool.activity.VideoPlayActivity;
 import com.fengx.railtool.activity.bluetooth.DeviceScanActivity;
@@ -47,7 +48,15 @@ public class IntentUtils {
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
 
-
+    public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId, String xh) {
+        Intent intent = new Intent(context, Step2Activity.class);
+        intent.putExtra("injectorType", injectorType);
+        intent.putExtra("language", language);
+        intent.putExtra("moduleId", moduleId);
+        intent.putExtra("xh", xh);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
+    }
     public static void enterVideoPlayActivity(Context activity,String sourceId) {
         Intent intent = new Intent(activity, VideoPlayActivity.class);
 

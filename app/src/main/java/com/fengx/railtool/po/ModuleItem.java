@@ -30,4 +30,12 @@ public class ModuleItem implements Serializable {
     public void setModuleName(final String mModuleName) {
         moduleName = mModuleName;
     }
+
+    @Override
+    public String toString() {
+        return "ModuleItem{" +
+                "id='" + id + '\'' +
+                ", moduleName='" + moduleName + '\'' +
+                '}';
+    }
 }

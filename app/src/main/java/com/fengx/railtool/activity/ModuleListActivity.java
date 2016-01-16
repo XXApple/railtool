@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fengx.railtool.AppClient;
 import com.fengx.railtool.R;
 import com.fengx.railtool.adapter.ModuleListAdapter;
 import com.fengx.railtool.base.BaseActivity;
@@ -25,6 +26,8 @@ import com.fengx.railtool.util.IntentUtils;
 import com.fengx.railtool.util.common.GlobalUtils;
 import com.fengx.railtool.util.common.L;
 import com.fengx.railtool.util.retrofit.RxUtils;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,6 +81,11 @@ public class ModuleListActivity extends BaseActivity {
     private CompositeSubscription subscription = new CompositeSubscription();
     private boolean isBosch = false;
     private Bosch mBosch = null;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient mClient;
 
     @Override
     public int getLayoutRes() {
@@ -95,11 +103,15 @@ public class ModuleListActivity extends BaseActivity {
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
         tips.setText(R.string.module_list_tips);
+        injectorTypeEt.clearFocus();
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
         String injectorType = getIntent().getStringExtra("injectorType");
         String language = getIntent().getStringExtra("language");
         getModuleList(injectorType, language);
         initBoschInfoView(injectorType);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @OnClick(R.id.home_btn)
@@ -133,7 +145,7 @@ public class ModuleListActivity extends BaseActivity {
             });
 
             //this line is for test
-            getBoschInfo(mInjectorType);
+            getBoschInfo(injectorTypeEt.getText().toString().trim());
 
         } else {
             isBosch = false;
@@ -201,21 +213,59 @@ public class ModuleListActivity extends BaseActivity {
                                             xh = mBosch.getXh();
                                         }
                                     }
-                                    IntentUtils.enterStepActivity(ModuleListActivity.this, injectorType, language, mModule.getId(), xh);
+                                    IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, mModule.getId(), xh);
                                 }
                             });
                             mIndexAdapter.notifyDataSetChanged();
                         } else {
-                            GlobalUtils.showToastShort(ModuleListActivity.this, getString(R.string.net_error));
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                         }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(ModuleListActivity.this, getString(R.string.net_error));
+                        GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                     }
                 }));
     }
 
+//    private void getRepairStep(final String injectorType, final String language, final int moduleId, final String xh) {
+//
+//        HashMap<String, Object> map = new HashMap<>();
+//        map.put("injectorType", injectorType);
+//        map.put("language", language);
+//        map.put("moduleId", moduleId);
+//        if (!TextUtils.isEmpty(xh)) {
+//            map.put("xh", xh);
+//        }
+//        subscription.add(api.getRepairStep(map)
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Result<StepList>>() {
+//                    @Override
+//                    public void call(Result<StepList> t) {
+//                        L.e("getRepairStep " + t.getStatus() + t.getMsg() + "" + t.getData().toString());
+//                        if (t.getStatus() == 200) {
+//                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+//                            StepList mStepList = t.getData();
+//                            if (mStepList != null) {
+//                                ModuleItem mItem = mStepList.getModule();
+//                                L.v("ModuleName:" + mItem.getModuleName());
+//                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, xh);
+//                            }
+//
+//                        } else {
+//                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+//                        }
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        L.e("" + throwable.toString());
+//                        GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+//                    }
+//                }));
+//    }
 }

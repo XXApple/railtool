@@ -27,7 +27,7 @@
                 android:orientation="vertical">
 
                 <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/image1"
+                    android:id="@+id/videoPicUrl"
                     android:layout_width="200dp"
                     android:layout_height="match_parent"
                     fresco:actualImageScaleType="focusCrop"
@@ -59,9 +59,10 @@
                     <TextView
                         android:id="@+id/injectorTv"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
                         android:text="BOSCH"
+                        android:gravity="center"
                         android:textColor="@color/md_red_500"
                         android:textSize="15sp"
                         />
@@ -69,20 +70,22 @@
                     <TextView
                         android:id="@+id/xhTv"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:layout_toRightOf="@+id/injectorTv"
                         android:text="0445120007"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         />
 
                     <TextView
-                        android:id="@+id/step"
+                        android:id="@+id/dispStepNameTv"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_toRightOf="@+id/xhTv"
-                        android:text="空气垫片测量：第一步"
+                        android:gravity="center"
                         android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
                         />
@@ -90,24 +93,27 @@
                     <TextView
                         android:id="@+id/choose"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/chooseEt"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/measToolNumEt"
                         android:text="选择道具编号"
+                        android:gravity="center"
                         android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
                         />
 
                     <EditText
-                        android:id="@+id/chooseEt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/rightImg"
+                        android:id="@+id/measToolNumEt"
+                        android:gravity="center_vertical"
+                        android:layout_width="100dp"
+                        android:textColor="@color/md_black"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/measToolPic"
                         />
 
                     <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/rightImg"
+                        android:id="@+id/measToolPic"
                         android:layout_width="100dp"
-                        android:layout_height="56dp"
+                        android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         />
 
@@ -158,39 +164,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/testSpecTv"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="1 jiangjiangjiangjiang"
                                 android:textColor="@color/md_black"
                                 />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="1 jiangjiangjiangjiang"
-                                android:textColor="@color/md_black"
-                                />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="1 jiangjiangjiangjiang"
-                                android:textColor="@color/md_black"
-                                />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="1 jiangjiangjiangjiang"
-                                android:textColor="@color/md_black"
-                                />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="1 jiangjiangjiangjiang"
-                                android:textColor="@color/md_black"
-                                />
+                          
                         </LinearLayout>
 
 
@@ -204,7 +185,7 @@
                         android:orientation="vertical">
 
                         <com.facebook.drawee.view.SimpleDraweeView
-                            android:id="@+id/image2"
+                            android:id="@+id/picUrlImg"
                             android:layout_width="400dp"
                             android:layout_height="210dp"
                             fresco:actualImageScaleType="focusCrop"
@@ -225,6 +206,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/measDisp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="1 jiangjiangjiangjiang"
@@ -232,18 +214,13 @@
                                 />
 
                             <TextView
+                                android:id="@+id/suggestDisp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="1 jiangjiangjiangjiang"
                                 android:textColor="@color/md_black"
                                 />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="1 jiangjiangjiangjiang"
-                                android:textColor="@color/md_black"
-                                />
 
                         </LinearLayout>
                     </LinearLayout>

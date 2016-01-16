@@ -5,6 +5,8 @@
       <root url="file://$PROJECT_DIR$/build/intermediates/exploded-aar/com.google.android.exoplayer/exoplayer/r1.5.3/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/exoplayer/r1.5.3/e8080803ff0fa111ee815e30564cd7870a1d1f28/exoplayer-r1.5.3-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

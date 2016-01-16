@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
@@ -137,5 +138,39 @@ public class AppUtils {
         L.e(map.toString());
         return map;
     }
+
+    /**
+     * 远程图片	http://, https://	HttpURLConnection 或者参考 使用其他网络加载方案
+     * 本地文件	file://	FileInputStream
+     * Content provider	content://	ContentResolver
+     * asset目录下的资源
+     *
+     * @param res
+     * @return
+     */
+
+
+    public static Uri getResFrescoUri(int res) {
+        return Uri.parse("res://" + res);
+    }
+
+    public static Uri getFileFrescoUri(String fileName) {
+        String path = SDCardUtils.getSDCardPath() + fileName;
+        L.e(path);
+        return Uri.parse("file://" + path);
+    }
+
+    public static Uri getContentResolverFrescoUri(String contentResolver) {
+        return Uri.parse("content://" + contentResolver);
+    }
+
+    public static Uri getassetFrescoUri(int asset) {
+        return Uri.parse("asset://" + asset);
+    }
+
+    public static String getVideoPath(String fileName) {
+        return SDCardUtils.getSDCardPath() + fileName;
+    }
+
 
 }
