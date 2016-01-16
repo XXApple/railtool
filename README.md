@@ -11,7 +11,9 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 ###Update Log
 
 2016/1/6 init project  
+
 2016/1/13 write layouts and video-player
+
 2016/1/16 use okhttp3,add okhttp3 cache,set fresco use okhttp3,make step2activity work
 
 
