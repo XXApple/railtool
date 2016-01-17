@@ -271,6 +271,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/preBtn"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
                         >
@@ -278,13 +279,12 @@
                         <TextView
                             android:id="@+id/testSpecTv1"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:padding="8dp"
-                            android:text="1 jiangjiangjiangjiang"
+                            android:maxWidth="550dp"
+                            android:text="1 jiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiang"
                             android:textColor="@color/md_black"
                             android:textSize="18dp"
-
-
                             />
 
 
@@ -474,10 +474,10 @@
                         android:id="@+id/testResultLine"
                         android:layout_width="388dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_above="@+id/preBtn"
-                        android:layout_alignRight="@+id/type1Line"
+                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignRight="@+id/type1Line"
                         android:orientation="vertical"
                         >
 
@@ -506,7 +506,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="8dp"
-                             android:text="dadassadasdasdsa"
+                            android:text="dadassadasdasdsa"
                             android:textColor="@color/md_black"
                             />
 
