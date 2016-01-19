@@ -16,6 +16,7 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 
 2016/1/16 use okhttp3,add okhttp3 cache,set fresco use okhttp3,make step2activity work
 
+2016/1/20 add icon and logo,add bluetooth part,set minSdkVersion=18
 
 
 
