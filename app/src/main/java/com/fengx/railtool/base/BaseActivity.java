@@ -42,6 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         initToolBar();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void initToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar == null)
@@ -49,8 +50,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         toolbar.setTitle(null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setLogo(R.drawable.logo);
+//        toolbar.setNavigationIcon(R.drawable.logo);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

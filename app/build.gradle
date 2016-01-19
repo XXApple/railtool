@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.fengx.railtool"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -55,5 +55,5 @@ dependencies {
 
     compile 'com.pgyersdk:sdk:2.2.2'
     compile project(':rtplayer')
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.3.0'
 }

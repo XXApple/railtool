@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.AppBarLayout
+    android:id="@+id/app_bar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/app_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?actionBarSize"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <android.support.v7.widget.Toolbar
@@ -25,28 +27,32 @@
 
         <LinearLayout
             android:id="@+id/home_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="132dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/home_shape_bg"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:padding="4dp">
 
 
             <ImageView
                 android:id="@+id/rightImg"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@color/md_red_500" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/home"
+                />
 
             <TextView
                 android:id="@+id/rightBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:text="首页"
-                android:textColor="@color/md_white"
-                android:textSize="30dp" />
+                android:textColor="@color/md_black"
+                android:textSize="30dp"/>
 
 
         </LinearLayout>

@@ -1,13 +1,25 @@
 package com.fengx.railtool.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +29,9 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fengx.railtool.R;
+import com.fengx.railtool.activity.bluetooth.BluetoothLeService;
+import com.fengx.railtool.activity.bluetooth.DeviceScanActivity;
+import com.fengx.railtool.activity.bluetooth.SampleGattAttributes;
 import com.fengx.railtool.base.BaseActivity;
 import com.fengx.railtool.po.ModuleItem;
 import com.fengx.railtool.po.Result;
@@ -33,7 +48,9 @@ import com.fengx.rtplayer.RtPlayer;
 import com.fengx.rtplayer.listener.RtPlayerListener;
 import com.fengx.rtplayer.view.RtVideoView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -126,6 +143,16 @@ public class Step2Activity extends BaseActivity {
     private RtApi api;
     private CompositeSubscription subscription = new CompositeSubscription();
 
+    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
+    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+    private String mDeviceAddress;
+    private String mDeviceName;
+    private BluetoothLeService mBluetoothLeService;
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<>();
+    private boolean mConnected = false;
+    private BluetoothGattCharacteristic mNotifyCharacteristic;
+
+
     @Override
     public int getLayoutRes() {
         return R.layout.activity_step2;
@@ -150,9 +177,12 @@ public class Step2Activity extends BaseActivity {
         progress.setVisibility(View.VISIBLE);
         rootLine.setVisibility(View.GONE);
         getRepairStep(injectorType, language, moduleId, xh);
+        final String mDeviceName = getIntent().getStringExtra(EXTRAS_DEVICE_NAME);
+        mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
+        toolbar.setTitle(mDeviceName);
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-
-//        danmuku();
     }
 
 
@@ -163,16 +193,18 @@ public class Step2Activity extends BaseActivity {
             public void onStateChanged(boolean playWhenReady, int playbackState) {
                 if (playbackState == RtPlayer.STATE_ENDED) {
                     isPlayOver = true;
-
+                    mOkVideoView.setVideoUri(mUri);
+                } else if (playbackState == RtPlayer.STATE_READY) {
+                    GlobalUtils.showToastShort(Step2Activity.this, "视频准备中...");
+                } else if (playbackState == RtPlayer.STATE_BUFFERING) {
+                    GlobalUtils.showToastShort(Step2Activity.this, "视频缓冲中...");
                 }
-//                else if (playbackState == RtPlayer.STATE_READY) {
-//                } else if (playbackState == RtPlayer.STATE_BUFFERING) {
-//                }
                 Log.w(TAG, "" + playWhenReady + "/" + playbackState);
             }
 
             @Override
             public void onError(Exception e) {
+                Toast.makeText(Step2Activity.this, "视频打开出错", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -198,6 +230,8 @@ public class Step2Activity extends BaseActivity {
                 mOkVideoView.setPlayWhenReady(true);
                 mIvPlay.setBackgroundResource(android.R.drawable.ic_media_play);
             }
+
+
         }
     }
 
@@ -327,12 +361,18 @@ public class Step2Activity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mOkVideoView.onResume(mUri);
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mOkVideoView.onPause();
+        unregisterReceiver(mGattUpdateReceiver);
     }
 
     @Override
@@ -342,12 +382,18 @@ public class Step2Activity extends BaseActivity {
             mOkVideoView.onDestroy();
         }
         isPlayOver = true;
+        unbindService(mServiceConnection);
+        mBluetoothLeService = null;
     }
 
     @OnClick(R.id.home_btn)
     public void homeBtn(View view) {
-        IntentUtils.enterDeviceScanActivity(this);
+//        IntentUtils.enterDeviceScanActivity(this);
+        Intent intent = new Intent(this, DeviceScanActivity.class);
+
+        this.startActivityForResult(intent, 0);
     }
+
 
     @OnClick(R.id.preBtn)
     public void setPreBtn(View mView) {
@@ -374,14 +420,213 @@ public class Step2Activity extends BaseActivity {
     }
 
 
-    public void logLongString(String veryLongString) {
-        int maxLogSize = 1000;
-        for (int i = 0; i <= veryLongString.length() / maxLogSize; i++) {
-            int start = i * maxLogSize;
-            int end = (i + 1) * maxLogSize;
-            end = end > veryLongString.length() ? veryLongString.length() : end;
-            Log.v(TAG, veryLongString.substring(start, end));
+    // Code to manage Service lifecycle.
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName,
+                                       IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
+                    .getService();
+            if (!mBluetoothLeService.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+                finish();
+            }
+            // Automatically connects to the device upon successful start-up
+            // initialization.
+            mBluetoothLeService.connect(mDeviceAddress);
         }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+        }
+    };
+
+
+    // Handles various events fired by the Service.
+    // ACTION_GATT_CONNECTED: connected to a GATT server.
+    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
+    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
+    // ACTION_DATA_AVAILABLE: received data from the device. This can be a
+    // result of read
+    // or notification operations.
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                mConnected = true;
+                if (!TextUtils.isEmpty(mDeviceName)) {
+                    toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.connected) + mDeviceAddress);
+                    L.e("已链接蓝牙设备", mDeviceName);
+                }
+//                updateConnectionState(R.string.connected);
+                invalidateOptionsMenu();
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
+                    .equals(action)) {
+                mConnected = false;
+                if (!TextUtils.isEmpty(mDeviceName)) {
+                    toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.disconnected));
+                    L.e("未链接蓝牙设备", mDeviceName);
+                }
+//                updateConnectionState(R.string.disconnected);
+                invalidateOptionsMenu();
+//                clearUI();
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
+                    .equals(action)) {
+                // Show all the supported services and characteristics on the
+                // user interface.
+                displayGattServices(mBluetoothLeService
+                        .getSupportedGattServices());
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+//                displayData();
+                String testResult = intent
+                        .getStringExtra(BluetoothLeService.EXTRA_DATA);
+                L.e("测试结果", testResult);
+                toolbar.setTitle(testResult);
+
+                measDisp.setText(measDisp.getText().toString() + ":  " + testResult);
+//                suggestDisp.setText();
+
+
+            }
+        }
+    };
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void displayGattServices(List<BluetoothGattService> gattServices) {
+        if (gattServices == null)
+            return;
+        String uuid;
+        // String unknownServiceString =
+        // getResources().getString(R.string.unknown_service);
+        // String unknownCharaString =
+        // getResources().getString(R.string.unknown_characteristic);
+        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<>();
+        mGattCharacteristics = new ArrayList<>();
+
+        // Loops through available GATT Services.
+        final String mLIST_NAME = "NAME";
+        final String mLIST_UUID = "UUID";
+        for (BluetoothGattService gattService : gattServices) {
+            HashMap<String, String> currentServiceData = new HashMap<>();
+            uuid = gattService.getUuid().toString();
+            // if (uuid.equals("0000fff0-0000-1000-8000-00805f9b34fb")) {
+            currentServiceData.put(mLIST_NAME,
+                    SampleGattAttributes.lookup(uuid, "Data CharaString"));
+            currentServiceData.put(mLIST_UUID, uuid);
+            gattServiceData.add(currentServiceData);
+
+            ArrayList<HashMap<String, String>> gattCharacteristicGroupData = new ArrayList<>();
+            List<BluetoothGattCharacteristic> gattCharacteristics = gattService
+                    .getCharacteristics();
+            ArrayList<BluetoothGattCharacteristic> charas = new ArrayList<>();
+
+            // Loops through available Characteristics.
+            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+                // charas.add(gattCharacteristic);
+                HashMap<String, String> currentCharaData = new HashMap<>();
+                uuid = gattCharacteristic.getUuid().toString();
+
+                // if (uuid.equals("0000fff4-0000-1000-8000-00805f9b34fb")) {
+                charas.add(gattCharacteristic);
+                currentCharaData.put(mLIST_NAME,
+                        SampleGattAttributes.lookup(uuid, "Data CharaString"));
+                currentCharaData.put(mLIST_UUID, uuid);
+                gattCharacteristicGroupData.add(currentCharaData);
+                // }
+            }
+            mGattCharacteristics.add(charas);
+            gattCharacteristicData.add(gattCharacteristicGroupData);
+            // }
+        }
+
+        new Thread() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                super.run();
+
+                if (mGattCharacteristics != null) {
+                    final BluetoothGattCharacteristic characteristic = mGattCharacteristics
+                            .get(3).get(3);
+                    final int charaProp = characteristic.getProperties();
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                        // If there is an active notification on a
+                        // characteristic, clear
+                        // it first so it doesn't update the data field on the
+                        // user interface.
+                        if (mNotifyCharacteristic != null) {
+                            mBluetoothLeService.setCharacteristicNotification(
+                                    mNotifyCharacteristic, false);
+                            mNotifyCharacteristic = null;
+                        }
+                        mBluetoothLeService.readCharacteristic(characteristic);
+
+                        // mProgressBar.setVisibility(View.GONE);
+
+                        characteristic.getUuid();
+                    }
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+                    }
+
+                }
+
+            }
+
+        }.start();
+
+
     }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter
+                .addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gatt_services, menu);
+        if (mConnected) {
+            menu.findItem(R.id.menu_connect).setVisible(false);
+            menu.findItem(R.id.menu_disconnect).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_connect).setVisible(true);
+            menu.findItem(R.id.menu_disconnect).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_connect:
+                mBluetoothLeService.connect(mDeviceAddress);
+                return true;
+            case R.id.menu_disconnect:
+                mBluetoothLeService.disconnect();
+                return true;
+            case R.id.menu_refresh:
+                mBluetoothLeService.connect(mDeviceAddress);
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

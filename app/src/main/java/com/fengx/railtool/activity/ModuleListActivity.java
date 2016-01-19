@@ -1,6 +1,7 @@
 package com.fengx.railtool.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.fengx.railtool.AppClient;
 import com.fengx.railtool.R;
+import com.fengx.railtool.activity.bluetooth.DeviceScanActivity;
 import com.fengx.railtool.adapter.ModuleListAdapter;
 import com.fengx.railtool.base.BaseActivity;
 import com.fengx.railtool.po.Bosch;
@@ -186,10 +188,17 @@ public class ModuleListActivity extends BaseActivity {
                 }));
     }
 
+    private String injectorType;
+    private String language;
+    private int moduleId = 0;
+    private String xh = "";
+
     private void getModuleList(final String injectorType, final String language) {
         HashMap<String, String> map = new HashMap<>();
         map.put("injectorType", injectorType);
         map.put("language", language);
+        this.injectorType = injectorType;
+        this.language = language;
         L.e(map.toString());
         subscription.add(api.getModuleList(map)
                 .observeOn(Schedulers.io())
@@ -207,13 +216,17 @@ public class ModuleListActivity extends BaseActivity {
                                 @Override
                                 public void itemClick(int p) {
                                     Module mModule = t.getData().get(p);
-                                    String xh = "";
                                     if (isBosch) {
                                         if (mBosch != null) {
                                             xh = mBosch.getXh();
                                         }
                                     }
-                                    IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, mModule.getId(), xh);
+                                    moduleId =  mModule.getId();
+                                    Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
+
+                                    ModuleListActivity.this.startActivityForResult(intent, 0);
+
+
                                 }
                             });
                             mIndexAdapter.notifyDataSetChanged();
@@ -230,6 +243,23 @@ public class ModuleListActivity extends BaseActivity {
                 }));
     }
 
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            if (resultCode == RESULT_OK) {
+                String mDeviceName = data.getStringExtra(Step2Activity.EXTRAS_DEVICE_NAME);
+                String mDeviceAddress = data.getStringExtra(Step2Activity.EXTRAS_DEVICE_ADDRESS);
+                if (!TextUtils.isEmpty(mDeviceName)) {
+                    toolbar.setSubtitle(mDeviceName);
+                    L.e("链接蓝牙设备", mDeviceName);
+                }
+                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, xh, mDeviceName, mDeviceAddress);
+
+            }
+        }
+    }
 //    private void getRepairStep(final String injectorType, final String language, final int moduleId, final String xh) {
 //
 //        HashMap<String, Object> map = new HashMap<>();

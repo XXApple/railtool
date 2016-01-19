@@ -10,6 +10,7 @@ import com.fengx.railtool.activity.ModuleListActivity;
 import com.fengx.railtool.activity.Step2Activity;
 import com.fengx.railtool.activity.StepActivity;
 import com.fengx.railtool.activity.VideoPlayActivity;
+import com.fengx.railtool.activity.bluetooth.DeviceControlActivity;
 import com.fengx.railtool.activity.bluetooth.DeviceScanActivity;
 
 
@@ -48,12 +49,14 @@ public class IntentUtils {
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
 
-    public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId, String xh) {
+    public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId, String xh,String mDeviceName,String mDeviceAddress) {
         Intent intent = new Intent(context, Step2Activity.class);
         intent.putExtra("injectorType", injectorType);
         intent.putExtra("language", language);
         intent.putExtra("moduleId", moduleId);
         intent.putExtra("xh", xh);
+        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }

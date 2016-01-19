@@ -18,7 +18,6 @@ package com.fengx.railtool.activity.bluetooth;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -34,19 +33,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fengx.railtool.R;
+import com.fengx.railtool.base.BaseActivity;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
 @SuppressWarnings("deprecation")
-public class DeviceScanActivity extends ListActivity {
+public class DeviceScanActivity extends BaseActivity {
+    @Bind(R.id.home_btn)
+    LinearLayout homeBtn;
+    @Bind(R.id.listview)
+    ListView listview;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -54,12 +63,23 @@ public class DeviceScanActivity extends ListActivity {
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000*60;
+    private static final long SCAN_PERIOD = 10000 * 60;
+
+    @Override
+    public int getLayoutRes() {
+        return R.layout.activity_device_scan;
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar.setTitle("查找蓝牙设备——扫描中...");
         mHandler = new Handler();
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
@@ -102,10 +122,12 @@ public class DeviceScanActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_scan:
+                toolbar.setTitle("查找蓝牙设备——扫描中...");
                 mLeDeviceListAdapter.clear();
                 scanLeDevice(true);
                 break;
             case R.id.menu_stop:
+                toolbar.setTitle("查找蓝牙设备——已停止扫描");
                 scanLeDevice(false);
                 break;
         }
@@ -125,7 +147,7 @@ public class DeviceScanActivity extends ListActivity {
 
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
-        setListAdapter(mLeDeviceListAdapter);
+        listview.setAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
     }
 
@@ -146,23 +168,50 @@ public class DeviceScanActivity extends ListActivity {
         mLeDeviceListAdapter.clear();
     }
 
-    @SuppressWarnings("deprecation")
+    @OnClick(R.id.home_btn)
+    public void homeBtn(View view) {
+        onBackPressed();
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
+    @OnItemClick(R.id.listview)
+    void onListItemClick(int position) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-        
-        
         if (device == null) return;
-        final Intent intent = new Intent(this, DeviceControlActivity.class);
+        final Intent intent = new Intent();
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
         }
-        startActivity(intent);
+        setResult(RESULT_OK, intent);
+        finish();
     }
+
+
+//    
+//    @SuppressWarnings("deprecation")
+//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+//
+//
+//        if (device == null) return;
+////        final Intent intent = new Intent(this, Step2Activity.class);
+//
+//        final Intent intent = new Intent();
+//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+//        if (mScanning) {
+//            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//            mScanning = false;
+//        }
+//        setResult(RESULT_OK, intent);
+//        finish();
+////        startActivity(intent);
+//    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void scanLeDevice(final boolean enable) {
@@ -189,8 +238,7 @@ public class DeviceScanActivity extends ListActivity {
     }
 
     // Adapter for holding devices found through scanning.
-    
-    //list  ��  adapter
+
     private class LeDeviceListAdapter extends BaseAdapter {
         private ArrayList<BluetoothDevice> mLeDevices;
         private LayoutInflater mInflator;
@@ -202,7 +250,7 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         public void addDevice(BluetoothDevice device) {
-            if(!mLeDevices.contains(device)) {
+            if (!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
             }
         }
@@ -259,18 +307,17 @@ public class DeviceScanActivity extends ListActivity {
     // Device scan callback.
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
-
-        @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-            runOnUiThread(new Runnable() {
                 @Override
-                public void run() {
-                    mLeDeviceListAdapter.addDevice(device);
-                    mLeDeviceListAdapter.notifyDataSetChanged();
+                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mLeDeviceListAdapter.addDevice(device);
+                            mLeDeviceListAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
-            });
-        }
-    };
+            };
 
     static class ViewHolder {
         TextView deviceName;
