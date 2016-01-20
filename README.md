@@ -18,6 +18,7 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 
 2016/1/20 add icon and logo,add bluetooth part,set minSdkVersion=18
 
+2016/1/21  change packagename ,add tips icon,add player position,add showpicurl
 
 
 ###thanks to 
