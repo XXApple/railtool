@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:orientation="vertical"
-             tools:context="com.fengx.railtool.activity.MainActivity">
+             tools:context="com.commonrail.mtf.activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -142,7 +142,7 @@
                                 android:background="@android:drawable/ic_media_play"/>
 
 
-                            <com.fengx.rtplayer.view.RtVideoView
+                            <com.commonrail.rtplayer.view.RtVideoView
                                 android:id="@+id/rt_video_view"
                                 android:layout_width="350dp"
                                 android:layout_height="210dp"

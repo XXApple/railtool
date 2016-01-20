@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.fengx.railtool"
+    package="com.commonrail.mtf"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -50,45 +50,45 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.commonrail.mtf.activity.LoginActivity"
             android:label="@string/title_activity_login"/>
         <activity
-            android:name=".activity.ModuleListActivity"
+            android:name="com.commonrail.mtf.activity.ModuleListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_module_list"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".activity.StepActivity"
+            android:name="com.commonrail.mtf.activity.StepActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_module_list"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".activity.Step2Activity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:label="@string/title_activity_module_list"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity
-            android:name=".activity.VideoPlayActivity"
+            android:name="com.commonrail.mtf.activity.Step2Activity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_module_list"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".activity.bluetooth.DeviceScanActivity"
+            android:name="com.commonrail.mtf.activity.VideoPlayActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_module_list"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name="com.commonrail.mtf.activity.bluetooth.DeviceScanActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".activity.bluetooth.DeviceControlActivity"
+            android:name="com.commonrail.mtf.activity.bluetooth.DeviceControlActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
-            android:name=".activity.bluetooth.BluetoothLeService"
+            android:name="com.commonrail.mtf.activity.bluetooth.BluetoothLeService"
             android:enabled="true"/>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

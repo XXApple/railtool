@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.fengx.railtool"
+        applicationId "com.commonrail.mtf"
         minSdkVersion 18
         targetSdkVersion 23
         versionCode 1

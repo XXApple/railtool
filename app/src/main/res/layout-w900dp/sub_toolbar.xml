@@ -38,14 +38,12 @@
 
 
             <ImageView
-                android:id="@+id/rightImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/home"
                 />
 
             <TextView
-                android:id="@+id/rightBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

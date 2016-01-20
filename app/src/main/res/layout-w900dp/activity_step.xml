@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:orientation="vertical"
-             tools:context="com.fengx.railtool.activity.MainActivity">
+             tools:context="com.commonrail.mtf.activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,8 +61,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
-                        android:text="BOSCH"
                         android:gravity="center"
+                        android:text="BOSCH"
                         android:textColor="@color/md_red_500"
                         android:textSize="15sp"
                         />
@@ -72,10 +72,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
-                        android:layout_toRightOf="@+id/injectorTv"
-                        android:text="0445120007"
                         android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/injectorTv"
                         android:gravity="center"
+                        android:text="0445120007"
                         android:textColor="@color/colorPrimary"
                         android:textSize="15sp"
                         />
@@ -95,19 +95,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_toLeftOf="@+id/measToolNumEt"
-                        android:text="选择道具编号"
                         android:gravity="center"
+                        android:text="选择道具编号"
                         android:textColor="@color/colorPrimary"
                         android:textSize="20sp"
                         />
 
                     <EditText
                         android:id="@+id/measToolNumEt"
-                        android:gravity="center_vertical"
                         android:layout_width="100dp"
-                        android:textColor="@color/md_black"
                         android:layout_height="match_parent"
                         android:layout_toLeftOf="@+id/measToolPic"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/md_black"
                         />
 
                     <com.facebook.drawee.view.SimpleDraweeView
@@ -148,7 +148,7 @@
                                 android:background="@android:drawable/ic_media_play"/>
 
 
-                            <com.fengx.rtplayer.view.RtVideoView
+                            <com.commonrail.rtplayer.view.RtVideoView
                                 android:id="@+id/rt_video_view"
                                 android:layout_width="350dp"
                                 android:layout_height="210dp"

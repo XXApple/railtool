@@ -1,4 +1,4 @@
-package com.fengx.railtool;
+package com.commonrail.mtf;
 
 import org.junit.Test;
 

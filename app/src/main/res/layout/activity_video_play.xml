@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:id="@+id/video_play_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/video_play_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.fengx.rtplayer.view.RtVideoView
+    <com.commonrail.rtplayer.view.RtVideoView
         android:id="@+id/rt_video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
