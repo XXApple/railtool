@@ -13,6 +13,8 @@ import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
 import com.commonrail.mtf.po.Injector;
 import com.commonrail.mtf.po.Result;
+import com.commonrail.mtf.po.StepList;
+import com.commonrail.mtf.po.Update;
 import com.commonrail.mtf.po.User;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
@@ -53,7 +55,8 @@ public class MainActivity extends BaseActivity {
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
         doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US
-
+        checkUpdate();
+        updateFile();
     }
 
     @Override
@@ -116,6 +119,65 @@ public class MainActivity extends BaseActivity {
                                 }
                             });
                             mIndexAdapter.notifyDataSetChanged();
+                        } else {
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        L.e("" + throwable.toString());
+                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                    }
+                }));
+    }
+
+    private void checkUpdate() {
+        subscription.add(api.appVersion("")
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Result<Update>>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void call(Result<Update> t) {
+                        L.e("appVersion： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                            Update update = t.getData();
+                            if (update != null) {
+                                String vc = update.getAppVersionCode();
+                                boolean forced = update.getForced();
+                                String url = update.getUrl();
+                                L.e(update.toString());
+                            }
+
+                        } else {
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        L.e("" + throwable.toString());
+                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                    }
+                }));
+    }
+
+    private void updateFile() {
+        subscription.add(api.updateFile("")
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Result<StepList>>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void call(Result<StepList> t) {
+                        L.e("appVersion： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+
                         } else {
                             GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                         }

@@ -1,7 +1,6 @@
 package com.commonrail.mtf.util.retrofit;
 
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
 
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.util.common.AppUtils;
@@ -29,20 +28,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class OkHttpClientManager {
     private static final String TAG = "OkHttpClientManager";
-    static Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
         @Override
-        public Response intercept(final Chain chain) throws IOException {
+        public Response intercept(Chain chain) throws IOException {
             Response originalResponse = chain.proceed(chain.request());
-            Request request = chain.request();
-            String cacheControl = request.cacheControl().toString();
-            if (TextUtils.isEmpty(cacheControl)) {
-                cacheControl = "no-cache";
-            }
             return originalResponse.newBuilder()
-                    .header("Cache-Control", cacheControl)
-                    .removeHeader("Pragma").build();
+                    .removeHeader("Pragma")
+                    .header("Cache-Control",
+                            String.format("max-age=%d", 60))
+                    .build();
         }
-
     };
     private static com.squareup.okhttp.OkHttpClient sInstance;
 
@@ -90,9 +85,9 @@ public class OkHttpClientManager {
 
 
             Request request = original.newBuilder()
-                    .header("Cache-Control", "public")
-                    .header("max-age", "604800")
-                    .header("max-stale", "2419200")
+//                    .header("Cache-Control", "public")
+//                    .header("max-age", "604800")
+//                    .header("max-stale", "2419200")
 
 //                    .header("terminal-type", "pad")
 //                    .header("device-number", deviceId)
@@ -114,14 +109,10 @@ public class OkHttpClientManager {
             long t1 = System.nanoTime();
             L.e(String.format("Sending request %s on %s%n%s",
                     request.url(), chain.connection(), request.headers()));
-
             Response response = chain.proceed(request);
-
             long t2 = System.nanoTime();
             L.e(String.format("Received response for %s in %.1fms%n%s",
                     response.request().url(), (t2 - t1) / 1e6d, response.headers()));
-//            final Response response1 = response;
-//            System.out.println(response1.body().string());
 
             return response;
         }
