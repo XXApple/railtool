@@ -406,34 +406,4 @@ public class RtVideoView extends FrameLayout implements
         }
     }
 
-    /**
-     * 手势监听
-     */
-    public class CustomTouchListener extends GestureDetector.SimpleOnGestureListener implements OnTouchListener {
-        private GestureDetector gestureDetector;
-
-        public CustomTouchListener(Context context) {
-            gestureDetector = new GestureDetector(context, this);
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            gestureDetector.onTouchEvent(event);
-            return true;
-        }
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            if (mediaController == null) {
-                return false;
-            }
-
-            if (mediaController.isShowing()) {
-                mediaController.hide();
-            } else {
-                mediaController.show(5000);
-            }
-            return true;
-        }
-    }
 }
