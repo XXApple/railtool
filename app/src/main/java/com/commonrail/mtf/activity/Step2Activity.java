@@ -1,5 +1,6 @@
 package com.commonrail.mtf.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -39,6 +40,7 @@ import com.commonrail.mtf.po.StepList;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
+import com.commonrail.mtf.util.ReadAndCalculateUtil;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
@@ -51,6 +53,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -182,6 +185,7 @@ public class Step2Activity extends BaseActivity {
     // result of read
     // or notification operations.
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
@@ -210,14 +214,29 @@ public class Step2Activity extends BaseActivity {
                 displayGattServices(mBluetoothLeService
                         .getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-//                displayData();
+                //从蓝牙取得测试结果
                 String testResult = intent
                         .getStringExtra(BluetoothLeService.EXTRA_DATA);
                 L.e("测试结果", testResult);
-                toolbar.setTitle(testResult);
-
+                /**
+                 *
+                 if (!TextUtils.isEmpty(mStep.getReadKey)) {
+                 ReadAndCalculateUtil.setReadKey("");
+                 }
+                 if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
+                 ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
+                 }
+                 *基于前面两条都有set的时候才能计算出建议值的结果
+                 *
+                 */
                 measDispTest.setText(measDisp.getText().toString() + ":  " + testResult);
-//                suggestDisp.setText();
+                Map<String, Object> mStringObjectMap = ReadAndCalculateUtil.handleReadValue(testResult);
+                if (mStringObjectMap != null) {
+                    suggestDisp.setText(mStringObjectMap.get(ReadAndCalculateUtil.CALC_VALUE).toString());
+                }
+                //将测量值，计算出来的建议值和服务器提供的范围分别对比，更UI上的值的提示
+                measDispTips.setText("您的测试存在错误，测量值偏小。。。");
+                suggestDispTips.setText("您的测量存在错误，垫片超出合理范围");
 
 
             }
@@ -243,7 +262,7 @@ public class Step2Activity extends BaseActivity {
         toolbar.setTitle(mDeviceName);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
+        ReadAndCalculateUtil.init();
     }
 
     @Override
@@ -362,7 +381,6 @@ public class Step2Activity extends BaseActivity {
         Step mStep = checkStep(curStepOrder);
         if (mStep == null) return;
 
-
         if (TextUtils.equals(mStep.getPageType(), "1")) {
             measDispLine.setVisibility(View.VISIBLE);
 
@@ -411,6 +429,14 @@ public class Step2Activity extends BaseActivity {
             ljTv.setText(mStep.getLj());
             testSpecTv2.setText(mStep.getTestSpec());
         }
+
+        if (!TextUtils.isEmpty("")) {
+            ReadAndCalculateUtil.setReadKey("");
+        }
+        if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
+            ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
+        }
+
 
         videoPicUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getShowPicUrl()));
         dispStepNameTv.setText(mStep.getDispStepName());
