@@ -20,6 +20,8 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 
 2016/1/21  change packagename ,add tips icon,add player position,add showpicurl
 
+2016/1/21 add ReadAndCaculateUtil,and  some caculate code
+
 
 ###thanks to 
 
