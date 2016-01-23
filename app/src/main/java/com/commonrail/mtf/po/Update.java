@@ -20,8 +20,17 @@ import java.io.Serializable;
  */
 public class Update implements Serializable {
     private String appVersionCode = "";
-    private String forced = "";
+    private boolean forced = false;
     private String url = "";
+
+    @Override
+    public String toString() {
+        return "Update{" +
+                "appVersionCode='" + appVersionCode + '\'' +
+                ", forced=" + forced +
+                ", url='" + url + '\'' +
+                '}';
+    }
 
     public String getAppVersionCode() {
         return appVersionCode;
@@ -31,11 +40,11 @@ public class Update implements Serializable {
         appVersionCode = mAppVersionCode;
     }
 
-    public String getForced() {
+    public boolean getForced() {
         return forced;
     }
 
-    public void setForced(final String mForced) {
+    public void setForced(final boolean mForced) {
         forced = mForced;
     }
 

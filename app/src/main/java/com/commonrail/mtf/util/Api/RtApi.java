@@ -50,11 +50,11 @@ public interface RtApi {
     @POST(Config.UPLOAD_MESRESULT)
     Observable<Result<StepList>> uploadMesResult(@Field("injectorType") String injectorType, @Field("moduleId") String moduleId, @Field("values") String values);
 
-
+    @FormUrlEncoded
     @POST(Config.APP_VERSION)
     Observable<Result<Update>> appVersion(@Field("") String injectorType);
 
-
+    @FormUrlEncoded
     @POST(Config.UPDATE_FILE)
     Observable<Result<StepList>> updateFile(@Field("") String injectorType);
 

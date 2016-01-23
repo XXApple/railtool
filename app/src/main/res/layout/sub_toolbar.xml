@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.AppBarLayout
+    android:id="@+id/app_bar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/app_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?actionBarSize"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:subtitle="Common Rail Injector Precision Repair System"/>
         <!--android:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
@@ -40,14 +38,12 @@
 
 
             <ImageView
-                android:id="@+id/rightImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/home"
                 />
 
             <TextView
-                android:id="@+id/rightBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

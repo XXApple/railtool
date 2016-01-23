@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:fresco="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_gravity="center"
-             android:background="@color/white_bg"
-             android:orientation="vertical"
-             tools:context="com.commonrail.mtf.activity.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white_bg"
+    android:orientation="vertical"
+    tools:context="com.commonrail.mtf.activity.MainActivity">
 
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="600dp"
         android:layout_height="200dp"
-        android:indeterminateDrawable="@drawable/animation_list"/>
+        android:indeterminateDrawable="@drawable/animation_list" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/rootLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/sub_toolbar"/>
+            <include layout="@layout/sub_toolbar" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,26 +36,27 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_gravity="top|center_horizontal"
                     android:layout_weight="1"
                     android:background="@color/md_white"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
+                    android:gravity="top|center_horizontal"
+                    android:orientation="vertical">
+                    <!--android:layout_width="315px"-->
+                    <!--android:layout_height="1101px"-->
                     <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/videoPicUrl"
-                        android:layout_width="316dp"
-                        android:layout_height="290dp"
-                        fresco:actualImageScaleType="focusCrop"
+                        android:id="@+id/showPicUrl"
+                        android:layout_width="315px"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="?actionBarSize"
+                        android:layout_marginTop="16dp"
+                        fresco:actualImageScaleType="centerInside"
                         fresco:fadeDuration="300"
-                        fresco:failureImage="@drawable/ic_launcher"
+                        fresco:failureImage="@drawable/logo"
                         fresco:failureImageScaleType="centerInside"
                         fresco:placeholderImage="@color/white"
-                        fresco:placeholderImageScaleType="fitCenter"
-                        fresco:retryImage="@drawable/ic_launcher"
-                        fresco:retryImageScaleType="centerInside"
-                        />
+                        fresco:placeholderImageScaleType="centerInside"
+                        fresco:retryImage="@drawable/logo"
+                        fresco:retryImageScaleType="centerInside" />
 
 
                 </LinearLayout>
@@ -67,175 +69,210 @@
                     android:layout_weight="3"
                     android:orientation="vertical">
 
-                    <RelativeLayout
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@color/grey"
-                        android:orientation="vertical"
-                        android:padding="8dp">
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/grey"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="5dp">
 
-                        <TextView
-                            android:id="@+id/injectorTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentLeft="true"
-                            android:gravity="center"
-                            android:text="BOSCH"
-                            android:textColor="@color/md_red_500"
-                            android:textSize="15sp"
-                            />
-
-                        <TextView
-                            android:id="@+id/xhTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginLeft="8dp"
-                            android:layout_toRightOf="@+id/injectorTv"
-                            android:gravity="center"
-                            android:text="0445120007"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            />
-
-                        <TextView
-                            android:id="@+id/dispStepNameTv"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/chooseTv"
-                            android:layout_toRightOf="@+id/xhTv"
-                            android:gravity="center"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            />
+                            android:layout_height="48dp"
+                            android:background="@color/grey"
+                            android:orientation="vertical"
+                            android:padding="8dp">
 
-                        <TextView
-                            android:id="@+id/chooseTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/measToolNumEt"
-                            android:gravity="center"
-                            android:text="选择道具编号"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
-                            />
+                            <TextView
+                                android:id="@+id/injectorTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentLeft="true"
+                                android:gravity="center"
+                                android:text="BOSCH"
+                                android:textColor="@color/md_red_500"
+                                android:textSize="15sp" />
 
-                        <TextView
-                            android:id="@+id/measToolNumEt"
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/measToolPic"
-                            android:gravity="center"
-                            android:textColor="@color/md_black"
-                            />
+                            <TextView
+                                android:id="@+id/xhTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginLeft="8dp"
+                                android:layout_toRightOf="@+id/injectorTv"
+                                android:gravity="center"
+                                android:text="0445120007"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="15sp" />
 
-                        <com.facebook.drawee.view.SimpleDraweeView
-                            android:id="@+id/measToolPic"
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            />
+                            <TextView
+                                android:id="@+id/dispStepNameTv"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_toLeftOf="@+id/chooseTv"
+                                android:layout_toRightOf="@+id/xhTv"
+                                android:gravity="center"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp" />
 
-                    </RelativeLayout>
+                            <TextView
+                                android:id="@+id/chooseTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_toLeftOf="@+id/measToolNumEt"
+                                android:gravity="center"
+                                android:text="选择道具编号"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="20sp" />
 
-                    <LinearLayout
+                            <TextView
+                                android:id="@+id/measToolNumEt"
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_toLeftOf="@+id/measToolPic"
+                                android:gravity="center"
+                                android:textColor="@color/md_black" />
+
+                            <com.facebook.drawee.view.SimpleDraweeView
+                                android:id="@+id/measToolPic"
+                                android:layout_width="100dp"
+
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true" />
+
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="290dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@color/md_white"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/md_white"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="5dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="290dp"
-                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="288dp"
+                            android:layout_marginTop="8dp"
                             android:background="@color/md_white"
-                            android:orientation="vertical">
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
 
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="290dp"
-                                android:layout_gravity="center"
-
-                                >
-
-                                <ImageView
-                                    android:id="@+id/iv_play"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:layout_gravity="center"
-                                    android:background="@android:drawable/ic_media_play"/>
-
-                                <com.commonrail.rtplayer.view.RtVideoView
-                                    android:id="@+id/rt_video_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center"
-                                    android:background="@color/grey"
-                                    android:padding="4dp"
-                                    />
-                            </FrameLayout>
-
+                            <ImageView
+                                android:layout_width="54dp"
+                                android:layout_height="168dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/video_tips" />
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:background="@color/md_white"
+                                android:orientation="horizontal">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="288dp"
+                                    android:layout_gravity="center">
+
+                                    <ImageView
+                                        android:id="@+id/iv_play"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_gravity="center"
+                                        android:background="@android:drawable/ic_media_play" />
+
+                                    <com.commonrail.rtplayer.view.RtVideoView
+                                        android:id="@+id/rt_video_view"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="288dp"
+                                        android:layout_gravity="center"
+                                        android:background="@color/grey" />
+                                </FrameLayout>
+
+                                <!--<LinearLayout-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:background="@color/md_white"-->
+                                <!--android:orientation="vertical">-->
+
+                                <!--</LinearLayout>-->
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
                                 android:background="@color/md_white"
                                 android:orientation="vertical">
 
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@color/md_white"
-                            android:orientation="vertical">
-
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="end|center_vertical"
-                                android:background="@color/md_white"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-
-                                <com.facebook.drawee.view.SimpleDraweeView
-                                    android:id="@+id/picUrl"
-                                    android:layout_width="158dp"
-                                    android:layout_height="145dp"
-                                    android:visibility="gone"
-                                    fresco:actualImageScaleType="focusCrop"
-                                    fresco:fadeDuration="300"
-                                    fresco:failureImage="@drawable/ic_launcher"
-                                    fresco:failureImageScaleType="centerInside"
-                                    fresco:placeholderImage="@color/white"
-                                    fresco:placeholderImageScaleType="fitCenter"
-                                    fresco:retryImage="@drawable/ic_launcher"
-                                    fresco:retryImageScaleType="centerInside"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/testSpecTv2"
+                                <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="1 jiangjiangjiangjiang"
-                                    android:textColor="@color/md_black"
-                                    android:textSize="15sp"
-                                    android:visibility="gone"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/md_white"
+                                    android:orientation="horizontal">
 
-                                    />
+                                    <ImageView
+                                        android:id="@+id/rightImg"
+                                        android:layout_width="54dp"
+                                        android:layout_height="168dp"
+                                        android:layout_gravity="top"
+                                        android:scaleType="centerInside"
+                                        android:src="@drawable/img_tips" />
 
 
+                                    <android.support.v7.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        app:cardBackgroundColor="@color/md_white"
+                                        app:cardCornerRadius="5dp"
+                                        app:cardElevation="5dp">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="end|center_vertical"
+                                            android:background="@color/md_white"
+                                            android:orientation="vertical"
+                                            android:padding="16dp">
+
+
+                                            <com.facebook.drawee.view.SimpleDraweeView
+                                                android:id="@+id/picUrl"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="290dp"
+                                                android:layout_marginLeft="56dp"
+                                                android:visibility="gone"
+                                                fresco:actualImageScaleType="focusCrop"
+                                                fresco:fadeDuration="300"
+                                                fresco:failureImage="@drawable/ic_launcher"
+                                                fresco:failureImageScaleType="centerInside"
+                                                fresco:placeholderImage="@color/white"
+                                                fresco:placeholderImageScaleType="fitCenter"
+                                                fresco:retryImage="@drawable/ic_launcher"
+                                                fresco:retryImageScaleType="centerInside" />
+
+                                            <TextView
+                                                android:id="@+id/testSpecTv2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:text="1 jiangjiangjiangjiang"
+                                                android:textColor="@color/md_black"
+                                                android:textSize="15sp"
+                                                android:visibility="gone"
+
+                                                />
+
+
+                                        </LinearLayout>
+                                    </android.support.v7.widget.CardView>
+                                </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
+                    </android.support.v7.widget.CardView>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -246,35 +283,34 @@
 
                         <LinearLayout
                             android:id="@+id/type1Line"
-                            android:layout_width="488dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            >
+                            android:layout_alignParentLeft="true"
+                            android:layout_toLeftOf="@+id/preBtn"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/testSpecTv1"
-                                android:layout_width="500dp"
-                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:maxWidth="550dp"
                                 android:padding="8dp"
-                                android:text="1 jiangjiangjiangjiang"
+                                android:text="1 jiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiang"
                                 android:textColor="@color/md_black"
-                                android:textSize="18dp"
-
-
-                                />
+                                android:textSize="18dp" />
 
 
                         </LinearLayout>
 
+
                         <LinearLayout
                             android:id="@+id/type2Line"
-                            android:layout_width="488dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
                             android:gravity="center_vertical"
-                            android:orientation="vertical"
-
-                            >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -289,15 +325,15 @@
                                 />
 
                             <LinearLayout
-                                android:layout_width="500dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="16dp"
-                                android:gravity="center"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <LinearLayout
-                                    android:layout_width="288dp"
-                                    android:layout_height="match_parent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginRight="12dp"
                                     android:background="@color/grey"
                                     android:gravity="center_horizontal"
@@ -305,91 +341,88 @@
                                     android:padding="4dp">
 
                                     <TextView
-                                        android:layout_width="288dp"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:background="@color/grey"
                                         android:gravity="center"
                                         android:padding="4dp"
                                         android:text="角度控制法"
                                         android:textColor="@color/black"
-                                        android:textSize="20sp"
-                                        />
+                                        android:textSize="17sp" />
 
                                     <TableLayout
-                                        android:layout_width="288dp"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="16dp"
                                         android:stretchColumns="3">
 
                                         <TableRow
                                             android:layout_width="match_parent"
-                                            android:layout_height="96dp"
-                                            android:layout_marginTop="16dp">
+                                            android:layout_height="wrap_content">
 
                                             <TextView
-                                                android:layout_width="96dp"
-                                                android:layout_height="match_parent"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="角度"/>
+                                                android:text="角度" />
 
                                             <TextView
-                                                android:layout_width="96dp"
-                                                android:layout_height="match_parent"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="门阀值（N.m）"/>
+                                                android:text="门阀值（N.m）" />
 
                                             <TextView
-                                                android:layout_width="96dp"
-                                                android:layout_height="96dp"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="力矩（N.m）"/>
+                                                android:text="力矩（N.m）" />
                                         </TableRow>
 
                                         <TableRow
                                             android:layout_width="wrap_content"
-                                            android:layout_height="96dp"
+                                            android:layout_height="wrap_content"
                                             android:layout_marginTop="16dp">
 
                                             <TextView
                                                 android:id="@+id/angleTv"
-                                                android:layout_width="96dp"
-                                                android:layout_height="match_parent"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="20"/>
+                                                android:text="20" />
 
                                             <TextView
                                                 android:id="@+id/mkzTv"
-                                                android:layout_width="96dp"
-                                                android:layout_height="match_parent"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="5"/>
+                                                android:text="5" />
 
                                             <TextView
                                                 android:id="@+id/ljfwTv"
-                                                android:layout_width="96dp"
-                                                android:layout_height="match_parent"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="35-65"/>
+                                                android:text="35-65" />
                                         </TableRow>
 
                                     </TableLayout>
                                 </LinearLayout>
 
                                 <LinearLayout
-                                    android:layout_width="188dp"
-                                    android:layout_height="match_parent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="12dp"
                                     android:background="@color/grey"
                                     android:gravity="center_horizontal"
@@ -397,51 +430,48 @@
                                     android:padding="4dp">
 
                                     <TextView
-                                        android:layout_width="188dp"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:background="@color/grey"
                                         android:gravity="center"
                                         android:padding="4dp"
                                         android:text="力柜控制法"
                                         android:textColor="@color/black"
-                                        android:textSize="20sp"
-                                        />
+                                        android:textSize="17sp" />
 
 
                                     <TableLayout
-                                        android:layout_width="188dp"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="16dp"
+                                        android:layout_marginTop="8dp"
                                         android:stretchColumns="1">
 
                                         <TableRow
-                                            android:layout_width="match_parent"
-                                            android:layout_height="96dp"
-                                            android:layout_marginTop="16dp">
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content">
 
                                             <TextView
-                                                android:layout_width="188dp"
-                                                android:layout_height="96dp"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="角度"/>
+                                                android:text="角度" />
 
                                         </TableRow>
 
                                         <TableRow
                                             android:layout_width="wrap_content"
-                                            android:layout_height="96dp"
-                                            android:layout_marginTop="16dp">
+                                            android:layout_height="wrap_content">
 
                                             <TextView
                                                 android:id="@+id/ljTv"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="96dp"
-                                                android:layout_gravity="center"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center_horizontal"
                                                 android:gravity="center"
                                                 android:padding="8dp"
-                                                android:text="20"/>
+                                                android:text="20" />
 
                                         </TableRow>
                                     </TableLayout>
@@ -452,12 +482,13 @@
 
                         <LinearLayout
                             android:id="@+id/testResultLine"
-                            android:layout_width="376dp"
+                            android:layout_width="388dp"
                             android:layout_height="wrap_content"
+                            android:layout_above="@+id/preBtn"
                             android:layout_alignParentRight="true"
                             android:layout_alignParentTop="true"
-                            android:orientation="vertical"
-                            android:visibility="gone">
+                            android:layout_alignRight="@+id/type1Line"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -467,33 +498,74 @@
                                 android:padding="4dp"
                                 android:text="测量结果"
                                 android:textColor="@color/colorPrimary"
-                                android:textSize="20sp"
-                                />
+                                android:textSize="17sp" />
 
-                            <TextView
-                                android:id="@+id/measDisp"
+                            <LinearLayout
+                                android:id="@+id/measDispLine"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="16dp"
-                                android:textColor="@color/md_black"
-                                />
+                                android:layout_margin="4dp"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/suggestDisp"
+                                <TextView
+                                    android:id="@+id/measDisp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="4dp"
+                                    android:textColor="@color/md_black" />
+
+                                <TextView
+                                    android:id="@+id/measDispTest"
+                                    android:layout_width="60dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/test_shape_bg"
+                                    android:padding="4dp"
+                                    android:textColor="@color/md_black" />
+
+                                <TextView
+                                    android:id="@+id/measDispTips"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="4dp"
+                                    android:textColor="@color/md_red_500" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/suggestDispLine"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="16dp"
-                                android:textColor="@color/md_black"
-                                />
+                                android:layout_margin="4dp"
+                                android:orientation="horizontal">
 
+                                <TextView
+                                    android:id="@+id/suggestDisp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="4dp"
+                                    android:textColor="@color/md_black" />
+
+                                <TextView
+                                    android:id="@+id/suggestDispTest"
+                                    android:layout_width="60dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/test_shape_bg"
+                                    android:padding="4dp"
+                                    android:textColor="@color/md_black" />
+
+                                <TextView
+                                    android:id="@+id/suggestDispTips"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="4dp"
+                                    android:textColor="@color/md_red_500" />
+                            </LinearLayout>
 
                         </LinearLayout>
 
-
                         <TextView
                             android:id="@+id/preBtn"
-                            android:layout_width="188dp"
-                            android:layout_height="?actionBarSize"
+                            android:layout_width="108dp"
+                            android:layout_height="48dp"
                             android:layout_alignParentBottom="true"
                             android:layout_margin="8dp"
                             android:layout_toLeftOf="@+id/nextBtn"
@@ -502,12 +574,12 @@
                             android:text="上一步"
                             android:textColor="@color/md_white"
                             android:textSize="20sp"
-                            tools:ignore="RtlCompat"/>
+                            tools:ignore="RtlCompat" />
 
                         <TextView
                             android:id="@+id/nextBtn"
-                            android:layout_width="188dp"
-                            android:layout_height="?actionBarSize"
+                            android:layout_width="108dp"
+                            android:layout_height="48dp"
                             android:layout_alignParentBottom="true"
                             android:layout_alignParentEnd="true"
                             android:layout_margin="8dp"
@@ -516,7 +588,7 @@
                             android:text="下一步"
                             android:textColor="@color/md_white"
                             android:textSize="20sp"
-                            tools:ignore="RtlCompat"/>
+                            tools:ignore="RtlCompat" />
 
 
                     </RelativeLayout>
@@ -544,7 +616,7 @@
             android:gravity="center"
             android:text="上海星融汽车科技有限公司@2016"
             android:textColor="@color/md_white"
-            android:textSize="17dp"/>
+            android:textSize="17dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -553,7 +625,7 @@
             android:gravity="center"
             android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
             android:textColor="@color/md_white"
-            android:textSize="17dp"/>
+            android:textSize="17dp" />
 
     </LinearLayout>
 
