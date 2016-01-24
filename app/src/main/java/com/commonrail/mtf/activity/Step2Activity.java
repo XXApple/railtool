@@ -229,14 +229,62 @@ public class Step2Activity extends BaseActivity {
                  *基于前面两条都有set的时候才能计算出建议值的结果
                  *
                  */
-                measDispTest.setText(measDisp.getText().toString() + ":  " + testResult);
-                Map<String, Object> mStringObjectMap = ReadAndCalculateUtil.handleReadValue(testResult);
-                if (mStringObjectMap != null) {
-                    suggestDisp.setText(mStringObjectMap.get(ReadAndCalculateUtil.CALC_VALUE).toString());
-                }
+                measDispTest.setText(testResult);
+
                 //将测量值，计算出来的建议值和服务器提供的范围分别对比，更UI上的值的提示
-                measDispTips.setText("您的测试存在错误，测量值偏小。。。");
-                suggestDispTips.setText("您的测量存在错误，垫片超出合理范围");
+
+                Step mStep = mStepList.getStepList().get(curStepOrder);
+
+
+                String sgstKey = mStep.getSuggestCalcFun();
+                if (!TextUtils.isEmpty(sgstKey)) {
+                    Map<String, Object> mStringObjectMap = ReadAndCalculateUtil.handleReadValue(testResult);
+                    if (mStringObjectMap != null) {
+                        double sgt = (double) mStringObjectMap.get(ReadAndCalculateUtil.CALC_VALUE);
+                        suggestDispTest.setText(String.valueOf(sgt));
+
+                        //解析建议值的范围
+                        String sgstRange = mStep.getSgstRange();
+                        L.e("建议值范围" + sgstRange);
+                        String[] sgstR = sgstRange.split("-");
+                        double sgst1 = Double.parseDouble(sgstR[0]);
+                        double sgst2 = Double.parseDouble(sgstR[1]);
+                        L.e("建议值范围1：" + sgst1);
+                        L.e("建议值范围1：" + sgst2);
+
+                        L.e("建议值结果：" + sgt);
+                        //将计算结果和范围对比
+                        if (sgt >= sgst1 && sgt <= sgst2) {
+                            measDispTips.setText("您的测试符合正常范围。。。");
+                        } else if (sgt < sgst1) {
+                            measDispTips.setText("您的测试存在错误，垫片超出合理范围。。。");
+                        } else {
+                            measDispTips.setText("您的测试存在错误，垫片超出合理范围。。。");
+                        }
+
+                    }
+                }
+
+
+                String result = testResult.replace("mm", "");
+                double meadispResult = Double.parseDouble(result);
+                L.e("测试结果：" + meadispResult);
+                //解析测试值的范围
+                String measdiap = mStep.getMeasRange();
+                L.e("测试值范围：" + measdiap);
+                String[] measdiapR = measdiap.split("-");
+                double measdiapR1 = Double.parseDouble(measdiapR[0]);
+                double measdiapR2 = Double.parseDouble(measdiapR[1]);
+
+                L.e("测试范围1：" + measdiapR1);
+                L.e("测试范围2：" + measdiapR2);
+                if (meadispResult >= measdiapR1 && meadispResult <= measdiapR2) {
+                    measDispTips.setText("您的测试符合正常范围。。。");
+                } else if (meadispResult < measdiapR1) {
+                    measDispTips.setText("您的测试存在错误，测量值偏小。。。");
+                } else {
+                    measDispTips.setText("您的测试存在错误，测量值偏大。。。");
+                }
 
 
             }
@@ -382,12 +430,11 @@ public class Step2Activity extends BaseActivity {
         if (mStep == null) return;
 
         if (TextUtils.equals(mStep.getPageType(), "1")) {
-            measDispLine.setVisibility(View.VISIBLE);
+
 
             measToolNumEt.setVisibility(View.VISIBLE);
             measToolPic.setVisibility(View.VISIBLE);
             picUrl.setVisibility(View.VISIBLE);
-            measToolNumEt.setVisibility(View.VISIBLE);
             type1Line.setVisibility(View.VISIBLE);
             testSpecTv1.setVisibility(View.VISIBLE);
             testResultLine.setVisibility(View.VISIBLE);
@@ -397,9 +444,8 @@ public class Step2Activity extends BaseActivity {
             measToolNumEt.setText(mStep.getMeasToolNum());
             measToolPic.setImageURI(AppUtils.getFileFrescoUri(mStep.getMeasToolPic()));
             picUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getPicUrl()));
-            measDisp.setText(mStep.getMeasDisp());
-
             rightImg.setImageResource(R.drawable.img_tips);
+
 
             if (!TextUtils.isEmpty(mStep.getSuggestDisp())) {
                 suggestDispLine.setVisibility(View.VISIBLE);
@@ -407,6 +453,33 @@ public class Step2Activity extends BaseActivity {
             } else {
                 suggestDispLine.setVisibility(View.GONE);
             }
+
+
+            L.e("步骤index:" + curStepOrder + "测量值key：" + mStep.getMeasKey()
+                    + "测量值范围：" + mStep.getMeasRange()
+                    + "建议值key：" + mStep.getSuggestCalcFun()
+                    + "建议值范围：" + mStep.getSgstRange()
+                    + "\n");
+
+            if (!TextUtils.isEmpty(mStep.getMeasKey())) {
+                measDispLine.setVisibility(View.VISIBLE);
+                measDisp.setText(mStep.getMeasDisp());
+                String value = ReadAndCalculateUtil.setReadKey(mStep.getMeasKey());
+                L.e(mStep.getMeasKey() + " 上次测量值:" + value);
+
+                measDispTest.setText(value);
+            } else {
+                measDispLine.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
+                suggestDispLine.setVisibility(View.VISIBLE);
+                suggestDispTest.setText(ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun()));
+            } else {
+                suggestDispLine.setVisibility(View.GONE);
+            }
+
+
             testSpecTv1.setText(mStep.getTestSpec());
         } else {
             measDispLine.setVisibility(View.GONE);
@@ -428,13 +501,6 @@ public class Step2Activity extends BaseActivity {
             ljfwTv.setText(mStep.getLjfw());
             ljTv.setText(mStep.getLj());
             testSpecTv2.setText(mStep.getTestSpec());
-        }
-
-        if (!TextUtils.isEmpty("")) {
-            ReadAndCalculateUtil.setReadKey("");
-        }
-        if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
-            ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
         }
 
 

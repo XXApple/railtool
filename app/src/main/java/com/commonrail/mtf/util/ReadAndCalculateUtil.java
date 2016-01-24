@@ -2,6 +2,7 @@ package com.commonrail.mtf.util;
 
 import android.text.TextUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class ReadAndCalculateUtil {
                 map.put(READ_VALUE, measuredValue);//先将测量值保存到内存，才能计算
                 String calcKey = DATA_MAP.get(CALC_KEY);
                 if (null != calcKey) {
-//                    Map<String, Object> mStringObjectMap = calc(calcKey);//计算建议值的计算结果
+//                    Map<String, Object> mStringOb jectMap = calc(calcKey);//计算建议值的计算结果
                     return calc(calcKey);//计算建议值的计算结果
                 }
             }
@@ -79,18 +80,30 @@ public class ReadAndCalculateUtil {
     }
 
     protected static Map<String, Object> calc(String method) throws Exception {
-        Method m = ReadAndCalculateUtil.class.getMethod(method);
-        ReadAndCalculateUtil methobj = new ReadAndCalculateUtil();
-        Object obj = m.invoke(methobj);
-        Double value = (Double) obj;
-        String calcValue = format(value.toString());
-        DATA_MAP.put(method, calcValue);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(CALC_VALUE, calcValue);//得到建议值的计算结果
-        return map;
+        try {
+            Method m = ReadAndCalculateUtil.class.getMethod(method);
+            ReadAndCalculateUtil methobj = new ReadAndCalculateUtil();
+            Object obj = m.invoke(methobj);
+            Double value = (Double) obj;
+            String calcValue = format(value.toString());
+            DATA_MAP.put(method, calcValue);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put(CALC_VALUE, calcValue);//得到建议值的计算结果
+            return map;
 
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(
+                    "无法找到方法：" + method, e);
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getCause();
+            t.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
 //        ReadDataWebsocket.sendMsg(JSON.toJSONString(map));
     }
+
 
     //CRIN2
     static final double CRIN2_AH = 0.052;

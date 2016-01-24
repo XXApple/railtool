@@ -56,6 +56,33 @@ public class Step implements Serializable {
     private String suggestCalcFun = "";
     private String pageType = "";
 
+    private String measKey = "";
+    private String measRange = "";
+    private String sgstRange = "";
+
+    public String getMeasKey() {
+        return measKey;
+    }
+
+    public void setMeasKey(final String mMeasKey) {
+        measKey = mMeasKey;
+    }
+
+    public String getMeasRange() {
+        return measRange;
+    }
+
+    public void setMeasRange(final String mMeasRange) {
+        measRange = mMeasRange;
+    }
+
+    public String getSgstRange() {
+        return sgstRange;
+    }
+
+    public void setSgstRange(final String mSgstRange) {
+        sgstRange = mSgstRange;
+    }
 
     @Override
     public String toString() {
