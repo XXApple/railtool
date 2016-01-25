@@ -61,9 +61,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c6e99108-5337-4034-9d1b-0c3f5e4e7acd" name="Default" comment="make readandcalc work">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="c6e99108-5337-4034-9d1b-0c3f5e4e7acd" name="Default" comment="make readandcalc work" />
     <list id="1367e3dd-74d4-47da-86b0-7189a75d6c10" name="New changelist" comment="" />
     <ignored path="railtool.iws" />
     <ignored path=".idea/workspace.xml" />
