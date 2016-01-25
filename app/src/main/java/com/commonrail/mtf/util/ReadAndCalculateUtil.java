@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ReadAndCalculateUtil {
 
-    protected static Map<String, String> DATA_MAP = new HashMap<String, String>();
+    public static Map<String, String> DATA_MAP = new HashMap<String, String>();
 
     public static String READ_KEY = "readKey";
 
@@ -47,7 +47,7 @@ public class ReadAndCalculateUtil {
         }
     }
 
-    public static Map<String, Object> handleReadValue(String readValue) {
+    public static void handleReadValue(String readValue) {
         try {
             if (!TextUtils.isEmpty(readValue)) {
                 String measuredValue = readValue.trim().replace(" ", "").replace("&", "").replace("mm", "").replace("-", "");
@@ -60,14 +60,12 @@ public class ReadAndCalculateUtil {
                 map.put(READ_VALUE, measuredValue);//先将测量值保存到内存，才能计算
                 String calcKey = DATA_MAP.get(CALC_KEY);
                 if (null != calcKey) {
-//                    Map<String, Object> mStringOb jectMap = calc(calcKey);//计算建议值的计算结果
-                    return calc(calcKey);//计算建议值的计算结果
+                    calc(calcKey);//计算建议值的计算结果
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     protected static String format(String value) {
@@ -79,7 +77,7 @@ public class ReadAndCalculateUtil {
         return format.format(myNumber);
     }
 
-    protected static Map<String, Object> calc(String method) throws Exception {
+    protected static void calc(String method) throws Exception {
         try {
             Method m = ReadAndCalculateUtil.class.getMethod(method);
             ReadAndCalculateUtil methobj = new ReadAndCalculateUtil();
@@ -87,10 +85,6 @@ public class ReadAndCalculateUtil {
             Double value = (Double) obj;
             String calcValue = format(value.toString());
             DATA_MAP.put(method, calcValue);
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put(CALC_VALUE, calcValue);//得到建议值的计算结果
-            return map;
-
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(
                     "无法找到方法：" + method, e);
@@ -100,7 +94,6 @@ public class ReadAndCalculateUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
 //        ReadDataWebsocket.sendMsg(JSON.toJSONString(map));
     }
 

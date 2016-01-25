@@ -53,7 +53,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -236,60 +235,76 @@ public class Step2Activity extends BaseActivity {
                 Step mStep = mStepList.getStepList().get(curStepOrder);
 
 
-                String sgstKey = mStep.getSuggestCalcFun();
-                if (!TextUtils.isEmpty(sgstKey)) {
-                    Map<String, Object> mStringObjectMap = ReadAndCalculateUtil.handleReadValue(testResult);
-                    if (mStringObjectMap != null) {
-                        double sgt = (double) mStringObjectMap.get(ReadAndCalculateUtil.CALC_VALUE);
-                        suggestDispTest.setText(String.valueOf(sgt));
-
-                        //解析建议值的范围
-                        String sgstRange = mStep.getSgstRange();
-                        L.e("建议值范围" + sgstRange);
-                        String[] sgstR = sgstRange.split("-");
-                        double sgst1 = Double.parseDouble(sgstR[0]);
-                        double sgst2 = Double.parseDouble(sgstR[1]);
-                        L.e("建议值范围1：" + sgst1);
-                        L.e("建议值范围1：" + sgst2);
-
-                        L.e("建议值结果：" + sgt);
-                        //将计算结果和范围对比
-                        if (sgt >= sgst1 && sgt <= sgst2) {
-                            measDispTips.setText("您的测试符合正常范围。。。");
-                        } else if (sgt < sgst1) {
-                            measDispTips.setText("您的测试存在错误，垫片超出合理范围。。。");
-                        } else {
-                            measDispTips.setText("您的测试存在错误，垫片超出合理范围。。。");
-                        }
-
-                    }
-                }
-
-
                 String result = testResult.replace("mm", "");
-                double meadispResult = Double.parseDouble(result);
-                L.e("测试结果：" + meadispResult);
-                //解析测试值的范围
-                String measdiap = mStep.getMeasRange();
-                L.e("测试值范围：" + measdiap);
-                String[] measdiapR = measdiap.split("-");
-                double measdiapR1 = Double.parseDouble(measdiapR[0]);
-                double measdiapR2 = Double.parseDouble(measdiapR[1]);
-
-                L.e("测试范围1：" + measdiapR1);
-                L.e("测试范围2：" + measdiapR2);
-                if (meadispResult >= measdiapR1 && meadispResult <= measdiapR2) {
-                    measDispTips.setText("您的测试符合正常范围。。。");
-                } else if (meadispResult < measdiapR1) {
-                    measDispTips.setText("您的测试存在错误，测量值偏小。。。");
-                } else {
-                    measDispTips.setText("您的测试存在错误，测量值偏大。。。");
-                }
-
+                checkMeasResult(mStep, result);
+                checkSuggetCalc(mStep);
 
             }
         }
     };
+
+    private void checkMeasResult(final Step mStep, final String mResult) {
+        if (TextUtils.isEmpty(mResult)) {
+            measDispTips.setText("");
+            return;
+        }
+        double meadispResult = Double.parseDouble(mResult);
+        L.e("测试结果：" + meadispResult);
+        if (meadispResult <= 0) {
+            L.e("该结果小于0，已过滤");
+            return;
+        }
+        ReadAndCalculateUtil.handleReadValue(mResult);
+        //解析测试值的范围
+        String measdiap = mStep.getMeasRange();
+        L.e("测试值范围：" + measdiap);
+        String[] measdiapR = measdiap.split("-");
+        double measdiapR1 = Double.parseDouble(measdiapR[0]);
+        double measdiapR2 = Double.parseDouble(measdiapR[1]);
+
+        L.e("测试范围1：" + measdiapR1);
+        L.e("测试范围2：" + measdiapR2);
+        if (meadispResult >= measdiapR1 && meadispResult <= measdiapR2) {
+            measDispTips.setText("您的测试符合正常范围...");
+        } else if (meadispResult < measdiapR1) {
+            measDispTips.setText("您的测试存在错误，测量值偏小...");
+        } else {
+            measDispTips.setText("您的测试存在错误，测量值偏大...");
+        }
+    }
+
+    private void checkSuggetCalc(final Step mStep) {
+        String sgstKey = mStep.getSuggestCalcFun();
+        if (!TextUtils.isEmpty(sgstKey)) {
+            if (ReadAndCalculateUtil.DATA_MAP.get(sgstKey) != null) {
+                String sgtStr = ReadAndCalculateUtil.DATA_MAP.get(sgstKey);
+                double sgt = Double.parseDouble(sgtStr);
+                suggestDispTest.setText(String.valueOf(sgt));
+
+                //解析建议值的范围
+                String sgstRange = mStep.getSgstRange();
+                L.e("建议值范围" + sgstRange);
+                String[] sgstR = sgstRange.split("-");
+                double sgst1 = Double.parseDouble(sgstR[0]);
+                double sgst2 = Double.parseDouble(sgstR[1]);
+                L.e("建议值范围1：" + sgst1);
+                L.e("建议值范围1：" + sgst2);
+
+                L.e("建议值结果：" + sgt);
+                //将计算结果和范围对比
+                if (sgt >= sgst1 && sgt <= sgst2) {
+                    suggestDispTips.setText("您的测试符合正常范围...");
+                } else if (sgt < sgst1) {
+                    suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
+                } else {
+                    suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
+                }
+
+            }
+        } else {
+            suggestDispTips.setText("");
+        }
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -464,9 +479,10 @@ public class Step2Activity extends BaseActivity {
             if (!TextUtils.isEmpty(mStep.getMeasKey())) {
                 measDispLine.setVisibility(View.VISIBLE);
                 measDisp.setText(mStep.getMeasDisp());
-                String value = ReadAndCalculateUtil.setReadKey(mStep.getMeasKey());
+                ReadAndCalculateUtil.setReadKey(mStep.getMeasKey());
+                String value = ReadAndCalculateUtil.DATA_MAP.get(mStep.getMeasKey());
                 L.e(mStep.getMeasKey() + " 上次测量值:" + value);
-
+                checkMeasResult(mStep, value);
                 measDispTest.setText(value);
             } else {
                 measDispLine.setVisibility(View.GONE);
@@ -474,7 +490,8 @@ public class Step2Activity extends BaseActivity {
 
             if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
                 suggestDispLine.setVisibility(View.VISIBLE);
-                suggestDispTest.setText(ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun()));
+                ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
+                checkSuggetCalc(mStep);
             } else {
                 suggestDispLine.setVisibility(View.GONE);
             }

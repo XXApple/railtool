@@ -12,8 +12,9 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="600dp"
-        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
         android:indeterminateDrawable="@drawable/animation_list"/>
 
     <LinearLayout
@@ -79,7 +80,7 @@
                         android:layout_height="48dp"
                         android:background="@color/grey"
                         android:orientation="vertical"
-                        android:padding="8dp">
+                        android:padding="4dp">
 
                         <TextView
                             android:id="@+id/injectorTv"
@@ -89,7 +90,7 @@
                             android:gravity="center"
                             android:text="BOSCH"
                             android:textColor="@color/md_red_500"
-                            android:textSize="15sp"
+                            android:textSize="16sp"
                             />
 
                         <TextView
@@ -102,7 +103,7 @@
                             android:gravity="center"
                             android:text="0445120007"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="15sp"
+                            android:textSize="16sp"
                             />
 
                         <TextView
@@ -113,7 +114,7 @@
                             android:layout_toRightOf="@+id/xhTv"
                             android:gravity="center"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             />
 
                         <TextView
@@ -124,7 +125,7 @@
                             android:gravity="center"
                             android:text="选择道具编号"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             />
 
                         <TextView
@@ -157,8 +158,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="288dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_height="270dp"
+                        android:layout_marginTop="4dp"
                         android:background="@color/md_white"
                         android:baselineAligned="false"
                         android:orientation="horizontal">
@@ -179,7 +180,7 @@
 
                             <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="288dp"
+                                android:layout_height="270dp"
                                 android:layout_gravity="center"
                                 >
 
@@ -192,8 +193,8 @@
 
                                 <com.commonrail.rtplayer.view.RtVideoView
                                     android:id="@+id/rt_video_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="288dp"
+                                    android:layout_width="360dp"
+                                    android:layout_height="270dp"
                                     android:layout_gravity="center"
                                     android:background="@color/grey"
                                     />
@@ -247,13 +248,13 @@
                                         android:layout_gravity="end|center_vertical"
                                         android:background="@color/md_white"
                                         android:orientation="vertical"
-                                        android:padding="16dp">
+                                        android:padding="4dp">
 
 
                                         <com.facebook.drawee.view.SimpleDraweeView
                                             android:id="@+id/picUrl"
                                             android:layout_width="match_parent"
-                                            android:layout_height="290dp"
+                                            android:layout_height="270dp"
                                             android:layout_marginLeft="16dp"
                                             android:visibility="gone"
                                             fresco:actualImageScaleType="focusCrop"
@@ -272,7 +273,7 @@
                                             android:layout_height="wrap_content"
                                             android:text="1 jiangjiangjiangjiang"
                                             android:textColor="@color/md_black"
-                                            android:textSize="15sp"
+                                            android:textSize="14sp"
                                             android:visibility="gone"
 
                                             />
@@ -290,7 +291,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:orientation="horizontal"
-                    android:padding="8dp">
+                    android:padding="4dp">
 
                     <LinearLayout
                         android:id="@+id/type1Line"
@@ -306,8 +307,8 @@
                             android:id="@+id/testSpecTv1"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:maxWidth="550dp"
-                            android:padding="8dp"
+                            android:maxWidth="460dp"
+                            android:padding="4dp"
                             android:text="1 jiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiang"
                             android:textColor="@color/md_black"
                             android:textSize="18dp"
@@ -402,7 +403,7 @@
                                     <TableRow
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="16dp">
+                                        android:layout_marginTop="8dp">
 
                                         <TextView
                                             android:id="@+id/angleTv"
@@ -449,7 +450,7 @@
                                     android:layout_height="wrap_content"
                                     android:background="@color/grey"
                                     android:gravity="center"
-                                    android:padding="4dp"
+                                    android:padding="8dp"
                                     android:text="力柜控制法"
                                     android:textColor="@color/black"
                                     android:textSize="17sp"
@@ -498,7 +499,7 @@
 
                     <LinearLayout
                         android:id="@+id/testResultLine"
-                        android:layout_width="388dp"
+                        android:layout_width="488dp"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/preBtn"
                         android:layout_alignParentRight="true"
@@ -522,32 +523,44 @@
                             android:id="@+id/measDispLine"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/measDisp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
                                 android:padding="4dp"
+                                android:text="h2测量值[mm]"
                                 android:textColor="@color/md_black"
+                                android:textSize="12sp"
                                 />
 
                             <TextView
                                 android:id="@+id/measDispTest"
-                                android:layout_width="60dp"
+                                android:layout_width="88dp"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:background="@drawable/test_shape_bg"
+                                android:gravity="center"
                                 android:padding="4dp"
+                                android:text="0.000mm"
                                 android:textColor="@color/md_black"
+                                android:textSize="12sp"
                                 />
 
                             <TextView
                                 android:id="@+id/measDispTips"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
                                 android:padding="4dp"
                                 android:textColor="@color/md_red_500"
+                                android:textSize="14sp"
                                 />
                         </LinearLayout>
 
@@ -555,32 +568,42 @@
                             android:id="@+id/suggestDispLine"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/suggestDisp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
                                 android:padding="4dp"
                                 android:textColor="@color/md_black"
+                                android:textSize="12sp"
                                 />
 
                             <TextView
                                 android:id="@+id/suggestDispTest"
-                                android:layout_width="60dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:background="@drawable/test_shape_bg"
+                                android:gravity="center"
                                 android:padding="4dp"
                                 android:textColor="@color/md_black"
+                                android:textSize="12sp"
                                 />
 
                             <TextView
                                 android:id="@+id/suggestDispTips"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
                                 android:padding="4dp"
                                 android:textColor="@color/md_red_500"
+                                android:textSize="12sp"
                                 />
                         </LinearLayout>
 
