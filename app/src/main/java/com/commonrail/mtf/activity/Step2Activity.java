@@ -236,8 +236,12 @@ public class Step2Activity extends BaseActivity {
 
 
                 String result = testResult.replace("mm", "");
-                checkMeasResult(mStep, result);
-                checkSuggetCalc(mStep);
+                try {
+                    checkMeasResult(mStep, result);
+                    checkSuggetCalc(mStep);
+                } catch (NumberFormatException e) {
+                    L.e(e.toString());
+                }
 
             }
         }
@@ -482,7 +486,11 @@ public class Step2Activity extends BaseActivity {
                 ReadAndCalculateUtil.setReadKey(mStep.getMeasKey());
                 String value = ReadAndCalculateUtil.DATA_MAP.get(mStep.getMeasKey());
                 L.e(mStep.getMeasKey() + " 上次测量值:" + value);
-                checkMeasResult(mStep, value);
+                try {
+                    checkMeasResult(mStep, value);
+                } catch (NumberFormatException e) {
+                    L.e(e.toString());
+                }
                 measDispTest.setText(value);
             } else {
                 measDispLine.setVisibility(View.GONE);
@@ -491,7 +499,11 @@ public class Step2Activity extends BaseActivity {
             if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
                 suggestDispLine.setVisibility(View.VISIBLE);
                 ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
-                checkSuggetCalc(mStep);
+                try {
+                    checkSuggetCalc(mStep);
+                } catch (NumberFormatException e) {
+                    L.e(e.toString());
+                }
             } else {
                 suggestDispLine.setVisibility(View.GONE);
             }
