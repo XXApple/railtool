@@ -53,6 +53,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -142,8 +143,15 @@ public class Step2Activity extends BaseActivity {
     TextView suggestDispTest;
     @Bind(R.id.rightImg)
     ImageView rightImg;
+
+
     private boolean isPlayOver = false;
     private Uri mUri;
+
+    List<HashMap<String, Object>> values = new ArrayList<>();
+
+
+    private ModuleItem mItem = null;
     private StepList mStepList;
     private int curStepOrder = 0;
     private RtApi api;
@@ -232,15 +240,40 @@ public class Step2Activity extends BaseActivity {
 
                 //将测量值，计算出来的建议值和服务器提供的范围分别对比，更UI上的值的提示
 
+
                 Step mStep = mStepList.getStepList().get(curStepOrder);
-
-
                 String result = testResult.replace("mm", "");
                 try {
                     checkMeasResult(mStep, result);
                     checkSuggetCalc(mStep);
                 } catch (NumberFormatException e) {
                     L.e(e.toString());
+                }
+
+                HashMap mHashMap = new HashMap();
+                mHashMap.put("stepId", mStep.getStepId());
+                mHashMap.put("stepNum", mStep.getStepOrder());
+                values.add(mHashMap);
+
+
+                if (curStepOrder == mStepList.getStepList().size() - 1) {
+                    //提交测试结果
+                    if (mItem == null) {
+                        return;
+                    }
+                    int moduleId = mItem.getId();
+                    String injectorType = injectorTv.getText().toString().trim();
+                    HashMap<String, Object> mMap = new HashMap<>();
+                    mMap.put("moduleId", moduleId);
+                    mMap.put("injectorType", injectorType);
+
+
+                    for (Map.Entry<String, String> entry : ReadAndCalculateUtil.DATA_MAP.entrySet()) {
+                        System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                        
+                    }
+
+
                 }
 
             }
@@ -353,6 +386,7 @@ public class Step2Activity extends BaseActivity {
         mBluetoothLeService = null;
     }
 
+
     private void getRepairStep(String injectorType, String language, int moduleId, String xh) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("injectorType", injectorType);
@@ -377,7 +411,7 @@ public class Step2Activity extends BaseActivity {
                             Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
                             mStepList = t.getData();
                             if (mStepList != null) {
-                                ModuleItem mItem = mStepList.getModule();
+                                mItem = mStepList.getModule();
                                 L.v("ModuleName:" + mItem.getModuleName());
                                 progress.setVisibility(View.GONE);
                                 rootLine.setVisibility(View.VISIBLE);
@@ -623,15 +657,18 @@ public class Step2Activity extends BaseActivity {
 
     @OnClick(R.id.preBtn)
     public void setPreBtn(View mView) {
-        int maxSteps = mStepList.getStepList().size();
+//        int maxSteps = mStepList.getStepList().size();
         --curStepOrder;
         if (curStepOrder < 0) {
-            curStepOrder = maxSteps - 1;
-        }
-
-        if (curStepOrder >= maxSteps) {
             curStepOrder = 0;
+            return;
+
+//            curStepOrder = maxSteps - 1;
         }
+//
+//        if (curStepOrder >= maxSteps) {
+//            curStepOrder = 0;
+//        }
         setStepOrderInfo(curStepOrder);
     }
 
@@ -640,7 +677,8 @@ public class Step2Activity extends BaseActivity {
         ++curStepOrder;
         int maxSteps = mStepList.getStepList().size();
         if (curStepOrder > maxSteps - 1) {
-            curStepOrder = 0;
+            curStepOrder = maxSteps - 1;
+            return;
         }
         setStepOrderInfo(curStepOrder);
     }

@@ -12,14 +12,14 @@ import java.io.Serializable;
  * 修改备注：
  */
 public class ModuleItem implements Serializable {
-    private String id = "1";
+    private int id = 1;
     private String moduleName = "";
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(final String mId) {
+    public void setId(final int mId) {
         id = mId;
     }
 
