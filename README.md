@@ -22,6 +22,7 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 
 2016/1/21 add ReadAndCaculateUtil,and  some caculate code
 
+2016/1/22-25 make ReadAndCaculateUtil work,make step2 layout better
 
 ###thanks to 
 
