@@ -2,6 +2,7 @@ package com.commonrail.mtf.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import java.util.List;
 import butterknife.Bind;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -149,32 +151,55 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<Update>>() {
-                    @SuppressLint("SetTextI18n")
+                .map(new Func1<Result<Update>, Update>() {
                     @Override
-                    public void call(Result<Update> t) {
-                        L.e("appVersion： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            Update update = t.getData();
-                            if (update != null) {
-                                String vc = update.getAppVersionCode();
-                                boolean forced = update.getForced();
-                                String url = update.getUrl();
-                                L.e(update.toString());
-                            }
-
-                        } else {
+                    public Update call(Result<Update> updateResult) {
+                        L.e("appVersion： " + updateResult.getStatus() + updateResult.getMsg());
+                        if (updateResult.getStatus() != 200) {
                             GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                            return null;
                         }
+                        return updateResult.getData();
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                    }
-                }));
+                }).subscribe(new Action1<Update>() {
+                                 @SuppressLint("SetTextI18n")
+                                 @Override
+                                 public void call(Update update) {
+                                     if (update == null) {
+                                         return;
+                                     }
+                                     String vc = update.getAppVersionCode();
+                                     boolean forced = update.getForced();
+                                     String url = update.getUrl();
+                                     L.e(update.toString());
+                                     boolean isNew = AppUtils.checkVersion(vc);
+                                     if (!isNew) {
+                                         return;
+                                     }
+                                     GlobalUtils.ShowDialog(MainActivity.this, "提示", "发现新版本，是否更新", !forced, new DialogInterface.OnClickListener() {
+                                         @Override
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             dialog.dismiss();
+
+                                         }
+                                     }, new DialogInterface.OnClickListener() {
+                                         @Override
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             if (dialog != null) {
+                                                 dialog.dismiss();
+                                             }
+                                         }
+                                     });
+                                 }
+                             }
+                        , new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                L.e("" + throwable.toString());
+                                GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                            }
+                        }
+                ));
     }
 
     private void updateFile() {

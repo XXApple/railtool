@@ -9,6 +9,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.commonrail.mtf.AppClient;
 
@@ -88,6 +89,29 @@ public class AppUtils {
 
         return versionCode;
     }
+
+    public static boolean checkVersion(String vc) {
+        String localVc = AppUtils.getVersionName();
+        if (TextUtils.equals("unknown version", localVc)) {
+            return false;
+        }
+        L.e("localVc" + localVc);
+        if (!TextUtils.isEmpty(localVc)) {
+            return false;
+        }
+        if (localVc.contains(".")) {
+            localVc = localVc.replace(".", "");
+        }
+        try {
+            int newVcInt = Integer.parseInt(vc);
+            int localVcInt = Integer.parseInt(localVc);
+            return newVcInt > localVcInt;
+        } catch (NumberFormatException ignored) {
+
+        }
+        return false;
+    }
+
 
     /**
      * 获取机器唯一标识

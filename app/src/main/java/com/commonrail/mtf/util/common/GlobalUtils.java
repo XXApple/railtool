@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -61,6 +63,40 @@ public class GlobalUtils {
     private GlobalUtils() {
         throw new UnsupportedOperationException("Sorry, you cannot instantiate an utility class!");
     }
+
+    public static void ShowDialog(final Activity activity, String title, String msg, boolean showDismiss, final DialogInterface.OnClickListener positive, final DialogInterface.OnClickListener negative) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);  //先得到构造器
+        builder.setTitle(title); //设置标题
+        builder.setMessage(msg); //设置内容
+//        builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() { //设置确定按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss(); //关闭dialog
+                positive.onClick(dialog, which);
+            }
+        });
+        if (showDismiss) {
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    negative.onClick(dialog, which);
+                }
+            });
+        }
+
+//        builder.setNeutralButton("忽略", new DialogInterface.OnClickListener() {//设置忽略按钮
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//                Toast.makeText(activity, "忽略" + which, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        //参数都设置完成了，创建并显示出来
+        builder.create().show();
+    }
+
 
     /**
      * @return the name of the app (as defined in the "label" attribute in the
