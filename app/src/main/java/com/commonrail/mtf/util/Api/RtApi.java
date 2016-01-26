@@ -48,7 +48,7 @@ public interface RtApi {
 
 
     @POST(Config.UPLOAD_MESRESULT)
-    Observable<Result<StepList>> uploadMesResult(@Body HashMap<String, Object> body);
+    Observable<Result<String>> uploadMesResult(@Body HashMap<String, Object> body);
 
     @FormUrlEncoded
     @POST(Config.APP_VERSION)

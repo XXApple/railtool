@@ -37,6 +37,7 @@ import com.commonrail.mtf.po.ModuleItem;
 import com.commonrail.mtf.po.Result;
 import com.commonrail.mtf.po.Step;
 import com.commonrail.mtf.po.StepList;
+import com.commonrail.mtf.po.Value;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
@@ -53,7 +54,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -148,8 +148,8 @@ public class Step2Activity extends BaseActivity {
     private boolean isPlayOver = false;
     private Uri mUri;
 
-    List<HashMap<String, Object>> values = new ArrayList<>();
-
+    private List<Value> values = new ArrayList<>();
+    private Value curValue;
 
     private ModuleItem mItem = null;
     private StepList mStepList;
@@ -243,17 +243,15 @@ public class Step2Activity extends BaseActivity {
 
                 Step mStep = mStepList.getStepList().get(curStepOrder);
                 String result = testResult.replace("mm", "");
+                curValue.setStepId(mStep.getStepId());
+                curValue.setStepNum(mStep.getStepOrder());
+
                 try {
                     checkMeasResult(mStep, result);
                     checkSuggetCalc(mStep);
                 } catch (NumberFormatException e) {
                     L.e(e.toString());
                 }
-
-                HashMap mHashMap = new HashMap();
-                mHashMap.put("stepId", mStep.getStepId());
-                mHashMap.put("stepNum", mStep.getStepOrder());
-                values.add(mHashMap);
 
 
                 if (curStepOrder == mStepList.getStepList().size() - 1) {
@@ -266,16 +264,9 @@ public class Step2Activity extends BaseActivity {
                     HashMap<String, Object> mMap = new HashMap<>();
                     mMap.put("moduleId", moduleId);
                     mMap.put("injectorType", injectorType);
-
-
-                    for (Map.Entry<String, String> entry : ReadAndCalculateUtil.DATA_MAP.entrySet()) {
-                        System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-                        
-                    }
-
-
+                    mMap.put("values", values);
+                    uploadMesResult(mMap);
                 }
-
             }
         }
     };
@@ -291,6 +282,8 @@ public class Step2Activity extends BaseActivity {
             L.e("该结果小于0，已过滤");
             return;
         }
+        L.e("value setMeasResult" + meadispResult);
+        curValue.setMeasResult(meadispResult);
         ReadAndCalculateUtil.handleReadValue(mResult);
         //解析测试值的范围
         String measdiap = mStep.getMeasRange();
@@ -316,6 +309,8 @@ public class Step2Activity extends BaseActivity {
             if (ReadAndCalculateUtil.DATA_MAP.get(sgstKey) != null) {
                 String sgtStr = ReadAndCalculateUtil.DATA_MAP.get(sgstKey);
                 double sgt = Double.parseDouble(sgtStr);
+                L.e("value setCalcResult" + sgt);
+                curValue.setCalcResult(sgt);
                 suggestDispTest.setText(String.valueOf(sgt));
 
                 //解析建议值的范围
@@ -479,6 +474,17 @@ public class Step2Activity extends BaseActivity {
     }
 
     private void setStepOrderInfo(final int curStepOrder) {
+        if (curValue != null) {
+//            L.e("添加一个value: stepId:" + curValue.getStepId() + "stepNum: " + curValue.getStepNum()
+//                            + "measResult: " + curValue.getMeasResult()
+//                            + "valcResult: " + curValue.getCalcResult()
+//            );
+//
+            L.e("添加一个value: ");
+            values.add(curValue);
+            curValue = null;
+        }
+
         Step mStep = checkStep(curStepOrder);
         if (mStep == null) return;
 
@@ -515,6 +521,8 @@ public class Step2Activity extends BaseActivity {
                     + "\n");
 
             if (!TextUtils.isEmpty(mStep.getMeasKey())) {
+                L.e("new 一个value");
+                curValue = new Value();
                 measDispLine.setVisibility(View.VISIBLE);
                 measDisp.setText(mStep.getMeasDisp());
                 ReadAndCalculateUtil.setReadKey(mStep.getMeasKey());
@@ -681,6 +689,19 @@ public class Step2Activity extends BaseActivity {
             return;
         }
         setStepOrderInfo(curStepOrder);
+        if (curStepOrder == mStepList.getStepList().size() - 1) {
+            //提交测试结果
+            if (mItem == null) {
+                return;
+            }
+            int moduleId = mItem.getId();
+            String injectorType = injectorTv.getText().toString().trim();
+            HashMap<String, Object> mMap = new HashMap<>();
+            mMap.put("moduleId", moduleId);
+            mMap.put("injectorType", injectorType);
+            mMap.put("values", values);
+            uploadMesResult(mMap);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -806,5 +827,30 @@ public class Step2Activity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    private void uploadMesResult(HashMap<String, Object> map) {
+        L.e(map.toString());
+        subscription.add(api.uploadMesResult(map)
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Result<String>>() {
+                    @Override
+                    public void call(Result<String> t) {
+                        L.e("uploadMesResult " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        progress.setVisibility(View.GONE);
+                        rootLine.setVisibility(View.GONE);
+                        L.e("" + throwable.toString());
+                        GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                    }
+                }));
+    }
 }
