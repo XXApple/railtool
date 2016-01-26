@@ -19,7 +19,6 @@ import com.commonrail.mtf.po.User;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
-import com.commonrail.mtf.util.ReadAndCalculateUtil;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
@@ -60,16 +59,16 @@ public class MainActivity extends BaseActivity {
         updateFile();
 
 
-        ReadAndCalculateUtil.init();
-        ReadAndCalculateUtil.setReadKey("h2");
-        ReadAndCalculateUtil.handleReadValue("7.760");
-        L.e("ReadAndCalculateUtil","h2 meas:" + ReadAndCalculateUtil.DATA_MAP.get("h2"));
-
-        ReadAndCalculateUtil.setReadKey("h3");
-        ReadAndCalculateUtil.setCalcKey("crin1Formula1");
-        ReadAndCalculateUtil.handleReadValue("3.860");
-        L.e("ReadAndCalculateUtil","h3 meas:" + ReadAndCalculateUtil.DATA_MAP.get("h3"));
-        L.e("ReadAndCalculateUtil","h3 suggest:" + ReadAndCalculateUtil.DATA_MAP.get("crin1Formula1"));
+//        ReadAndCalculateUtil.init();
+//        ReadAndCalculateUtil.setReadKey("h2");
+//        ReadAndCalculateUtil.handleReadValue("7.760");
+//        L.e("ReadAndCalculateUtil","h2 meas:" + ReadAndCalculateUtil.DATA_MAP.get("h2"));
+//
+//        ReadAndCalculateUtil.setReadKey("h3");
+//        ReadAndCalculateUtil.setCalcKey("crin1Formula1");
+//        ReadAndCalculateUtil.handleReadValue("3.860");
+//        L.e("ReadAndCalculateUtil","h3 meas:" + ReadAndCalculateUtil.DATA_MAP.get("h3"));
+//        L.e("ReadAndCalculateUtil","h3 suggest:" + ReadAndCalculateUtil.DATA_MAP.get("crin1Formula1"));
     }
 
     @Override
@@ -190,7 +189,6 @@ public class MainActivity extends BaseActivity {
                         L.e("appVersion： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() == 200) {
                             Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-
                         } else {
                             GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                         }
