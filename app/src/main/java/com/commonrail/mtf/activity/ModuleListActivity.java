@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
@@ -135,6 +134,7 @@ public class ModuleListActivity extends BaseActivity {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
                         }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
                         return t.getData();
                     }
                 })
@@ -213,21 +213,27 @@ public class ModuleListActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<Bosch>>() {
+                .map(new Func1<Result<Bosch>, Bosch>() {
                     @Override
-                    public void call(Result<Bosch> t) {
-                        L.e("searchBosch " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            GlobalUtils.hideKeyboard(ModuleListActivity.this, cs);
-                            mBosch = t.getData();
-                            cs.setText(mBosch.getCs());
-                            yzkyh.setText(mBosch.getYzkyh());
-                            yzxh.setText(mBosch.getYzxh());
-                            fzjxh.setText(mBosch.getFzjxh());
-                        } else {
-                            GlobalUtils.showToastShort(ModuleListActivity.this, getString(R.string.net_error));
+                    public Bosch call(Result<Bosch> t) {
+                        L.e("searchBosch： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
                         }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<Bosch>() {
+                    @Override
+                    public void call(Bosch t) {
+                        GlobalUtils.hideKeyboard(ModuleListActivity.this, cs);
+                        mBosch = t;
+                        cs.setText(mBosch.getCs());
+                        yzkyh.setText(mBosch.getYzkyh());
+                        yzxh.setText(mBosch.getYzxh());
+                        fzjxh.setText(mBosch.getFzjxh());
                     }
                 }, new Action1<Throwable>() {
                     @Override

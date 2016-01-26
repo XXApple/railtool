@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
@@ -118,24 +119,30 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<List<Injector>>>() {
+                .map(new Func1<Result<List<Injector>>, List<Injector>>() {
                     @Override
-                    public void call(final Result<List<Injector>> t) {
-                        L.e("getIndexList " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            mIndexAdapter = new IndexAdapter(t.getData());
-                            itemList.setAdapter(mIndexAdapter);
-                            mIndexAdapter.setClick(new IndexAdapter.Click() {
-                                @Override
-                                public void itemClick(int p) {
-                                    IntentUtils.enterModuleListActivity(MainActivity.this, t.getData().get(p).getInjectorType(), language);
-                                }
-                            });
-                            mIndexAdapter.notifyDataSetChanged();
-                        } else {
+                    public List<Injector> call(Result<List<Injector>> t) {
+                        L.e("getIndexList： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                            return null;
                         }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<List<Injector>>() {
+                    @Override
+                    public void call(final List<Injector> t) {
+                        mIndexAdapter = new IndexAdapter(t);
+                        itemList.setAdapter(mIndexAdapter);
+                        mIndexAdapter.setClick(new IndexAdapter.Click() {
+                            @Override
+                            public void itemClick(int p) {
+                                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), language);
+                            }
+                        });
+                        mIndexAdapter.notifyDataSetChanged();
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -153,25 +160,26 @@ public class MainActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new Func1<Result<Update>, Update>() {
                     @Override
-                    public Update call(Result<Update> updateResult) {
-                        L.e("appVersion： " + updateResult.getStatus() + updateResult.getMsg());
-                        if (updateResult.getStatus() != 200) {
+                    public Update call(Result<Update> t) {
+                        L.e("appVersion： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                             return null;
                         }
-                        return updateResult.getData();
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
                     }
                 }).subscribe(new Action1<Update>() {
                                  @SuppressLint("SetTextI18n")
                                  @Override
-                                 public void call(Update update) {
-                                     if (update == null) {
+                                 public void call(Update t) {
+                                     if (t == null) {
                                          return;
                                      }
-                                     String vc = update.getAppVersionCode();
-                                     boolean forced = update.getForced();
-                                     String url = update.getUrl();
-                                     L.e(update.toString());
+                                     String vc = t.getAppVersionCode();
+                                     boolean forced = t.getForced();
+                                     String url = t.getUrl();
+                                     L.e(t.toString());
                                      boolean isNew = AppUtils.checkVersion(vc);
                                      if (!isNew) {
                                          return;
@@ -207,15 +215,23 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<StepList>>() {
+                .map(new Func1<Result<StepList>, StepList>() {
+                    @Override
+                    public StepList call(Result<StepList> t) {
+                        L.e("updateFile： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<StepList>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void call(Result<StepList> t) {
-                        L.e("appVersion： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                    public void call(StepList t) {
+                        if (t == null) {
                         }
                     }
                 }, new Action1<Throwable>() {

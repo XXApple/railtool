@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.activity.bluetooth.BluetoothLeService;
 import com.commonrail.mtf.activity.bluetooth.DeviceScanActivity;
@@ -59,6 +60,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -398,25 +400,31 @@ public class Step2Activity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<StepList>>() {
+                .map(new Func1<Result<StepList>, StepList>() {
                     @Override
-                    public void call(Result<StepList> t) {
-                        L.e("getRepairStep " + t.getStatus() + t.getMsg() + "" + t.getData().toString());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            mStepList = t.getData();
-                            if (mStepList != null) {
-                                mItem = mStepList.getModule();
-                                L.v("ModuleName:" + mItem.getModuleName());
-                                progress.setVisibility(View.GONE);
-                                rootLine.setVisibility(View.VISIBLE);
-                                Step mStep = checkStep(curStepOrder);
-                                if (mStep == null) return;
-                                startVideo(mStep.getVideoUrl());
-                                setStepOrderInfo(curStepOrder);
-                            }
-                        } else {
-                            GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                    public StepList call(Result<StepList> t) {
+                        L.e("getRepairStep " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<StepList>() {
+                    @Override
+                    public void call(StepList t) {
+                        mStepList = t;
+                        if (mStepList != null) {
+                            mItem = mStepList.getModule();
+                            L.v("ModuleName:" + mItem.getModuleName());
+                            progress.setVisibility(View.GONE);
+                            rootLine.setVisibility(View.VISIBLE);
+                            Step mStep = checkStep(curStepOrder);
+                            if (mStep == null) return;
+                            startVideo(mStep.getVideoUrl());
+                            setStepOrderInfo(curStepOrder);
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -833,15 +841,22 @@ public class Step2Activity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<String>>() {
+                .map(new Func1<Result<String>, String>() {
                     @Override
-                    public void call(Result<String> t) {
+                    public String call(Result<String> t) {
                         L.e("uploadMesResult " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                        } else {
+                        if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                            return null;
                         }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String t) {
+
                     }
                 }, new Action1<Throwable>() {
                     @Override
