@@ -62,7 +62,7 @@ public class IndexAdapter
 
     @Override
     public int getItemCount() {
-        return mInjectors.size();
+        return mInjectors == null ? 0 : mInjectors.size();
     }
 
     public void setClick(Click mClick) {
