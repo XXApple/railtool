@@ -3,6 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@drawable/bg2"
              android:orientation="vertical"
              tools:context="com.commonrail.mtf.activity.MainActivity">
 
@@ -12,11 +13,12 @@
         android:orientation="vertical">
 
         <include layout="@layout/sub_toolbar"/>
+
         <LinearLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context="com.commonrail.mtf.activity.ModuleListActivity"
@@ -28,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/md_blue_300"
+                android:background="@android:color/transparent"
                 android:orientation="horizontal"
                 >
 
@@ -47,10 +49,25 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center_horizontal"
+                            android:layout_gravity="center"
+                            android:gravity="center"
                             android:orientation="vertical"
                             android:padding="20dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/logo01"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="16dp"
+                                android:gravity="center"
+                                android:textColor="@color/md_black"
+                                android:text="博世，科技成就生活之美"/>
 
                             <include
                                 layout="@layout/left_tips"
@@ -103,6 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:layout_gravity="center"
+                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 

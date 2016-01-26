@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,8 @@ public class MainActivity extends BaseActivity {
     TextView uname;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.callFb)
+    TextView callFb;
 
     private RtApi api;
     private IndexAdapter mIndexAdapter;
@@ -57,6 +60,12 @@ public class MainActivity extends BaseActivity {
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
         updateFile();
+        callFb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                AppUtils.callPhone(MainActivity.this, callFb.getText().toString().trim());
+            }
+        });
     }
 
     @Override

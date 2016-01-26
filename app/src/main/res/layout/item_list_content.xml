@@ -7,38 +7,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/md_white"
-    app:cardCornerRadius="5dp"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="16dp"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image"
-            android:layout_width="200dp"
-            android:layout_height="125dp"
-            fresco:actualImageScaleType="focusCrop"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            fresco:actualImageScaleType="fitCenter"
             fresco:fadeDuration="300"
             fresco:failureImage="@drawable/ic_launcher"
-            fresco:failureImageScaleType="centerInside"
+            fresco:failureImageScaleType="fitCenter"
             fresco:placeholderImage="@color/white"
             fresco:placeholderImageScaleType="fitCenter"
             fresco:retryImage="@drawable/ic_launcher"
-            fresco:retryImageScaleType="centerInside"
+            fresco:retryImageScaleType="fitCenter"
             />
 
         <TextView
             android:id="@+id/content"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/text_margin"
             android:gravity="center"
-            android:textSize="15dp"/>
+            android:textSize="15sp"/>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

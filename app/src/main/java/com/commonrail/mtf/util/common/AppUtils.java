@@ -1,6 +1,9 @@
 package com.commonrail.mtf.util.common;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -8,6 +11,7 @@ import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 
 import com.commonrail.mtf.AppClient;
@@ -172,5 +176,22 @@ public class AppUtils {
         return SDCardUtils.getSDCardPath() + fileName;
     }
 
+
+    public static void callPhone(Activity ctx, String number) {
+        //用intent启动拨打电话  
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            GlobalUtils.showToastShort(ctx, "拨打电话权限被拒");
+            return;
+        }
+        ctx.startActivity(intent);
+    }
 
 }
