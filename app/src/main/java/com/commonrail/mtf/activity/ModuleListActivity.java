@@ -37,6 +37,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -126,35 +127,41 @@ public class ModuleListActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<List<Module>>>() {
+                .map(new Func1<Result<List<Module>>, List<Module>>() {
                     @Override
-                    public void call(final Result<List<Module>> t) {
+                    public List<Module> call(Result<List<Module>> t) {
                         L.e("getModuleList " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            mIndexAdapter = new ModuleListAdapter(t.getData());
-                            itemList.setAdapter(mIndexAdapter);
-                            mIndexAdapter.setClick(new ModuleListAdapter.Click() {
-                                @Override
-                                public void itemClick(int p) {
-                                    Module mModule = t.getData().get(p);
-                                    if (isBosch) {
-                                        if (mBosch != null) {
-                                            xh = mBosch.getXh();
-                                        }
-                                    }
-                                    moduleId = mModule.getId();
-                                    Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
-
-                                    ModuleListActivity.this.startActivityForResult(intent, 0);
-
-
-                                }
-                            });
-                            mIndexAdapter.notifyDataSetChanged();
-                        } else {
+                        if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
                         }
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<List<Module>>() {
+                    @Override
+                    public void call(final List<Module> t) {
+                        if (t == null || t.isEmpty()) {
+                            return;
+                        }
+                        mIndexAdapter = new ModuleListAdapter(t);
+                        itemList.setAdapter(mIndexAdapter);
+                        mIndexAdapter.setClick(new ModuleListAdapter.Click() {
+                            @Override
+                            public void itemClick(int p) {
+                                Module mModule = t.get(p);
+                                if (isBosch) {
+                                    if (mBosch != null) {
+                                        xh = mBosch.getXh();
+                                    }
+                                }
+                                moduleId = mModule.getId();
+                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
+
+                                ModuleListActivity.this.startActivityForResult(intent, 0);
+                            }
+                        });
+                        mIndexAdapter.notifyDataSetChanged();
                     }
                 }, new Action1<Throwable>() {
                     @Override
