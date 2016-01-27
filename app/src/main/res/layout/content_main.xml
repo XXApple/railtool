@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-             tools:context="com.commonrail.mtf.activity.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:background="@android:color/transparent"
+             tools:context="com.commonrail.mtf.activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@color/colorPrimaryDark"
-        android:orientation="vertical">
+        android:background="@android:color/transparent"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.commonrail.mtf.activity.MainActivity"
+        tools:showIn="@layout/app_bar_main"
+
+        >
+
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="36dp"
+            android:layout_margin="16dp"
             android:text="欢迎使用共轨之家喷油器智能精密维修系统"
             android:textColor="@color/md_white"
-            android:textSize="15dp" />
+            android:textSize="30sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/md_blue_300"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -41,44 +47,12 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:background="@color/cardview_dark_background"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="MOTTO"
-                        android:textColor="@color/md_white"
-                        android:textSize="15dp" />
+                    <include layout="@layout/left_tips"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:scaleType="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="3"
-                            android:gravity="center"
-                            android:text="MOTTO"
-                            android:textColor="@color/md_white"
-                            android:textSize="15dp" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -88,7 +62,7 @@
                     android:layout_weight="2"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -99,40 +73,48 @@
                         android:padding="8dp"
                         android:text="请选择厂商"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="17dp"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/item_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="16dp"
+                        android:paddingTop="32dp"
                         app:layoutManager="GridLayoutManager"
-                        app:spanCount="3" />
+                        app:spanCount="3"/>
+
+
                 </LinearLayout>
             </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="?actionBarSize"
             android:layout_gravity="bottom"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="?actionBarSize"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="021-311033839"
-                android:textColor="@color/md_white" />
+                android:layout_marginLeft="32dp"
+                android:drawablePadding="16dp"
+                android:drawableLeft="@drawable/fb"
+                android:textColor="@color/md_white"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="?actionBarSize"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical">
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -141,7 +123,7 @@
                     android:gravity="center"
                     android:text="上海星融汽车科技有限公司@2016"
                     android:textColor="@color/md_white"
-                    android:textSize="15dp" />
+                    android:textSize="17dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -150,7 +132,7 @@
                     android:gravity="center"
                     android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
                     android:textColor="@color/md_white"
-                    android:textSize="15dp" />
+                    android:textSize="17dp"/>
 
             </LinearLayout>
 

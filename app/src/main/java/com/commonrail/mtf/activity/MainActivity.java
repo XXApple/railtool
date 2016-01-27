@@ -2,14 +2,13 @@ package com.commonrail.mtf.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
@@ -31,7 +30,6 @@ import java.util.List;
 import butterknife.Bind;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -45,6 +43,8 @@ public class MainActivity extends BaseActivity {
     TextView uname;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.callFb)
+    TextView callFb;
 
     private RtApi api;
     private IndexAdapter mIndexAdapter;
@@ -60,18 +60,12 @@ public class MainActivity extends BaseActivity {
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
         updateFile();
-
-
-//        ReadAndCalculateUtil.init();
-//        ReadAndCalculateUtil.setReadKey("h2");
-//        ReadAndCalculateUtil.handleReadValue("7.760");
-//        L.e("ReadAndCalculateUtil","h2 meas:" + ReadAndCalculateUtil.DATA_MAP.get("h2"));
-//
-//        ReadAndCalculateUtil.setReadKey("h3");
-//        ReadAndCalculateUtil.setCalcKey("crin1Formula1");
-//        ReadAndCalculateUtil.handleReadValue("3.860");
-//        L.e("ReadAndCalculateUtil","h3 meas:" + ReadAndCalculateUtil.DATA_MAP.get("h3"));
-//        L.e("ReadAndCalculateUtil","h3 suggest:" + ReadAndCalculateUtil.DATA_MAP.get("crin1Formula1"));
+        callFb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                AppUtils.callPhone(MainActivity.this, callFb.getText().toString().trim());
+            }
+        });
     }
 
     @Override
@@ -119,30 +113,24 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<List<Injector>>, List<Injector>>() {
+                .subscribe(new Action1<Result<List<Injector>>>() {
                     @Override
-                    public List<Injector> call(Result<List<Injector>> t) {
-                        L.e("getIndexList： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
+                    public void call(final Result<List<Injector>> t) {
+                        L.e("getIndexList " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                            mIndexAdapter = new IndexAdapter(t.getData());
+                            itemList.setAdapter(mIndexAdapter);
+                            mIndexAdapter.setClick(new IndexAdapter.Click() {
+                                @Override
+                                public void itemClick(int p) {
+                                    IntentUtils.enterModuleListActivity(MainActivity.this, t.getData().get(p).getInjectorType(), language);
+                                }
+                            });
+                            mIndexAdapter.notifyDataSetChanged();
+                        } else {
                             GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                            return null;
                         }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<List<Injector>>() {
-                    @Override
-                    public void call(final List<Injector> t) {
-                        mIndexAdapter = new IndexAdapter(t);
-                        itemList.setAdapter(mIndexAdapter);
-                        mIndexAdapter.setClick(new IndexAdapter.Click() {
-                            @Override
-                            public void itemClick(int p) {
-                                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), language);
-                            }
-                        });
-                        mIndexAdapter.notifyDataSetChanged();
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -158,56 +146,32 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<Update>, Update>() {
+                .subscribe(new Action1<Result<Update>>() {
+                    @SuppressLint("SetTextI18n")
                     @Override
-                    public Update call(Result<Update> t) {
+                    public void call(Result<Update> t) {
                         L.e("appVersion： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                            return null;
-                        }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                }).subscribe(new Action1<Update>() {
-                                 @SuppressLint("SetTextI18n")
-                                 @Override
-                                 public void call(Update t) {
-                                     if (t == null) {
-                                         return;
-                                     }
-                                     String vc = t.getAppVersionCode();
-                                     boolean forced = t.getForced();
-                                     String url = t.getUrl();
-                                     L.e(t.toString());
-                                     boolean isNew = AppUtils.checkVersion(vc);
-                                     if (!isNew) {
-                                         return;
-                                     }
-                                     GlobalUtils.ShowDialog(MainActivity.this, "提示", "发现新版本，是否更新", !forced, new DialogInterface.OnClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which) {
-                                             dialog.dismiss();
-
-                                         }
-                                     }, new DialogInterface.OnClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which) {
-                                             if (dialog != null) {
-                                                 dialog.dismiss();
-                                             }
-                                         }
-                                     });
-                                 }
-                             }
-                        , new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                L.e("" + throwable.toString());
-                                GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                            Update update = t.getData();
+                            if (update != null) {
+                                String vc = update.getAppVersionCode();
+                                boolean forced = update.getForced();
+                                String url = update.getUrl();
+                                L.e(update.toString());
                             }
+
+                        } else {
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                         }
-                ));
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        L.e("" + throwable.toString());
+                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                    }
+                }));
     }
 
     private void updateFile() {
@@ -215,23 +179,16 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<StepList>, StepList>() {
-                    @Override
-                    public StepList call(Result<StepList> t) {
-                        L.e("updateFile： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                            return null;
-                        }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<StepList>() {
+                .subscribe(new Action1<Result<StepList>>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void call(StepList t) {
-                        if (t == null) {
+                    public void call(Result<StepList> t) {
+                        L.e("appVersion： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() == 200) {
+                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                         }
                     }
                 }, new Action1<Throwable>() {

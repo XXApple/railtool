@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+             android:background="@drawable/bg2"
              tools:context="com.commonrail.mtf.activity.ModuleListActivity">
 
     <LinearLayout
@@ -17,7 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
 
             >
@@ -26,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/md_blue_300"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -95,6 +95,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
 
