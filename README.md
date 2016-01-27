@@ -25,7 +25,7 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 - 2016/1/22-25 make ReadAndCaculateUtil work,make step2 layout better
 
 
-- 2016/1/22-27 add appversion downloader and updater
+- 2016/1/25-27 add rxjava map operation,add appversion downloader and updater
 
 
 
