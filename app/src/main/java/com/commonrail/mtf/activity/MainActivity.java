@@ -2,13 +2,14 @@ package com.commonrail.mtf.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
@@ -24,12 +25,18 @@ import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.retrofit.RxUtils;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -66,6 +73,11 @@ public class MainActivity extends BaseActivity {
                 AppUtils.callPhone(MainActivity.this, callFb.getText().toString().trim());
             }
         });
+
+//        String url = "http://dl.game.qidian.com/apknew/game/dzz/dzz.apk";
+//        String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "tmp1";
+//        L.e("savePath"+savePath1);
+//        downloadApkAndUpdate(url, savePath1);
     }
 
     @Override
@@ -83,20 +95,25 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<User>>() {
+                .map(new Func1<Result<User>, User>() {
+                    @Override
+                    public User call(Result<User> t) {
+                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<User>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void call(Result<User> t) {
-                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            String name = t.getData().getUname();
-                            uname.setText(t.getData().getUname() + "你好，欢迎！");
-                            L.e("uname: ", name);
-                        } else {
-                            uname.setText(t.getMsg());
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                        }
+                    public void call(User t) {
+                        if (t == null) return;
+                        String name = t.getUname();
+                        uname.setText(name + "你好，欢迎！");
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -113,23 +130,31 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<List<Injector>>>() {
+                .map(new Func1<Result<List<Injector>>, List<Injector>>() {
                     @Override
-                    public void call(final Result<List<Injector>> t) {
-                        L.e("getIndexList " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            mIndexAdapter = new IndexAdapter(t.getData());
+                    public List<Injector> call(Result<List<Injector>> t) {
+                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<List<Injector>>() {
+                    @Override
+                    public void call(final List<Injector> t) {
+                        if (!t.isEmpty()) {
+                            mIndexAdapter = new IndexAdapter(t);
                             itemList.setAdapter(mIndexAdapter);
                             mIndexAdapter.setClick(new IndexAdapter.Click() {
                                 @Override
                                 public void itemClick(int p) {
-                                    IntentUtils.enterModuleListActivity(MainActivity.this, t.getData().get(p).getInjectorType(), language);
+                                    IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), language);
                                 }
                             });
                             mIndexAdapter.notifyDataSetChanged();
-                        } else {
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -146,24 +171,42 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<Update>>() {
+                .map(new Func1<Result<Update>, Update>() {
+                    @Override
+                    public Update call(Result<Update> t) {
+                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<Update>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void call(Result<Update> t) {
-                        L.e("appVersion： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                            Update update = t.getData();
-                            if (update != null) {
-                                String vc = update.getAppVersionCode();
-                                boolean forced = update.getForced();
-                                String url = update.getUrl();
-                                L.e(update.toString());
+                    public void call(Update t) {
+                        if (t == null) return;
+                        final String vc = t.getAppVersionCode();
+                        boolean forced = t.getForced();
+                        final String url = t.getUrl();
+                        L.e(t.toString());
+                        if (!AppUtils.checkVersion(vc)) return;
+                        GlobalUtils.ShowDialog(MainActivity.this, "提示", "发现新版本，是否更新", !forced, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                //download and update
+                                String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "railtool" + vc + ".apk";
+                                downloadApkAndUpdate(url, savePath1);
                             }
-
-                        } else {
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                        }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (dialog != null) dialog.dismiss();
+                            }
+                        });
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -174,21 +217,81 @@ public class MainActivity extends BaseActivity {
                 }));
     }
 
+    private void downloadApkAndUpdate(String url, String savePath) {
+        FileDownloader.getImpl().create(url)
+                .setPath(savePath)
+                .setListener(new FileDownloadListener() {
+                    @Override
+                    protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        L.e("pending:" + "已下载：" + soFarBytes + " 文件总大小：" + totalBytes);
+
+                    }
+
+                    @Override
+                    protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+                        L.e("connected:" + "已下载：" + soFarBytes + " 文件总大小：" + totalBytes + "  百分比:" + (float) soFarBytes / (float) totalBytes * 100 + "%");
+                    }
+
+                    @Override
+                    protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        L.e("progress:" + "已下载：" + soFarBytes + " 文件总大小：" + totalBytes + "  百分比" + (float) soFarBytes / (float) totalBytes * 100 + "%");
+                    }
+
+                    @Override
+                    protected void blockComplete(BaseDownloadTask task) {
+                        L.e("blockComplete:");
+                    }
+
+                    @Override
+                    protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
+                        L.e("progress:" + soFarBytes + "" + ex.toString() + " 已下载:" + soFarBytes);
+                    }
+
+                    @Override
+                    protected void completed(BaseDownloadTask task) {
+                        L.e("completed:");
+                    }
+
+                    @Override
+                    protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        L.e("paused:" + "已下载：" + soFarBytes + " 文件总大小：" + totalBytes + "百分比:" + (float) soFarBytes / (float) totalBytes * 100 + "%");
+                    }
+
+                    @Override
+                    protected void error(BaseDownloadTask task, Throwable e) {
+                        L.e("error:" + e.toString());
+                    }
+
+                    @Override
+                    protected void warn(BaseDownloadTask task) {
+                        L.e("warn:");
+                    }
+                }).start();
+    }
+
     private void updateFile() {
         subscription.add(api.updateFile("")
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<StepList>>() {
+                .map(new Func1<Result<StepList>, StepList>() {
+                    @Override
+                    public StepList call(Result<StepList> t) {
+                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<StepList>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void call(Result<StepList> t) {
-                        L.e("appVersion： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() == 200) {
-                            Toast.makeText(getApplicationContext(), t.getMsg(), Toast.LENGTH_SHORT).show();
+                    public void call(StepList t) {
+                        if (t == null) {
 
-                        } else {
-                            GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                         }
                     }
                 }, new Action1<Throwable>() {

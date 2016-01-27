@@ -6,6 +6,7 @@ import android.content.Context;
 import com.commonrail.mtf.util.FrescoConfig;
 import com.commonrail.mtf.util.common.L;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -35,6 +36,7 @@ public class AppClient extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        FileDownloader.init(this);
         L.isDebug = true;
         sInstance = this;
 //        PgyCrashManager.register(sInstance);
