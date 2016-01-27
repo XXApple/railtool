@@ -10,21 +10,30 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 
 ###Update Log
 
-2016/1/6 init project  
+- 2016/1/6 init project  
 
-2016/1/13 write layouts and video-player
+- 2016/1/13 write layouts and video-player
 
-2016/1/16 use okhttp3,add okhttp3 cache,set fresco use okhttp3,make step2activity work
+- 2016/1/16 use okhttp3,add okhttp3 cache,set fresco use -okhttp3,make step2activity work
 
-2016/1/20 add icon and logo,add bluetooth part,set minSdkVersion=18
+- 2016/1/20 add icon and logo,add bluetooth part,set - minSdkVersion=18
 
-2016/1/21  change packagename ,add tips icon,add player position,add showpicurl
+- 2016/1/21  change packagename ,add tips icon,add player position,add showpicurl
 
-2016/1/21 add ReadAndCaculateUtil,and  some caculate code
+- 2016/1/21 add ReadAndCaculateUtil,and  some caculate code
 
-2016/1/22-25 make ReadAndCaculateUtil work,make step2 layout better
+- 2016/1/22-25 make ReadAndCaculateUtil work,make step2 layout better
+
+
+- 2016/1/22-27 add appversion downloader and updater
+
+
 
 ###thanks to 
+
+
+[FileDownloader](
+https://github.com/lingochamp/FileDownloader)
 
 [ExoPlayer](https://github.com/google/ExoPlayer)
 
