@@ -58,5 +58,4 @@ dependencies {
 
     compile 'com.pgyersdk:sdk:2.2.2'
     compile project(':rtplayer')
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

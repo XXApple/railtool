@@ -1,41 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.AppBarLayout
     android:id="@+id/app_bar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="end"
+        android:gravity="end"
         android:orientation="horizontal">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
+            android:layout_width="580dp"
+            android:layout_height="100dp"
+            android:minHeight="100dp"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:subtitle="Common Rail Injector Precision Repair System" />
+            app:subtitle="Common Rail Injector Precision Repair System"/>
         <!--android:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
         <!--app:theme="@style/ActionBarTheme">-->
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end|center_horizontal"
+            android:layout_width="680dp"
+            android:layout_height="100dp"
+            android:layout_gravity="end|center_vertical"
+            android:gravity="end|center_vertical"
             android:orientation="horizontal"
             android:padding="8dp">
 
             <TextView
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+
+                android:gravity="center"
                 android:text="上海天气"
-                android:textColor="@color/md_white" />
+                android:textColor="@color/md_white"
+                android:textSize="14dp"/>
 
             <LinearLayout
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -43,14 +54,18 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="center" />
+                    android:visibility="invisible"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/logo"/>
 
                 <LinearLayout
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+
                     android:orientation="vertical">
 
 
@@ -58,14 +73,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="今天"
-                        android:textColor="@color/md_white" />
+                        android:textColor="@color/md_white"
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:id="@+id/wendu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+
                         android:text="10-15c"
-                        android:textColor="@color/md_white" />
+                        android:textColor="@color/md_white"
+                        android:textSize="14dp"/>
 
                 </LinearLayout>
 
@@ -73,9 +91,12 @@
             </LinearLayout>
 
             <View
+                android:visibility="invisible"
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:background="@color/md_white" />
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/md_white"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -85,14 +106,18 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:scaleType="center" />
+                    android:scaleType="centerInside"
+                    android:src="@drawable/logo"/>
 
                 <LinearLayout
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
                     android:orientation="vertical">
 
 
@@ -100,13 +125,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="明天"
-                        android:textColor="@color/md_white" />
+                        android:textColor="@color/md_white"
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="9-13c"
-                        android:textColor="@color/md_white" />
+                        android:textColor="@color/md_white"/>
 
                 </LinearLayout>
 
@@ -129,13 +155,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="王小明你好，欢迎！"
-                            android:textColor="@color/md_white" />
+                            android:textColor="@color/md_white"
+                            android:textSize="14dp"/>
 
                         <TextView
+                            android:id="@+id/dateTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="2016年2月10日 21：00"
-                            android:textColor="@color/md_white" />
+                            android:textColor="@color/md_white"
+                            android:textSize="14dp"/>
 
                     </LinearLayout>
 

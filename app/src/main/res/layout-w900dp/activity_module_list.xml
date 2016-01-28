@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
@@ -15,14 +16,11 @@
         <include layout="@layout/sub_toolbar"/>
 
         <LinearLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context="com.commonrail.mtf.activity.ModuleListActivity"
-            tools:showIn="@layout/app_bar_main"
             >
 
 
@@ -34,40 +32,33 @@
                 android:orientation="horizontal"
                 >
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     >
 
                     <ScrollView
-                        android:layout_width="0dp"
+                        android:layout_width="488dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="68dp"
+                        android:layout_marginRight="263dp"
                         >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="488dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="20dp">
+                            android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="488dp"
+                                android:layout_height="88dp"
+                                android:layout_marginBottom="26dp"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/logo01"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginBottom="16dp"
-                                android:gravity="center"
-                                android:textColor="@color/md_black"
-                                android:text="博世，科技成就生活之美"/>
 
                             <include
                                 layout="@layout/left_tips"
@@ -80,37 +71,36 @@
                     </ScrollView>
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="400dp"
                         android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
                         android:layout_gravity="center"
-                        android:layout_weight="2"
+                        android:layout_marginRight="88dp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tips"
-                            android:layout_width="match_parent"
+                            android:layout_width="400dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:background="@color/md_white"
                             android:gravity="center"
-                            android:padding="8dp"
-                            android:text="请选择厂商"
-                            android:textColor="@color/black"
-                            android:textSize="17dp"/>
+                            android:padding="16dp"
+                            android:text="请选择维修类别"
+                            android:textColor="@color/black1"
+                            android:textSize="30dp"/>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/item_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:paddingTop="32dp"
+                            android:paddingTop="8dp"
                             app:layoutManager="LinearLayoutManager"/>
 
 
                     </LinearLayout>
-                </LinearLayout>
+                </RelativeLayout>
 
 
             </LinearLayout>
@@ -132,7 +122,7 @@
                     android:gravity="center"
                     android:text="上海星融汽车科技有限公司@2016"
                     android:textColor="@color/md_white"
-                    android:textSize="17dp"/>
+                    android:textSize="14dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -141,7 +131,7 @@
                     android:gravity="center"
                     android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
                     android:textColor="@color/md_white"
-                    android:textSize="17dp"/>
+                    android:textSize="14dp"/>
 
             </LinearLayout>
 

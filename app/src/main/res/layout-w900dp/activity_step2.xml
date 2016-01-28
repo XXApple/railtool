@@ -12,10 +12,9 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="300dp"
+        android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/animation_list"/>
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:id="@+id/rootLine"
@@ -28,14 +27,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="280dp"
+                android:layout_height="650dp"
                 android:layout_gravity="top|center_horizontal"
-                android:layout_weight="1"
-                android:background="@color/md_white"
+                android:background="@drawable/home_shape_bg"
                 android:gravity="top|center_horizontal"
                 android:orientation="vertical">
                 <!--android:layout_width="315px"-->
@@ -173,13 +175,13 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="400dp"
                             android:layout_weight="3"
                             android:background="@color/md_white"
                             android:orientation="horizontal">
 
                             <FrameLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="400dp"
                                 android:layout_height="270dp"
                                 android:layout_gravity="center"
                                 >
@@ -193,8 +195,8 @@
 
                                 <com.commonrail.rtplayer.view.RtVideoView
                                     android:id="@+id/rt_video_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="270dp"
+                                    android:layout_width="400dp"
+                                    android:layout_height="300dp"
                                     android:layout_gravity="center"
                                     android:background="@color/grey"
                                     />
@@ -298,9 +300,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
+                        android:layout_marginRight="16dp"
                         android:layout_toLeftOf="@+id/preBtn"
                         android:background="@color/md_white"
-                        android:layout_marginRight="16dp"
                         android:orientation="vertical"
                         >
 
@@ -308,9 +310,9 @@
                             android:id="@+id/testSpecTv"
                             android:layout_width="400dp"
                             android:layout_height="wrap_content"
-                            android:padding="4dp"
-                            android:maxWidth="400dp"
                             android:background="@color/grey"
+                            android:maxWidth="400dp"
+                            android:padding="4dp"
                             android:text="测量步骤及要点"
                             android:textColor="@color/md_black"
                             android:textSize="18dp"
@@ -335,9 +337,9 @@
                         android:id="@+id/type2Line"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
                         android:layout_marginRight="16dp"
                         android:layout_toLeftOf="@+id/testResultLine"
-                        android:layout_alignParentLeft="true"
                         android:orientation="vertical"
                         >
 
@@ -474,11 +476,11 @@
                                 <TableLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
                                     android:layout_marginTop="8dp"
                                     android:background="@color/md_white"
-                                    android:layout_gravity="center"
                                     android:gravity="center"
-                                  
+
                                     android:stretchColumns="1">
 
                                     <TableRow
@@ -489,9 +491,9 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center_horizontal"
+                                            android:layout_margin="8dp"
                                             android:gravity="center"
                                             android:paddingLeft="8dp"
-                                            android:layout_margin="8dp"
                                             android:text="角度"/>
 
                                     </TableRow>
@@ -506,9 +508,9 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center_horizontal"
+                                            android:layout_margin="8dp"
                                             android:gravity="center"
                                             android:paddingLeft="8dp"
-                                            android:layout_margin="8dp"
                                             android:text="20"/>
 
                                     </TableRow>
@@ -521,12 +523,12 @@
                     <LinearLayout
                         android:id="@+id/testResultLine"
                         android:layout_width="488dp"
-                        android:background="@color/md_white"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/preBtn"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:layout_alignRight="@+id/type1Line"
+                        android:background="@color/md_white"
                         android:orientation="vertical"
                         >
 

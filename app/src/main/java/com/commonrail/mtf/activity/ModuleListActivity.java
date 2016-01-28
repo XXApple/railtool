@@ -26,8 +26,6 @@ import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.retrofit.RxUtils;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,11 +76,6 @@ public class ModuleListActivity extends BaseActivity {
     private CompositeSubscription subscription = new CompositeSubscription();
     private boolean isBosch = false;
     private Bosch mBosch = null;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient mClient;
     private String injectorType;
     private String language;
     private int moduleId = 0;
@@ -100,9 +93,6 @@ public class ModuleListActivity extends BaseActivity {
         String language = getIntent().getStringExtra("language");
         getModuleList(injectorType, language);
         initBoschInfoView(injectorType);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override

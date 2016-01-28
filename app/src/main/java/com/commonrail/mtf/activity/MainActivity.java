@@ -22,6 +22,7 @@ import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.AppUtils;
+import com.commonrail.mtf.util.common.DateTimeUtil;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.retrofit.RxUtils;
@@ -31,6 +32,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -52,6 +54,9 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
     @Bind(R.id.callFb)
     TextView callFb;
+    @Bind(R.id.dateTime)
+    TextView dateTime;
+
 
     private RtApi api;
     private IndexAdapter mIndexAdapter;
@@ -62,6 +67,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
+        dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
         doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US

@@ -2,23 +2,29 @@
 <LinearLayout
     android:id="@+id/left_tips"
     xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+    android:layout_width="420dp"
+    android:layout_height="402dp"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/side_nav_bar"
+    
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_margin="16dp"
         android:text="MOTTO"
         android:textColor="@color/md_white"
-        android:textSize="20sp"/>
+        android:textSize="26dp"/>
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,12 +43,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:drawablePadding="8dp"
             android:layout_margin="16dp"
             android:drawableLeft="@drawable/people"
+            android:drawablePadding="34dp"
+            android:gravity="center_vertical"
             android:text="改变自己，是自救，\n影响别人,是救人。"
             android:textColor="@color/md_white"
-            android:textSize="15sp"/>
+            android:textSize="26dp"/>
     </LinearLayout>
 </LinearLayout>

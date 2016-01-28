@@ -4,6 +4,10 @@
     <color name="colorPrimaryDark">#1464b0</color>
     <color name="colorAccent">#FF4081</color>
 
+
+    <color name="colorPrimarye">#0b64b0</color>
+    
+    
     <color name="touming">#00000000</color>
 
     <!--黑色-->
@@ -11,6 +15,14 @@
     <!--灰色 -->
     <color name="gray">#808080</color>
 
+    <!--黑色1-->
+    <color name="black1">#4c4c4c</color>
+    <!--黑色2-->
+    <color name="black2">#333333</color>
+    <!--黑色3-->
+    <color name="black3">#4c4b4b</color>
+    
+    
 
     <color name="menu_bg">#ff333237</color>
     <color name="menu_selected">#ff26252a</color>
