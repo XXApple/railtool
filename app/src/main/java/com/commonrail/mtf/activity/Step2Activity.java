@@ -11,12 +11,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -145,7 +147,8 @@ public class Step2Activity extends BaseActivity {
     TextView suggestDispTest;
     @Bind(R.id.rightImg)
     ImageView rightImg;
-
+    @Bind(R.id.layout_right_bg)
+    LinearLayout layoutRightBg;
 
     private boolean isPlayOver = false;
     private Uri mUri;
@@ -498,12 +501,13 @@ public class Step2Activity extends BaseActivity {
 
         if (TextUtils.equals(mStep.getPageType(), "1")) {
 
-
+            layoutRightBg.setBackground(ContextCompat.getDrawable(this, R.drawable.dv_white_shape_bg));
             measToolNumEt.setVisibility(View.VISIBLE);
             measToolPic.setVisibility(View.VISIBLE);
             picUrl.setVisibility(View.VISIBLE);
             type1Line.setVisibility(View.VISIBLE);
             testSpecTv1.setVisibility(View.VISIBLE);
+            testSpecTv2.setVisibility(View.GONE);
             testResultLine.setVisibility(View.VISIBLE);
             chooseTv.setVisibility(View.VISIBLE);
             type2Line.setVisibility(View.GONE);
@@ -561,6 +565,7 @@ public class Step2Activity extends BaseActivity {
 
             testSpecTv1.setText(mStep.getTestSpec());
         } else {
+            layoutRightBg.setBackgroundColor(Color.TRANSPARENT);
             measDispLine.setVisibility(View.GONE);
             suggestDispLine.setVisibility(View.GONE);
             chooseTv.setVisibility(View.GONE);

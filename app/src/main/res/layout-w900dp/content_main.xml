@@ -49,6 +49,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="?actionBarSize"
                     android:layout_marginLeft="68dp"
                     android:layout_marginRight="104dp"
                     android:layout_weight="1"

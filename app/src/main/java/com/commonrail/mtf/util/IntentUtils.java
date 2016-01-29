@@ -8,7 +8,6 @@ import com.commonrail.mtf.R;
 import com.commonrail.mtf.activity.MainActivity;
 import com.commonrail.mtf.activity.ModuleListActivity;
 import com.commonrail.mtf.activity.Step2Activity;
-import com.commonrail.mtf.activity.StepActivity;
 import com.commonrail.mtf.activity.VideoPlayActivity;
 import com.commonrail.mtf.activity.bluetooth.DeviceControlActivity;
 import com.commonrail.mtf.activity.bluetooth.DeviceScanActivity;
@@ -40,15 +39,6 @@ public class IntentUtils {
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
 
-    public static void enterStepActivity(Activity context, String injectorType, String language, int moduleId, String xh) {
-        Intent intent = new Intent(context, StepActivity.class);
-        intent.putExtra("injectorType", injectorType);
-        intent.putExtra("language", language);
-        intent.putExtra("moduleId", moduleId);
-        intent.putExtra("xh", xh);
-        context.startActivity(intent);
-        context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
-    }
 
     public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId, String xh, String mDeviceName, String mDeviceAddress) {
         Intent intent = new Intent(context, Step2Activity.class);

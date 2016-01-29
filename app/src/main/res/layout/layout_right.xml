@@ -1,0 +1,57 @@
+<LinearLayout
+    android:id="@+id/layout_right_bg"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:layout_width="471dp"
+    android:layout_height="316dp"
+    android:gravity="center"
+    android:layout_marginLeft="16dp"
+    android:background="@drawable/dv_white_shape_bg"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/rightImg"
+        android:layout_width="46dp"
+        android:layout_height="168dp"
+        android:layout_gravity="top"
+        android:scaleType="centerInside"
+        android:src="@drawable/img_tips"
+        />
+
+
+    <LinearLayout
+        android:layout_width="420dp"
+        android:layout_height="310dp"
+        android:layout_gravity="center"
+        android:background="@drawable/dv_white_shape_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/picUrl"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
+            fresco:actualImageScaleType="centerInside"
+            fresco:fadeDuration="300"
+            fresco:failureImage="@drawable/logo"
+            fresco:failureImageScaleType="centerInside"
+            fresco:placeholderImage="@color/white"
+            fresco:placeholderImageScaleType="centerInside"
+            fresco:retryImage="@drawable/logo"
+            fresco:retryImageScaleType="centerInside"
+            />
+
+        <TextView
+            android:id="@+id/testSpecTv2"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:text="1 jiangjiangjiangjiang"
+            android:textColor="@color/black1"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+
+    </LinearLayout>
+</LinearLayout>

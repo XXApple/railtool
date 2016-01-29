@@ -13,7 +13,11 @@
     <!--黑色-->
     <color name="black">#000000</color>
     <!--灰色 -->
-    <color name="gray">#808080</color>
+    <color name="gray">#858585</color>
+
+
+    <!--灰色1 -->
+    <color name="grey1">#e6e6e9</color>
 
     <!--黑色1-->
     <color name="black1">#4c4c4c</color>
@@ -21,7 +25,7 @@
     <color name="black2">#333333</color>
     <!--黑色3-->
     <color name="black3">#4c4b4b</color>
-    
+
     
 
     <color name="menu_bg">#ff333237</color>

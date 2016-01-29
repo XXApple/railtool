@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:fresco="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_gravity="center"
+             android:background="@drawable/bg2"
+             android:orientation="vertical"
+             tools:context="com.commonrail.mtf.activity.MainActivity">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/rootLine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/sub_toolbar"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="280dp"
+                android:layout_height="650dp"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginRight="14dp"
+                android:background="@drawable/home_shape_bg"
+                android:gravity="top|center_horizontal"
+                android:orientation="vertical">
+                <!--android:layout_width="315px"-->
+                <!--android:layout_height="1101px"-->
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/showPicUrl"
+                    android:layout_width="315px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="?actionBarSize"
+                    android:layout_marginTop="16dp"
+                    fresco:actualImageScaleType="centerInside"
+                    fresco:fadeDuration="300"
+                    fresco:failureImage="@drawable/logo"
+                    fresco:failureImageScaleType="centerInside"
+                    fresco:placeholderImage="@color/white"
+                    fresco:placeholderImageScaleType="centerInside"
+                    fresco:retryImage="@drawable/logo"
+                    fresco:retryImageScaleType="centerInside"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="960dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="?actionBarSize"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="960dp"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/grey"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="940dp"
+                        android:layout_height="48dp"
+                        android:background="@color/grey"
+                        android:orientation="vertical"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/injectorTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:gravity="center"
+                            android:text="BOSCH"
+                            android:textColor="@color/md_red_500"
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/xhTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="8dp"
+                            android:layout_toRightOf="@+id/injectorTv"
+                            android:gravity="center"
+                            android:text="0445120007"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/dispStepNameTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@+id/chooseTv"
+                            android:layout_toRightOf="@+id/xhTv"
+                            android:gravity="center"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/chooseTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@+id/measToolNumEt"
+                            android:gravity="center"
+                            android:text="选择道具编号"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/measToolNumEt"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@+id/measToolPic"
+                            android:gravity="center"
+                            android:textColor="@color/md_black"
+                            />
+
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/measToolPic"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            />
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="320dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="960dp"
+                        android:layout_height="310dp"
+                        android:layout_marginTop="4dp"
+                        android:background="#00ffffff"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="54dp"
+                            android:layout_height="168dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/video_tips"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="410dp"
+                            android:layout_height="310dp"
+                            android:background="@color/md_white"
+                            android:orientation="horizontal">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center">
+
+                                <ImageView
+                                    android:id="@+id/iv_play"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_gravity="center"
+                                    android:background="@android:drawable/ic_media_play"/>
+
+                                <com.commonrail.rtplayer.view.RtVideoView
+                                    android:id="@+id/rt_video_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@color/grey"
+                                    />
+                            </FrameLayout>
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="471dp"
+                            android:layout_height="320dp"
+                            android:layout_marginLeft="28dp"
+                            app:cardBackgroundColor="@color/md_white"
+                            app:cardCornerRadius="5dp"
+                            app:cardElevation="5dp"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="471dp"
+                                android:layout_height="320dp"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/rightImg"
+                                    android:layout_width="54dp"
+                                    android:layout_height="168dp"
+                                    android:layout_gravity="top"
+                                    android:layout_marginLeft="24dp"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/img_tips"
+                                    />
+
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="400dp"
+                                    android:layout_height="300dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginTop="10dp"
+                                    app:cardBackgroundColor="@color/md_white"
+                                    app:cardCornerRadius="5dp"
+                                    app:cardElevation="5dp"
+                                    >
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="end|center_vertical"
+                                        android:background="@color/md_white"
+                                        android:orientation="vertical"
+                                        android:padding="4dp">
+
+
+                                        <com.facebook.drawee.view.SimpleDraweeView
+                                            android:id="@+id/picUrl"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="300dp"
+                                            fresco:actualImageScaleType="fitCenter"
+                                            fresco:fadeDuration="300"
+                                            fresco:failureImage="@drawable/logo"
+                                            fresco:failureImageScaleType="fitCenter"
+                                            fresco:placeholderImage="@color/white"
+                                            fresco:placeholderImageScaleType="fitCenter"
+                                            fresco:retryImage="@drawable/logo"
+                                            fresco:retryImageScaleType="fitCenter"
+                                            />
+
+                                        <TextView
+                                            android:id="@+id/testSpecTv2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:text="1 jiangjiangjiangjiang"
+                                            android:textColor="@color/md_black"
+                                            android:textSize="14sp"
+                                            android:visibility="gone"
+
+                                            />
+
+
+                                    </LinearLayout>
+                                </android.support.v7.widget.CardView>
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="14dp"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:id="@+id/type1Line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="16dp"
+                        android:background="@color/md_white"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <TextView
+                            android:id="@+id/testSpecTv"
+                            android:layout_width="400dp"
+                            android:layout_height="wrap_content"
+                            android:background="@color/grey"
+                            android:maxWidth="400dp"
+                            android:padding="4dp"
+                            android:text="测量步骤及要点"
+                            android:textColor="@color/md_black"
+                            android:textSize="18dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/testSpecTv1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="460dp"
+                            android:padding="4dp"
+                            android:text="1 jiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiang"
+                            android:textColor="@color/md_black"
+                            android:textSize="18dp"
+                            />
+
+
+                    </LinearLayout>
+
+
+                    <include layout="@layout/tablayout"/>
+
+                    <LinearLayout
+                        android:id="@+id/testResultLine"
+                        android:layout_width="488dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/preBtn"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignRight="@+id/type1Line"
+                        android:background="@color/md_white"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/grey"
+                            android:gravity="center_vertical"
+                            android:padding="4dp"
+                            android:text="测量结果"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="17sp"
+                            />
+
+                        <LinearLayout
+                            android:id="@+id/measDispLine"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/measDisp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:padding="4dp"
+                                android:text="h2测量值[mm]"
+                                android:textColor="@color/md_black"
+                                android:textSize="12sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/measDispTest"
+                                android:layout_width="88dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/test_shape_bg"
+                                android:gravity="center"
+                                android:padding="4dp"
+                                android:text="0.000mm"
+                                android:textColor="@color/md_black"
+                                android:textSize="12sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/measDispTips"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:padding="4dp"
+                                android:textColor="@color/md_red_500"
+                                android:textSize="14sp"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/suggestDispLine"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/suggestDisp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:padding="4dp"
+                                android:textColor="@color/md_black"
+                                android:textSize="12sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/suggestDispTest"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/test_shape_bg"
+                                android:gravity="center"
+                                android:padding="4dp"
+                                android:textColor="@color/md_black"
+                                android:textSize="12sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/suggestDispTips"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:padding="4dp"
+                                android:textColor="@color/md_red_500"
+                                android:textSize="12sp"
+                                />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/preBtn"
+                        android:layout_width="108dp"
+                        android:layout_height="48dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center"
+                        android:text="上一步"
+                        android:textColor="@color/md_white"
+                        android:textSize="20sp"
+                        tools:ignore="RtlCompat"/>
+
+                    <TextView
+                        android:id="@+id/nextBtn"
+                        android:layout_width="108dp"
+                        android:layout_height="48dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center"
+                        android:text="下一步"
+                        android:textColor="@color/md_white"
+                        android:textSize="20sp"
+                        tools:ignore="RtlCompat"/>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="上海星融汽车科技有限公司@2016"
+            android:textColor="@color/md_white"
+            android:textSize="17dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
+            android:textColor="@color/md_white"
+            android:textSize="17dp"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>
