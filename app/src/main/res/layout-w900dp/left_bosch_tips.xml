@@ -5,7 +5,6 @@
     android:id="@+id/left_bosch_tips"
     android:layout_height="402dp"
     android:layout_gravity="center"
-    android:visibility="gone"
     android:background="@android:color/transparent"
     android:gravity="center"
     android:orientation="vertical">
@@ -34,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="62dp"
             android:layout_gravity="center"
-            android:background="@android:color/white"
+            android:background="@drawable/bg_edittext"
             android:gravity="center"
             android:text="0445120019"
             android:textColor="@color/black1"

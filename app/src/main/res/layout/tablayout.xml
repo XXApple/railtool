@@ -38,7 +38,7 @@
                 android:background="@drawable/dv_grey_no_corner_shape_bg"
                 android:gravity="center"
                 android:text="角度控制法"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:textSize="16sp"
                 />
 
@@ -141,7 +141,7 @@
                 android:background="@drawable/dv_grey_no_corner_shape_bg"
                 android:gravity="center"
                 android:text="力柜控制法"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:textSize="16sp"
                 />
 

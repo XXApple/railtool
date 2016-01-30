@@ -28,6 +28,10 @@
             android:layout_marginRight="88dp"
             android:layout_marginTop="32dp"
             android:gravity="center"
+            android:shadowColor="@color/black4"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
             android:text="欢迎使用共轨之家喷油器智能精密维修系统"
             android:textColor="@color/md_white"
             android:textSize="48dp"/>
@@ -49,6 +53,7 @@
                     android:layout_width="420dp"
                     android:layout_height="403dp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="36dp"
                     android:layout_marginLeft="68dp"
                     android:layout_marginRight="104dp"
                     android:gravity="center_horizontal"
@@ -72,11 +77,11 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        android:background="@color/md_white"
+                        android:background="@drawable/dv_whitea_shape_bg"
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="请选择厂商"
-                        android:textColor="@color/black"
+                        android:textColor="@color/black2"
                         android:textSize="16dp"/>
 
                     <android.support.v7.widget.RecyclerView

@@ -148,6 +148,14 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
+                        fresco:actualImageScaleType="centerInside"
+                        fresco:fadeDuration="300"
+                        fresco:failureImage="@drawable/logo"
+                        fresco:failureImageScaleType="centerInside"
+                        fresco:placeholderImage="@color/white"
+                        fresco:placeholderImageScaleType="centerInside"
+                        fresco:retryImage="@drawable/logo"
+                        fresco:retryImageScaleType="centerInside"
                         />
 
                 </RelativeLayout>

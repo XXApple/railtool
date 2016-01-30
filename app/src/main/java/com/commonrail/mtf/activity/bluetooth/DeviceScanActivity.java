@@ -82,7 +82,7 @@ public class DeviceScanActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar.setTitle("查找蓝牙设备——扫描中...");
+        toolbar.setTitle("正在扫描蓝牙设备...");
         mHandler = new Handler();
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
@@ -135,12 +135,12 @@ public class DeviceScanActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_scan:
-                toolbar.setTitle("查找蓝牙设备——扫描中...");
+                toolbar.setTitle("正在扫描蓝牙设备......");
                 mLeDeviceListAdapter.clear();
                 scanLeDevice(true);
                 break;
             case R.id.menu_stop:
-                toolbar.setTitle("查找蓝牙设备——已停止扫描");
+                toolbar.setTitle("停止扫描");
                 scanLeDevice(false);
                 break;
         }

@@ -3,7 +3,7 @@
     android:layout_height="48dp"
     android:layout_gravity="bottom"
     android:layout_marginLeft="20dp"
-    android:gravity="bottom"
+    android:gravity="center"
     android:padding="4dp"
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">

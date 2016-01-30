@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.activity.bluetooth.BluetoothLeService;
-import com.commonrail.mtf.activity.bluetooth.DeviceScanActivity;
 import com.commonrail.mtf.activity.bluetooth.SampleGattAttributes;
 import com.commonrail.mtf.base.BaseActivity;
 import com.commonrail.mtf.po.ModuleItem;
@@ -52,6 +51,7 @@ import com.commonrail.rtplayer.RtPlayer;
 import com.commonrail.rtplayer.listener.RtPlayerListener;
 import com.commonrail.rtplayer.view.RtVideoView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -245,8 +245,8 @@ public class Step2Activity extends BaseActivity {
 
                 Step mStep = mStepList.getStepList().get(curStepOrder);
                 String result = testResult.replace("mm", "");
-                curValue.setStepId(mStep.getStepId());
-                curValue.setStepNum(mStep.getStepOrder());
+                curValue.setStepId(Integer.parseInt(mStep.getStepId()));
+                curValue.setStepNum(Integer.parseInt(mStep.getStepOrder()));
 
                 try {
                     checkMeasResult(mStep, result);
@@ -312,11 +312,14 @@ public class Step2Activity extends BaseActivity {
         if (!TextUtils.isEmpty(sgstKey)) {
             if (ReadAndCalculateUtil.DATA_MAP.get(sgstKey) != null) {
                 String sgtStr = ReadAndCalculateUtil.DATA_MAP.get(sgstKey);
+                if (TextUtils.isEmpty(sgtStr)) {
+                    suggestDispTest.setText("0.000");
+                    return;
+                }
                 double sgt = Double.parseDouble(sgtStr);
                 L.e("value setCalcResult" + sgt);
                 curValue.setCalcResult(sgt);
                 suggestDispTest.setText(String.valueOf(sgt));
-
                 //解析建议值的范围
                 String sgstRange = mStep.getSgstRange();
                 L.e("建议值范围" + sgstRange);
@@ -337,10 +340,15 @@ public class Step2Activity extends BaseActivity {
                     suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
                 }
 
+            } else {
+                suggestDispTips.setVisibility(View.GONE);
+                suggestDispTips.setText("");
+                suggestDispTest.setText("0.000");
             }
         } else {
             suggestDispTips.setVisibility(View.GONE);
             suggestDispTips.setText("");
+            suggestDispTest.setText("0.000");
         }
     }
 
@@ -543,7 +551,11 @@ public class Step2Activity extends BaseActivity {
                 } catch (NumberFormatException e) {
                     L.e(e.toString());
                 }
-                measDispTest.setText(value);
+                if (TextUtils.isEmpty(value)) {
+                    measDispTest.setText("0.000mm");
+                } else {
+                    measDispTest.setText(value);
+                }
             } else {
                 measDispLine.setVisibility(View.GONE);
             }
@@ -666,10 +678,11 @@ public class Step2Activity extends BaseActivity {
 
     @OnClick(R.id.home_btn)
     public void homeBtn(View view) {
-//        IntentUtils.enterDeviceScanActivity(this);
-        Intent intent = new Intent(this, DeviceScanActivity.class);
-
-        this.startActivityForResult(intent, 0);
+////        IntentUtils.enterDeviceScanActivity(this);
+//        Intent intent = new Intent(this, DeviceScanActivity.class);
+//
+//        this.startActivityForResult(intent, 0);
+        onBackPressed();
     }
 
     @OnClick(R.id.preBtn)
@@ -837,7 +850,10 @@ public class Step2Activity extends BaseActivity {
     }
 
     private void uploadMesResult(HashMap<String, Object> map) {
-        L.e(map.toString());
+        Gson mGson = new Gson();
+        String mJsonObject = mGson.toJson(map);
+        L.e("map2JsonString: " + mJsonObject);
+        L.e("map2String: " + map.toString());
         subscription.add(api.uploadMesResult(map)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
@@ -862,9 +878,8 @@ public class Step2Activity extends BaseActivity {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        progress.setVisibility(View.GONE);
                         rootLine.setVisibility(View.GONE);
-                        L.e("" + throwable.toString());
+                        L.e("Throwable", throwable.toString());
                         GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
                     }
                 }));

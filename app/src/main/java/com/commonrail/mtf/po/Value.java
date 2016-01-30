@@ -11,24 +11,24 @@ import java.io.Serializable;
  * calcResult:0.67 //建议测量工具结果
  */
 public class Value implements Serializable {
-    private String stepId ;
-    private String stepNum;
+    private int stepId ;
+    private int stepNum;
     private double measResult;
     private double calcResult;
 
-    public String getStepId() {
+    public int getStepId() {
         return stepId;
     }
 
-    public void setStepId(String stepId) {
+    public void setStepId(int stepId) {
         this.stepId = stepId;
     }
 
-    public String getStepNum() {
+    public int getStepNum() {
         return stepNum;
     }
 
-    public void setStepNum(String stepNum) {
+    public void setStepNum(int stepNum) {
         this.stepNum = stepNum;
     }
 

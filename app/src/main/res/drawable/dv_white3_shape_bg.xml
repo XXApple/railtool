@@ -11,7 +11,7 @@
 
     <stroke
         android:width="0.3px"
-        android:color="@color/md_black"/>
+        android:color="@color/divider"/>
 
 
 </shape> 

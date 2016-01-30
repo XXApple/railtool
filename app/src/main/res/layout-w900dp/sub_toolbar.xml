@@ -13,13 +13,13 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="75dp"
-        android:minHeight="75dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white"
         android:gravity="center"
-        app:subtitle="Common Rail Injector Precision Repair System"/>
+        android:minHeight="75dp"
+        app:subtitle="Common Rail Injector Precision Repair System"
+        app:subtitleTextColor="@color/white"
+        app:titleTextColor="@color/white"/>
     <!--android:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
     <!--app:theme="@style/ActionBarTheme">-->
 
@@ -39,16 +39,16 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="6dp"
+            android:layout_gravity="center"
+            android:scaleType="center"
             android:src="@drawable/home"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="首页"
             android:textColor="@color/md_black"
             android:textSize="20dp"/>

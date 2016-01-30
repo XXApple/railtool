@@ -6,9 +6,15 @@
 
 
     <color name="colorPrimarye">#0b64b0</color>
-    
-    
+
+
     <color name="touming">#00000000</color>
+
+    <color name="greya">#f2e6e6e9</color>
+
+    md_grey_100
+    
+    <color name="whitea">#e5ffffff</color>
 
     <!--黑色-->
     <color name="black">#000000</color>
@@ -17,7 +23,7 @@
 
 
     <!--灰色1 -->
-    <color name="grey1">#e6e6e9</color>
+    <color name="grey1">#e6e6e6</color>
 
     <!--黑色1-->
     <color name="black1">#4c4c4c</color>
@@ -26,7 +32,9 @@
     <!--黑色3-->
     <color name="black3">#4c4b4b</color>
 
-    
+    <!--黑色4-->
+    <color name="black4">#3d3d3d</color>
+
 
     <color name="menu_bg">#ff333237</color>
     <color name="menu_selected">#ff26252a</color>
@@ -37,7 +45,7 @@
     <color name="page_bg">#ffefeff4</color>
     <color name="content_text">#ff454545</color>
     <color name="tips_text">#ff9f9f9f</color>
-    <color name="divider">#ffc8c8cc</color>
+    <color name="divider">#ffcccccc</color>
     <color name="grey">#ffefefef</color>
     <color name="disable">#ffc8c8cc</color>
 
