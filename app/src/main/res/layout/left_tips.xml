@@ -45,7 +45,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="16dp"
             android:drawableLeft="@drawable/people"
-            android:drawablePadding="34dp"
+            android:drawablePadding="33dp"
             android:gravity="center_vertical"
             android:text="改变自己，是自救，\n影响别人,是救人。"
             android:textColor="@color/md_white"

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="471dp"
-    android:layout_height="316dp"
+    android:layout_height="310dp"
     android:gravity="center"
     android:layout_marginLeft="16dp"
     android:background="@drawable/dv_white_shape_bg"
@@ -11,8 +11,9 @@
 
     <ImageView
         android:id="@+id/rightImg"
-        android:layout_width="46dp"
-        android:layout_height="168dp"
+        android:layout_width="42dp"
+        android:layout_height="128dp"
+        android:padding="6dp"
         android:layout_gravity="top"
         android:scaleType="centerInside"
         android:src="@drawable/img_tips"
@@ -21,7 +22,7 @@
 
     <LinearLayout
         android:layout_width="420dp"
-        android:layout_height="310dp"
+        android:layout_height="305dp"
         android:layout_gravity="center"
         android:background="@drawable/dv_white_shape_bg"
         android:gravity="center"
@@ -46,6 +47,7 @@
             android:id="@+id/testSpecTv2"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:padding="8dp"
             android:text="1 jiangjiangjiangjiang"
             android:textColor="@color/black1"
             android:textSize="14sp"

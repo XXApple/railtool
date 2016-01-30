@@ -8,10 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.util.common.ViewUtils;
-import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.ButterKnife;
 
@@ -70,7 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         ButterKnife.unbind(getActivity());
         super.onDestroy();
-        RefWatcher refWatcher = AppClient.getRefWatcher(getActivity());
-        refWatcher.watch(getActivity());
+//        RefWatcher refWatcher = AppClient.getRefWatcher(getActivity());
+//        refWatcher.watch(getActivity());
     }
 }

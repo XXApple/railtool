@@ -2,14 +2,16 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/left_bosch_tips"
+    android:layout_height="402dp"
     android:layout_gravity="center"
+    android:visibility="gone"
     android:background="@android:color/transparent"
     android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/left_bosch_tips"
+       
         android:layout_width="402dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -31,7 +33,6 @@
             android:id="@+id/injectorTypeEt"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-
             android:layout_gravity="center"
             android:background="@android:color/white"
             android:gravity="center"

@@ -13,12 +13,14 @@
         android:id="@+id/progress"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/rootLine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
         android:orientation="vertical">
 
         <include layout="@layout/sub_toolbar"/>
@@ -34,10 +36,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="280dp"
+                android:layout_width="240dp"
                 android:layout_height="600dp"
                 android:layout_gravity="top|center_horizontal"
-                android:layout_marginRight="14dp"
+                android:layout_marginRight="8dp"
                 android:background="@drawable/home_shape_bg"
                 android:gravity="top|center_horizontal"
                 android:orientation="vertical">
@@ -46,7 +48,7 @@
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/showPicUrl"
-                    android:layout_width="315px"
+                    android:layout_width="200dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="?actionBarSize"
                     android:layout_marginTop="16dp"
@@ -67,14 +69,12 @@
                 android:layout_width="960dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginBottom="?actionBarSize"
                 android:gravity="center"
-
                 android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="960dp"
-                    android:layout_height="48dp"
+                    android:layout_height="46dp"
                     android:layout_gravity="center"
                     android:background="@drawable/dv_grey_shape_bg"
                     android:gravity="center"
@@ -121,6 +121,7 @@
                         android:id="@+id/chooseTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="8dp"
                         android:layout_toLeftOf="@+id/measToolNumEt"
                         android:gravity="center"
                         android:text="选择道具编号"
@@ -134,16 +135,19 @@
                         android:layout_height="36dp"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/measToolPic"
-
                         android:background="@drawable/dv_white_shape_bg"
-                        android:textColor="@color/md_black"
+                        android:gravity="center"
+                        android:textColor="@color/black1"
                         />
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/measToolPic"
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="69dp"
+                        android:layout_height="35dp"
+                        android:layout_marginRight="16dp"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
                         />
 
                 </RelativeLayout>
@@ -151,14 +155,14 @@
 
                 <LinearLayout
                     android:layout_width="960dp"
-                    android:layout_height="316dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="310dp"
                     android:background="@drawable/dv_white_shape_bg"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="54dp"
-                        android:layout_height="168dp"
+                        android:layout_width="42dp"
+                        android:layout_height="128dp"
+                        android:padding="6dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/video_tips"
                         />
@@ -181,15 +185,14 @@
 
                     <include layout="@layout/tablayout"/>
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent">
 
                         <include layout="@layout/layout_meas_result"/>
 
                         <include layout="@layout/layout_right_btn"/>
-                    </LinearLayout>
+                    </FrameLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -200,6 +203,5 @@
     </LinearLayout>
 
     <include layout="@layout/layout_bottom"/>
-
 
 </FrameLayout>

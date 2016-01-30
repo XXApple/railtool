@@ -1,9 +1,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
-    android:layout_height="300dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_height="304dp"
+    android:layout_marginBottom="2dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_marginTop="2dp"
     android:background="@drawable/dv_white_shape_bg"
     android:orientation="horizontal">
 
@@ -21,10 +23,10 @@
 
         <com.commonrail.rtplayer.view.RtVideoView
             android:id="@+id/rt_video_view"
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="match_parent"
-            android:background="@drawable/dv_grey_shape_bg"
             android:layout_gravity="center"
+            android:background="@drawable/dv_grey_shape_bg"
             />
     </FrameLayout>
 </LinearLayout>

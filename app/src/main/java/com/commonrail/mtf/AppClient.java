@@ -1,13 +1,10 @@
 package com.commonrail.mtf;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.commonrail.mtf.util.FrescoConfig;
 import com.commonrail.mtf.util.common.L;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.yw.filedownloader.FileDownloader;
 
 /**
@@ -21,17 +18,16 @@ import com.yw.filedownloader.FileDownloader;
  */
 public class AppClient extends Application {
     private static AppClient sInstance;
-    private RefWatcher refWatcher;
+//    private RefWatcher refWatcher;
 
     public static AppClient getInstance() {
         return sInstance;
     }
 
-    public static RefWatcher getRefWatcher(Context context) {
-        AppClient application = (AppClient) context.getApplicationContext();
-
-        return application.refWatcher;
-    }
+//    public static RefWatcher getRefWatcher(Context context) {
+//        AppClient application = (AppClient) context.getApplicationContext();
+//        return application.refWatcher;
+//    }
 
     @Override
     public void onCreate() {
@@ -40,7 +36,7 @@ public class AppClient extends Application {
         L.isDebug = true;
         sInstance = this;
 //        PgyCrashManager.register(sInstance);
-        refWatcher = LeakCanary.install(sInstance);
+//        refWatcher = LeakCanary.install(sInstance);
         Fresco.initialize(sInstance, FrescoConfig.getImagePipelineConfig(sInstance));
     }
 }

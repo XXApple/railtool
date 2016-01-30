@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="40dp"
     android:layout_gravity="bottom"
     android:background="@color/colorPrimary"
     android:gravity="center"
@@ -16,7 +16,7 @@
         android:gravity="center"
         android:text="上海星融汽车科技有限公司@2016"
         android:textColor="@color/md_white"
-        android:textSize="17dp"/>
+        android:textSize="15sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,6 +25,6 @@
         android:gravity="center"
         android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
         android:textColor="@color/md_white"
-        android:textSize="17dp"/>
+        android:textSize="14sp"/>
 
 </LinearLayout>

@@ -55,6 +55,8 @@ public class ModuleListActivity extends BaseActivity {
     RecyclerView itemList;
     @Bind(R.id.tips)
     TextView tips;
+    
+    
     @Bind(R.id.left_tips)
     LinearLayout leftTips;
     @Bind(R.id.left_bosch_tips)

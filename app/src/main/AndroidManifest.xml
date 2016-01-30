@@ -56,12 +56,15 @@
             android:name="com.commonrail.mtf.activity.ModuleListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_module_list"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="landscape"/>
+
+        <!--android:windowSoftInputMode="adjustPan"-->
         <activity
             android:name="com.commonrail.mtf.activity.Step2Activity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_module_list"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="landscape"/>
 
         <activity

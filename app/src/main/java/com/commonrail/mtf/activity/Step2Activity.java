@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -81,8 +80,6 @@ public class Step2Activity extends BaseActivity {
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     @Bind(R.id.home_btn)
     LinearLayout homeBtn;
-    @Bind(R.id.app_bar)
-    AppBarLayout appBar;
     @Bind(R.id.showPicUrl)
     SimpleDraweeView videoPicUrl;
     @Bind(R.id.injectorTv)
@@ -278,7 +275,8 @@ public class Step2Activity extends BaseActivity {
 
     private void checkMeasResult(final Step mStep, final String mResult) {
         if (TextUtils.isEmpty(mResult)) {
-            measDispTips.setText("");
+            measDispTips.setVisibility(View.GONE);
+            measDispTest.setText("0.000mm");
             return;
         }
         double meadispResult = Double.parseDouble(mResult);
@@ -299,6 +297,7 @@ public class Step2Activity extends BaseActivity {
 
         L.e("测试范围1：" + measdiapR1);
         L.e("测试范围2：" + measdiapR2);
+        measDispTips.setVisibility(View.VISIBLE);
         if (meadispResult >= measdiapR1 && meadispResult <= measdiapR2) {
             measDispTips.setText("您的测试符合正常范围...");
         } else if (meadispResult < measdiapR1) {
@@ -328,6 +327,7 @@ public class Step2Activity extends BaseActivity {
                 L.e("建议值范围1：" + sgst2);
 
                 L.e("建议值结果：" + sgt);
+                suggestDispTips.setVisibility(View.VISIBLE);
                 //将计算结果和范围对比
                 if (sgt >= sgst1 && sgt <= sgst2) {
                     suggestDispTips.setText("您的测试符合正常范围...");
@@ -339,6 +339,7 @@ public class Step2Activity extends BaseActivity {
 
             }
         } else {
+            suggestDispTips.setVisibility(View.GONE);
             suggestDispTips.setText("");
         }
     }
@@ -480,7 +481,7 @@ public class Step2Activity extends BaseActivity {
 
             }
         });
-        mUri = Uri.parse(AppUtils.getVideoPath(videoName));
+        mUri = Uri.parse(AppUtils.getVideoPath("1.mp4"));
         mOkVideoView.setVideoUri(mUri);
     }
 
@@ -500,7 +501,6 @@ public class Step2Activity extends BaseActivity {
         if (mStep == null) return;
 
         if (TextUtils.equals(mStep.getPageType(), "1")) {
-
             layoutRightBg.setBackground(ContextCompat.getDrawable(this, R.drawable.dv_white_shape_bg));
             measToolNumEt.setVisibility(View.VISIBLE);
             measToolPic.setVisibility(View.VISIBLE);
@@ -517,14 +517,12 @@ public class Step2Activity extends BaseActivity {
             picUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getPicUrl()));
             rightImg.setImageResource(R.drawable.img_tips);
 
-
             if (!TextUtils.isEmpty(mStep.getSuggestDisp())) {
                 suggestDispLine.setVisibility(View.VISIBLE);
                 suggestDisp.setText(mStep.getSuggestDisp());
             } else {
                 suggestDispLine.setVisibility(View.GONE);
             }
-
 
             L.e("步骤index:" + curStepOrder + "测量值key：" + mStep.getMeasKey()
                     + "测量值范围：" + mStep.getMeasRange()
@@ -561,8 +559,6 @@ public class Step2Activity extends BaseActivity {
             } else {
                 suggestDispLine.setVisibility(View.GONE);
             }
-
-
             testSpecTv1.setText(mStep.getTestSpec());
         } else {
             layoutRightBg.setBackgroundColor(Color.TRANSPARENT);

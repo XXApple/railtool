@@ -206,7 +206,7 @@ public class VideoPlayActivity extends BaseActivity {
         });
 //        String videourl = "http://7xkbzx.com1.z0.glb.clouddn.com/SampleVideo_1080x720_20mb.mp4";
 
-        String videourl = SDCardUtils.getSDCardPath() + "SampleVideo_1080x720_20mb.mp4";
+        String videourl = SDCardUtils.getSDCardPath() + "1.mp4";
         mUri = Uri.parse(videourl);
         mOkVideoView.setVideoUri(mUri);
         mOkVideoView.seekTo(currentPosition);

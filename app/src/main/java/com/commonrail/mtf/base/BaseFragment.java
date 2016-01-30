@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.commonrail.mtf.AppClient;
-import com.squareup.leakcanary.RefWatcher;
-
 import butterknife.ButterKnife;
 
 /**
@@ -54,8 +51,8 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        RefWatcher refWatcher = AppClient.getRefWatcher(getActivity());
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = AppClient.getRefWatcher(getActivity());
+//        refWatcher.watch(this);
     }
 }
 

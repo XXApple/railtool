@@ -3,13 +3,13 @@
     android:id="@+id/type2Line"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="568dp"
-    android:layout_height="200dp"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
 
     <TextView
         android:layout_width="568dp"
-        android:layout_height="44dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:background="@drawable/dv_grey_shape_bg"
         android:gravity="center"
@@ -17,24 +17,25 @@
         android:text="建议拧紧力柜"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
+
         />
 
     <LinearLayout
         android:layout_width="568dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="410dp"
-            android:layout_height="132dp"
+            android:layout_height="120dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="410dp"
-                android:layout_height="44dp"
-                android:background="@drawable/dv_grey_shape_bg"
+                android:layout_height="40dp"
+                android:background="@drawable/dv_grey_no_corner_shape_bg"
                 android:gravity="center"
                 android:text="角度控制法"
                 android:textColor="@color/black"
@@ -43,12 +44,12 @@
 
             <LinearLayout
                 android:layout_width="410dp"
-                android:layout_height="88dp"
+                android:layout_height="80dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="410dp"
-                    android:layout_height="44dp"
+                    android:layout_height="40dp"
                     android:background="@color/md_white"
                     android:orientation="horizontal"
                     >
@@ -86,7 +87,7 @@
 
                 <LinearLayout
                     android:layout_width="410dp"
-                    android:layout_height="44dp"
+                    android:layout_height="40dp"
                     android:background="@color/md_white"
                     android:orientation="horizontal">
 
@@ -129,15 +130,15 @@
 
         <LinearLayout
             android:layout_width="137dp"
-            android:layout_height="132dp"
+            android:layout_height="120dp"
             android:layout_marginLeft="18dp"
             android:background="@color/white"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="137dp"
-                android:layout_height="44dp"
-                android:background="@drawable/dv_grey_shape_bg"
+                android:layout_height="40dp"
+                android:background="@drawable/dv_grey_no_corner_shape_bg"
                 android:gravity="center"
                 android:text="力柜控制法"
                 android:textColor="@color/black"
@@ -147,7 +148,7 @@
 
             <TextView
                 android:layout_width="137dp"
-                android:layout_height="44dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/dv_white3_shape_bg"
                 android:gravity="center"
@@ -159,7 +160,7 @@
             <TextView
                 android:id="@+id/ljTv"
                 android:layout_width="137dp"
-                android:layout_height="44dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/dv_white3_shape_bg"
                 android:gravity="center"
