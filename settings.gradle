@@ -1,1 +1,1 @@
-include ':app',':rtplayer'
+include ':app',':rtplayer',':filedownloader'
