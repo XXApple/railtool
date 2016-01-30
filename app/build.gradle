@@ -53,9 +53,9 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
-
-    compile 'com.liulishuo.filedownloader:library:0.1.9'
+//    compile 'com.liulishuo.filedownloader:library:0.1.9'
 
     compile 'com.pgyersdk:sdk:2.2.2'
     compile project(':rtplayer')
+    compile project(':filedownloader')
 }

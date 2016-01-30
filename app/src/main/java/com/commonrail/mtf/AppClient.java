@@ -6,17 +6,17 @@ import android.content.Context;
 import com.commonrail.mtf.util.FrescoConfig;
 import com.commonrail.mtf.util.common.L;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.liulishuo.filedownloader.FileDownloader;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.yw.filedownloader.FileDownloader;
 
 /**
  * 项目名称：
  * 类描述：
  * 创建人：wengyiming
- * 创建时间：15/11/16 下午10:34
+ * 创建时间：16/01/06 下午10:34
  * 修改人：wengyiming
- * 修改时间：15/11/16 下午10:34
+ * 修改时间：16/01/06 下午10:34
  * 修改备注：
  */
 public class AppClient extends Application {

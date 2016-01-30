@@ -7,6 +7,7 @@ import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.L;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
@@ -39,14 +40,14 @@ public class OkHttpClientManager {
                     .build();
         }
     };
-    private static com.squareup.okhttp.OkHttpClient sInstance;
+    private static OkHttpClient sInstance;
 
     @SuppressWarnings("ConstantConditions")
-    public static com.squareup.okhttp.OkHttpClient getInstance() {
+    public static OkHttpClient getInstance() {
         if (sInstance == null) {
             synchronized (OkHttpClientManager.class) {
                 if (sInstance == null) {
-                    sInstance = new com.squareup.okhttp.OkHttpClient();
+                    sInstance = new OkHttpClient();
                     //cookie enabled
                     sInstance.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
                     //从主机读取数据超时
@@ -64,6 +65,7 @@ public class OkHttpClientManager {
         }
         return sInstance;
     }
+
 
     /**
      * see http://stackoverflow.com/questions/24952199/okhttp-enable-logs

@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 import com.commonrail.mtf.R;
-import com.commonrail.mtf.util.retrofit.OkHttpClientManager;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
@@ -24,6 +23,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.squareup.okhttp.OkHttpClient;
 
 
 /**
@@ -110,10 +110,9 @@ public class FrescoConfig {
                 .build();
 
         //缓存图片配置
-        ImagePipelineConfig.Builder configBuilder = OkHttpImagePipelineConfigFactory.newBuilder(context, OkHttpClientManager.getInstance())
-
-//		ImagePipelineConfig.Builder configBuilder = OkHttpImagePipelineConfigFactory
-//				.newBuilder(context, new OkHttpClient())
+//        ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context).setNetworkFetcher(OkHttpClientManager.getInstance())
+		ImagePipelineConfig.Builder configBuilder = OkHttpImagePipelineConfigFactory
+				.newBuilder(context, new OkHttpClient())
 
 //            .setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory)//图片加载动画
                 .setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams)//内存缓存配置（一级缓存，已解码的图片）

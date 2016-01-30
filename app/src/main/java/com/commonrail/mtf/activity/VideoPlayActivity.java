@@ -120,37 +120,6 @@ public class VideoPlayActivity extends BaseActivity {
         return this;
     }
 
-
-//    private void videoFormZhuZhan() {
-//        final Observable<NewAcVideo> getVideo = NewAcApi.getNewAcVideo().onResult(mVideoId);
-//        final Observable<Response<ResponseBody>> getDanmaku = NewAcApi.getNewAcDanmaku().onResult(mVideoId);
-//
-//        getDanmaku.subscribeOn(Schedulers.io())
-//                .flatMap(new Func1<Response<ResponseBody>, Observable<NewAcVideo>>() {
-//                    @Override
-//                    public Observable<NewAcVideo> call(Response<ResponseBody> response) {
-//                        try {
-//                            danmuku(new BufferedInputStream(response.body().byteStream()));
-//
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        return getVideo;
-//                    }
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<NewAcVideo>() {
-//                    @Override
-//                    public void call(NewAcVideo newAcVideo) {
-//                        List<NewAcVideo.DataEntity.FilesEntity> list = newAcVideo.getData().getFiles();
-//                        Collections.reverse(list);
-//                        mUri = Uri.parse(list.get(0).getUrl().get(0));
-//                        mOkVideoView.setVideoUri(mUri);
-//                        Log.w(TAG, "call: " + mUri.toString());
-//                    }
-//                });
-//    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
