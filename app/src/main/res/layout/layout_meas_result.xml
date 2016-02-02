@@ -51,7 +51,7 @@
             android:gravity="center"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:text="0.000mm"
+            android:text="0.000"
             android:textColor="@color/md_black"
             android:textSize="12sp"
             />

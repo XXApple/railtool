@@ -203,8 +203,10 @@ public class Step2Activity extends BaseActivity {
                 if (!TextUtils.isEmpty(mDeviceName)) {
                     toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.connected) + mDeviceAddress);
                     L.e("已链接蓝牙设备", mDeviceName);
+                    if (mProgressDialog != null) {
+                        mProgressDialog.dismiss();
+                    }
                 }
-//                updateConnectionState(R.string.connected);
                 invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
                     .equals(action)) {
@@ -212,6 +214,10 @@ public class Step2Activity extends BaseActivity {
                 if (!TextUtils.isEmpty(mDeviceName)) {
                     toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.disconnected));
                     L.e("未链接蓝牙设备", mDeviceName);
+                    mProgressDialog.setMessage("蓝牙连接已断开，正在重新连接，请稍等...");
+                    mProgressDialog.setIndeterminate(true);
+                    mProgressDialog.show();
+                    mBluetoothLeService.connect(mDeviceAddress);
                 }
 //                updateConnectionState(R.string.disconnected);
                 invalidateOptionsMenu();
@@ -276,13 +282,14 @@ public class Step2Activity extends BaseActivity {
     private void checkMeasResult(final Step mStep, final String mResult) {
         if (TextUtils.isEmpty(mResult)) {
             measDispTips.setVisibility(View.GONE);
-            measDispTest.setText("0.000mm");
+            measDispTest.setText("0.000");
             return;
         }
         double meadispResult = Double.parseDouble(mResult);
         L.e("测试结果：" + meadispResult);
-        if (meadispResult <= 0) {
-            L.e("该结果小于0，已过滤");
+        meadispResult = Math.abs(meadispResult);//取绝对值
+        if (meadispResult == 0.001) {
+            L.e("该结果几乎等于0，已过滤");
             return;
         }
         L.e("value setMeasResult" + meadispResult);
@@ -365,13 +372,18 @@ public class Step2Activity extends BaseActivity {
         String xh = getIntent().getStringExtra("xh");
         progress.setVisibility(View.VISIBLE);
         rootLine.setVisibility(View.GONE);
-        getRepairStep(injectorType, language, moduleId, xh);
+
         final String mDeviceName = getIntent().getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
-        toolbar.setTitle(mDeviceName);
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        L.e("mDeviceAddress:" + mDeviceAddress);
+        toolbar.setTitle(injectorType);
         ReadAndCalculateUtil.init();
+        getRepairStep(injectorType, language, moduleId, xh);
+
+        Intent gattServiceIntent = new Intent(getActivity(), BluetoothLeService.class);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+
     }
 
     @Override
@@ -436,7 +448,10 @@ public class Step2Activity extends BaseActivity {
                             Step mStep = checkStep(curStepOrder);
                             if (mStep == null) return;
                             startVideo(mStep.getVideoUrl());
+
                             setStepOrderInfo(curStepOrder);
+
+
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -489,8 +504,8 @@ public class Step2Activity extends BaseActivity {
 
             }
         });
-        mUri = Uri.parse(AppUtils.getVideoPath("1.mp4"));
-        mOkVideoView.setVideoUri(mUri);
+//        mUri = Uri.parse(AppUtils.getVideoPath("1.mp4"));
+//        mOkVideoView.setVideoUri(mUri);
     }
 
     private void setStepOrderInfo(final int curStepOrder) {
@@ -552,7 +567,7 @@ public class Step2Activity extends BaseActivity {
                     L.e(e.toString());
                 }
                 if (TextUtils.isEmpty(value)) {
-                    measDispTest.setText("0.000mm");
+                    measDispTest.setText("0.000");
                 } else {
                     measDispTest.setText(value);
                 }
@@ -834,13 +849,23 @@ public class Step2Activity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_connect:
+                mProgressDialog.setMessage("正在连接蓝牙设备，请稍等...");
+                mProgressDialog.setIndeterminate(true);
+                mProgressDialog.show();
                 mBluetoothLeService.connect(mDeviceAddress);
                 return true;
             case R.id.menu_disconnect:
-                mBluetoothLeService.disconnect();
+//                mBluetoothLeService.disconnect();
                 return true;
             case R.id.menu_refresh:
-                mBluetoothLeService.connect(mDeviceAddress);
+                if (!mConnected) {
+                    mProgressDialog.setMessage("正在连接蓝牙设备，请稍等...");
+                    mProgressDialog.setIndeterminate(true);
+                    mProgressDialog.show();
+                    mBluetoothLeService.connect(mDeviceAddress);
+                }else {
+                    GlobalUtils.showToastShort(getActivity(),"蓝牙已连接");
+                }
                 return true;
             case android.R.id.home:
                 onBackPressed();

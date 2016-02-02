@@ -1,6 +1,7 @@
 package com.commonrail.mtf.base;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity {
     protected static String TAG = "BaseActivity";
     protected Toolbar toolbar;
+    protected ProgressDialog mProgressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ViewUtils.toggleHideyBar(decorView);
         setContentView(getLayoutRes());
         TAG = getActivity().getClass().getSimpleName();
+        mProgressDialog = new ProgressDialog(getActivity());
         ButterKnife.bind(getActivity());
         initToolBar();
     }
@@ -68,6 +71,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         ButterKnife.unbind(getActivity());
         super.onDestroy();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
 //        RefWatcher refWatcher = AppClient.getRefWatcher(getActivity());
 //        refWatcher.watch(getActivity());
     }
