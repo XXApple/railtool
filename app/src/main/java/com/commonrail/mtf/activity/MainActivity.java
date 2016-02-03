@@ -80,6 +80,9 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        final float scale = getActivity().getResources().getDisplayMetrics().density;
+        L.e("scale:"+scale+"");
+
 //        String url = "http://dl.game.qidian.com/apknew/game/dzz/dzz.apk";
 //        String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "tmp1";
 //        L.e("savePath"+savePath1);
