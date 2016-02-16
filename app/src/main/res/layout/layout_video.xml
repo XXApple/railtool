@@ -1,7 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="400dp"
-    android:layout_height="304dp"
+    android:layout_width="356dp"
+    android:layout_height="277dp"
     android:layout_marginBottom="2dp"
     android:layout_gravity="center"
     android:gravity="center"
@@ -23,7 +23,7 @@
 
         <com.commonrail.rtplayer.view.RtVideoView
             android:id="@+id/rt_video_view"
-            android:layout_width="400dp"
+            android:layout_width="356dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@drawable/dv_grey_shape_bg"

@@ -388,7 +388,7 @@ public class Step2Activity extends BaseActivity {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.activity_step2;
+        return R.layout.activity_step;
     }
 
     @Override
