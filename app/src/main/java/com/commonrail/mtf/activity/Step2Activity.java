@@ -369,6 +369,7 @@ public class Step2Activity extends BaseActivity {
         String injectorType = getIntent().getStringExtra("injectorType");
         String language = getIntent().getStringExtra("language");
         int moduleId = getIntent().getIntExtra("moduleId", 0);
+        String moduleName = getIntent().getStringExtra("moduleName");
         String xh = getIntent().getStringExtra("xh");
         progress.setVisibility(View.VISIBLE);
         rootLine.setVisibility(View.GONE);
@@ -376,13 +377,12 @@ public class Step2Activity extends BaseActivity {
         final String mDeviceName = getIntent().getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
         L.e("mDeviceAddress:" + mDeviceAddress);
-        toolbar.setTitle(injectorType);
+        toolbar.setTitle("品牌:" + injectorType + " 模块:" + moduleName);
         ReadAndCalculateUtil.init();
         getRepairStep(injectorType, language, moduleId, xh);
 
         Intent gattServiceIntent = new Intent(getActivity(), BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
 
     }
 
@@ -447,7 +447,7 @@ public class Step2Activity extends BaseActivity {
                             rootLine.setVisibility(View.VISIBLE);
                             Step mStep = checkStep(curStepOrder);
                             if (mStep == null) return;
-                            L.e("mStep.getVideoUrl()" +mStep.getVideoUrl());
+                            L.e("mStep.getVideoUrl()" + mStep.getVideoUrl());
                             startVideo(mStep.getVideoUrl());
                             setStepOrderInfo(curStepOrder);
 
@@ -522,7 +522,7 @@ public class Step2Activity extends BaseActivity {
 
         Step mStep = checkStep(curStepOrder);
         if (mStep == null) return;
-        L.e("mStep.toString()" +mStep.toString());
+        L.e("mStep.toString()" + mStep.toString());
         if (TextUtils.equals(mStep.getPageType(), "1")) {
             layoutRightBg.setBackground(ContextCompat.getDrawable(this, R.drawable.dv_white_shape_bg));
             measToolNumEt.setVisibility(View.VISIBLE);

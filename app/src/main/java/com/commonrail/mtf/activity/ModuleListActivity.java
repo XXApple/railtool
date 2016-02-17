@@ -81,6 +81,7 @@ public class ModuleListActivity extends BaseActivity {
     private String injectorType;
     private String language;
     private int moduleId = 0;
+    private String moduleName="";
     private String xh = "";
 
     @Override
@@ -147,6 +148,7 @@ public class ModuleListActivity extends BaseActivity {
                                         xh = mBosch.getXh();
                                     }
                                 }
+                                moduleName = mModule.getModuleName();
                                 moduleId = mModule.getId();
                                 Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
 
@@ -252,7 +254,7 @@ public class ModuleListActivity extends BaseActivity {
                     toolbar.setSubtitle(mDeviceName);
                     L.e("链接蓝牙设备", mDeviceName);
                 }
-                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, xh, mDeviceName, mDeviceAddress);
+                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId,moduleName, xh, mDeviceName, mDeviceAddress);
 
             }
         }
