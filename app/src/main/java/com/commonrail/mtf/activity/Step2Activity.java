@@ -377,7 +377,7 @@ public class Step2Activity extends BaseActivity {
         final String mDeviceName = getIntent().getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
         L.e("mDeviceAddress:" + mDeviceAddress);
-        toolbar.setTitle("品牌:" + injectorType + " 模块:" + moduleName);
+        toolbar.setTitle(" " + injectorType + "  " + moduleName);
         ReadAndCalculateUtil.init();
         getRepairStep(injectorType, language, moduleId, xh);
 
