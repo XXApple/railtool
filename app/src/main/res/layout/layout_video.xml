@@ -1,7 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="356dp"
-    android:layout_height="277dp"
+    android:layout_width="362dp"
+    android:layout_height="270dp"
     android:layout_marginBottom="2dp"
     android:layout_gravity="center"
     android:gravity="center"
@@ -10,8 +10,8 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="358dp"
+        android:layout_height="270dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -23,8 +23,8 @@
 
         <com.commonrail.rtplayer.view.RtVideoView
             android:id="@+id/rt_video_view"
-            android:layout_width="356dp"
-            android:layout_height="match_parent"
+            android:layout_width="358dp"
+            android:layout_height="270dp"
             android:layout_gravity="center"
             android:background="@drawable/dv_grey_shape_bg"
             />

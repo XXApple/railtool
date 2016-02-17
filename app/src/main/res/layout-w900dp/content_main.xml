@@ -50,12 +50,11 @@
                 android:padding="8dp">
 
                 <LinearLayout
-                    android:layout_width="420dp"
-                    android:layout_height="403dp"
+                    android:layout_width="375dp"
+                    android:layout_height="358dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="36dp"
-                    android:layout_marginLeft="68dp"
-                    android:layout_marginRight="104dp"
+                    android:layout_marginLeft="98dp"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -64,16 +63,17 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="620dp"
+                    android:layout_width="550dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginRight="68dp"
+                    android:layout_marginRight="98dp"
+                    android:layout_marginLeft="93dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="620dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="550dp"
+                        android:layout_height="36dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
@@ -82,13 +82,13 @@
                         android:padding="8dp"
                         android:text="请选择厂商"
                         android:textColor="@color/black2"
-                        android:textSize="16dp"/>
+                        android:textSize="13dp"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/item_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="28dp"
+                        android:layout_marginTop="29dp"
                         app:layoutManager="GridLayoutManager"
                         app:spanCount="3"/>
 
@@ -102,7 +102,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="45dp"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
         android:gravity="center_vertical"
@@ -111,19 +111,19 @@
         <TextView
             android:id="@+id/callFb"
             android:layout_width="wrap_content"
-            android:layout_height="?actionBarSize"
+            android:layout_height="45dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="43dp"
             android:drawableLeft="@drawable/fb"
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
             android:text="021-311033839"
             android:textColor="@color/md_white"
-            android:textSize="24dp"/>
+            android:textSize="19dp"/>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="?actionBarSize"
+            android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_marginRight="88dp"
             android:layout_weight="1"
@@ -138,7 +138,7 @@
                 android:gravity="center"
                 android:text="上海星融汽车科技有限公司@2016"
                 android:textColor="@color/md_white"
-                android:textSize="17dp"/>
+                android:textSize="11dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -147,7 +147,7 @@
                 android:gravity="center"
                 android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
                 android:textColor="@color/md_white"
-                android:textSize="17dp"/>
+                android:textSize="11dp"/>
 
         </LinearLayout>
 

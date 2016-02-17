@@ -442,13 +442,13 @@ public class Step2Activity extends BaseActivity {
                         mStepList = t;
                         if (mStepList != null) {
                             mItem = mStepList.getModule();
-                            L.v("ModuleName:" + mItem.getModuleName());
+                            L.v("ModuleName:" + mItem.toString());
                             progress.setVisibility(View.GONE);
                             rootLine.setVisibility(View.VISIBLE);
                             Step mStep = checkStep(curStepOrder);
                             if (mStep == null) return;
+                            L.e("mStep.getVideoUrl()" +mStep.getVideoUrl());
                             startVideo(mStep.getVideoUrl());
-
                             setStepOrderInfo(curStepOrder);
 
 
@@ -504,8 +504,8 @@ public class Step2Activity extends BaseActivity {
 
             }
         });
-//        mUri = Uri.parse(AppUtils.getVideoPath("1.mp4"));
-//        mOkVideoView.setVideoUri(mUri);
+        mUri = Uri.parse(AppUtils.getVideoPath(videoName));
+        mOkVideoView.setVideoUri(mUri);
     }
 
     private void setStepOrderInfo(final int curStepOrder) {
@@ -522,7 +522,7 @@ public class Step2Activity extends BaseActivity {
 
         Step mStep = checkStep(curStepOrder);
         if (mStep == null) return;
-
+        L.e("mStep.toString()" +mStep.toString());
         if (TextUtils.equals(mStep.getPageType(), "1")) {
             layoutRightBg.setBackground(ContextCompat.getDrawable(this, R.drawable.dv_white_shape_bg));
             measToolNumEt.setVisibility(View.VISIBLE);
@@ -863,8 +863,8 @@ public class Step2Activity extends BaseActivity {
                     mProgressDialog.setIndeterminate(true);
                     mProgressDialog.show();
                     mBluetoothLeService.connect(mDeviceAddress);
-                }else {
-                    GlobalUtils.showToastShort(getActivity(),"蓝牙已连接");
+                } else {
+                    GlobalUtils.showToastShort(getActivity(), "蓝牙已连接");
                 }
                 return true;
             case android.R.id.home:

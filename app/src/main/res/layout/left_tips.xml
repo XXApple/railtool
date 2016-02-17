@@ -2,8 +2,8 @@
 <LinearLayout
     android:id="@+id/left_tips"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="420dp"
-    android:layout_height="402dp"
+    android:layout_width="375dp"
+    android:layout_height="358dp"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/side_nav_bar"
     

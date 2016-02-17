@@ -30,17 +30,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
             android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="248dp"
-                android:layout_height="578dp"
+                android:layout_height="579dp"
                 android:layout_gravity="top|center_horizontal"
-                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="3dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/home_shape_bg"
                 android:gravity="top|center_horizontal"
                 android:orientation="vertical">
@@ -51,7 +52,7 @@
                     android:id="@+id/showPicUrl"
                     android:layout_width="248dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="?actionBarSize"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="16dp"
                     fresco:actualImageScaleType="centerInside"
                     fresco:fadeDuration="300"
@@ -67,16 +68,16 @@
 
 
             <LinearLayout
-                android:layout_width="853dp"
-                android:layout_marginLeft="16dp"
+                android:layout_width="860dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="853dp"
-                    android:layout_height="41dp"
+                    android:layout_width="860dp"
+                    android:layout_height="42dp"
                     android:layout_gravity="center"
                     android:background="@drawable/dv_grey_shape_bg"
                     android:gravity="center"
@@ -146,10 +147,10 @@
                         android:id="@+id/measToolPic"
                         android:layout_width="69dp"
                         android:layout_height="35dp"
-                        android:layout_marginRight="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginRight="16dp"
                         fresco:actualImageScaleType="centerInside"
                         fresco:fadeDuration="300"
                         fresco:failureImage="@drawable/logo"
@@ -164,29 +165,39 @@
 
 
                 <LinearLayout
-                    android:layout_width="853dp"
-                    android:layout_height="277dp"
-                    android:background="@drawable/dv_white_shape_bg"
+                    android:layout_width="860dp"
+                    android:layout_height="287dp"
+                    android:layout_marginTop="7dp"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="42dp"
-                        android:layout_height="128dp"
-                        android:padding="6dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/video_tips"
-                        />
+                    <LinearLayout
+                        android:layout_width="420dp"
+                        android:layout_height="287dp"
+                        android:background="@drawable/dv_white_shape_bg"
+                        android:orientation="horizontal">
 
-                    <include layout="@layout/layout_video"/>
+                        <ImageView
+                            android:layout_width="42dp"
+                            android:layout_height="128dp"
+                            android:layout_gravity="top|center_horizontal"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:padding="5dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/video_tips"
+                            />
+
+                        <include layout="@layout/layout_video"/>
+                    </LinearLayout>
 
                     <include layout="@layout/layout_right"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="860dp"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="13dp"
                     android:background="@android:color/transparent"
                     android:orientation="horizontal">
 
@@ -197,9 +208,10 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="234dp">
 
                         <include layout="@layout/layout_meas_result"/>
+
                         <include layout="@layout/layout_right_btn"/>
                     </FrameLayout>
                 </LinearLayout>

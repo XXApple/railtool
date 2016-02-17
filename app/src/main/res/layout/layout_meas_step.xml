@@ -2,17 +2,17 @@
 <LinearLayout
     android:id="@+id/type1Line"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="460dp"
-    android:layout_height="match_parent"
-    android:layout_marginRight="16dp"
-    android:visibility="gone"
+    android:layout_width="420dp"
+    android:layout_height="230dp"
+    android:layout_marginRight="20dp"
     android:background="@drawable/dv_white_shape_bg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <TextView
         android:id="@+id/testSpecTv"
-        android:layout_width="460dp"
-        android:layout_height="40dp"
+        android:layout_width="420dp"
+        android:layout_height="37dp"
         android:layout_gravity="center"
         android:background="@drawable/dv_grey_shape_bg"
         android:gravity="left|center_vertical"
@@ -20,19 +20,19 @@
         android:paddingLeft="8dp"
         android:text="测量步骤及要点"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
+        android:textSize="18.9dp"
         />
 
     <TextView
         android:id="@+id/testSpecTv1"
-        android:layout_width="460dp"
-        android:layout_height="170dp"
+        android:layout_width="420dp"
+        android:layout_height="193dp"
         android:maxWidth="460dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:text="1 jiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiangjiang"
         android:textColor="@color/black1"
-        android:textSize="16sp"
+        android:textSize="12.6dp"
         />
 
 

@@ -2,16 +2,17 @@
 <LinearLayout
     android:id="@+id/testResultLine"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="460dp"
-    android:layout_height="140dp"
+    android:layout_width="420dp"
+    android:layout_height="169dp"
     android:layout_gravity="top"
     android:background="@drawable/dv_white_shape_bg"
+    android:gravity="top"
     android:orientation="vertical"
     >
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="37dp"
         android:background="@drawable/dv_grey_shape_bg"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
@@ -23,100 +24,103 @@
     <LinearLayout
         android:id="@+id/measDispLine"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="64dp"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="8dp"
+        android:paddingLeft="4dp"
         android:paddingRight="4dp">
 
         <TextView
             android:id="@+id/measDisp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:padding="4dp"
-            android:text="h2测量值[mm]"
+            android:singleLine="true"
+            android:text="h2测量值(mm)"
             android:textColor="@color/md_black"
-            android:textSize="12sp"
+            android:textSize="18.9dp"
             />
 
         <TextView
             android:id="@+id/measDispTest"
-            android:layout_width="94dp"
-            android:layout_height="36dp"
+            android:layout_width="84dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
             android:background="@drawable/dv_shape_bg"
             android:gravity="center"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:singleLine="true"
             android:text="0.000"
             android:textColor="@color/md_black"
-            android:textSize="12sp"
+            android:textSize="18.9dp"
             />
 
         <TextView
             android:id="@+id/measDispTips"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_gravity="center_vertical"
-            android:visibility="gone"
             android:drawableLeft="@drawable/cel_3"
             android:gravity="center_vertical"
             android:text="您的测量值存在错误，测量值偏小"
             android:textColor="@color/md_red_500"
-            android:textSize="12sp"
+            android:textSize="12.6dp"
             />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/divider"/>
 
     <LinearLayout
         android:id="@+id/suggestDispLine"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="64dp"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="8dp"
+        android:paddingLeft="4dp"
         android:paddingRight="4dp">
 
         <TextView
             android:id="@+id/suggestDisp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:padding="4dp"
+            android:singleLine="true"
             android:text="h4建议值(mm)"
             android:textColor="@color/md_black"
-            android:textSize="12sp"
+            android:textSize="18.9dp"
             />
 
         <TextView
             android:id="@+id/suggestDispTest"
-            android:layout_width="94dp"
-            android:layout_height="36dp"
+            android:layout_width="84dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
             android:background="@drawable/dv_shape_bg"
             android:gravity="center"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:singleLine="true"
             android:text="0.000"
             android:textColor="@color/md_black"
-            android:textSize="12sp"
+            android:textSize="18.9dp"
             />
 
         <TextView
             android:id="@+id/suggestDispTips"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="64dp"
             android:layout_gravity="center_vertical"
-            android:visibility="gone"
             android:drawableLeft="@drawable/cel_3"
             android:gravity="center_vertical"
             android:text="您的测量值存在错误，垫片超出合理范围"
             android:textColor="@color/md_red_500"
-            android:textSize="12sp"
+            android:textSize="12.6dp"
             />
     </LinearLayout>
 

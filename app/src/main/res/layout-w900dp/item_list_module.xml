@@ -2,22 +2,21 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="82dp"
     android:layout_gravity="center"
     android:layout_margin="8dp"
-
     android:gravity="center"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="400dp"
-        android:layout_height="76dp"
+        android:layout_width="356dp"
+        android:layout_height="82dp"
         android:layout_gravity="center"
         android:background="@drawable/bg_module_item"
         android:gravity="center"
         android:text="dasdsadsadsa"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/md_white"
-        android:textSize="24sp"/>
+        android:textSize="23.7dp"/>
 </LinearLayout>

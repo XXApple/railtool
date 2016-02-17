@@ -26,26 +26,26 @@
             android:text="输入喷油器型号"
             android:textColor="@color/black1"
             android:layout_marginBottom="16dp"
-            android:textSize="30dp"/>
+            android:textSize="23.7dp"/>
 
         <EditText
             android:id="@+id/injectorTypeEt"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="55dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_edittext"
             android:gravity="center"
             android:text="0445120019"
             android:textColor="@color/black1"
-            android:textSize="20dp"/>
+            android:textSize="23.7dp"/>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="38dp"
+            android:layout_marginTop="35dp"
             android:orientation="horizontal"
-            android:paddingBottom="28dp"
+            android:paddingBottom="25dp"
             android:paddingLeft="6dp">
 
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 android:text="厂商："
                 android:textColor="@color/md_black"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
             <TextView
                 android:id="@+id/cs"
@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:text="锡柴"
                 android:textColor="@color/black3"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
         </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="28dp"
+            android:paddingBottom="25dp"
             android:paddingLeft="6dp">
 
             <TextView
@@ -80,7 +80,7 @@
                 android:layout_weight="1"
                 android:text="喷油嘴印号："
                 android:textColor="@color/md_black"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
             <TextView
                 android:id="@+id/yzkyh"
@@ -89,7 +89,7 @@
                 android:layout_weight="1"
                 android:text="DLLA14P1622"
                 android:textColor="@color/black3"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
         </LinearLayout>
 
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="28dp"
+            android:paddingBottom="25dp"
             android:paddingLeft="6dp">
 
             <TextView
@@ -106,7 +106,7 @@
                 android:layout_weight="1"
                 android:text="油嘴型号："
                 android:textColor="@color/md_black"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
             <TextView
                 android:id="@+id/yzxh"
@@ -115,7 +115,7 @@
                 android:layout_weight="1"
                 android:text="0433172162"
                 android:textColor="@color/black3"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
         </LinearLayout>
 
@@ -123,7 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="28dp"
+            android:paddingBottom="25dp"
             android:paddingLeft="6dp">
 
             <TextView
@@ -132,7 +132,7 @@
                 android:layout_weight="1"
                 android:text="阀组件型号："
                 android:textColor="@color/md_black"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
             <TextView
                 android:id="@+id/fzjxh"
@@ -141,7 +141,7 @@
                 android:layout_weight="1"
                 android:text="F00RJ1657"
                 android:textColor="@color/black3"
-                android:textSize="20dp"/>
+                android:textSize="19dp"/>
 
         </LinearLayout>
 
