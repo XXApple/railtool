@@ -24,42 +24,54 @@
     <LinearLayout
         android:id="@+id/measDispLine"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="66dp"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingLeft="4dp"
         android:paddingRight="4dp">
 
-        <TextView
-            android:id="@+id/measDisp"
-            android:layout_width="wrap_content"
-            android:layout_height="64dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:singleLine="true"
-            android:text="h2测量值(mm)"
-            android:textColor="@color/md_black"
-            android:textSize="18.9dp"
-            />
+            android:orientation="horizontal"
+            >
 
-        <TextView
-            android:id="@+id/measDispTest"
-            android:layout_width="84dp"
-            android:layout_height="28dp"
-            android:layout_gravity="center"
-            android:background="@drawable/dv_shape_bg"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="0.000"
-            android:textColor="@color/md_black"
-            android:textSize="18.9dp"
-            />
+            <TextView
+                android:id="@+id/measDisp"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="h2测量值(mm)"
+                android:textColor="@color/md_black"
+                android:textSize="18.9dp"
+                />
+
+            <TextView
+                android:id="@+id/measDispTest"
+                android:layout_width="84dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/dv_shape_bg"
+                android:gravity="center"
+                android:singleLine="true"
+                android:layout_marginLeft="20dp"
+                android:text="0.000"
+                android:textColor="@color/md_black"
+                android:textSize="18.9dp"
+                />
+
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/measDispTips"
             android:layout_width="wrap_content"
-            android:layout_height="64dp"
+            android:layout_height="32dp"
             android:layout_gravity="center_vertical"
             android:drawableLeft="@drawable/cel_3"
             android:gravity="center_vertical"
@@ -79,42 +91,51 @@
     <LinearLayout
         android:id="@+id/suggestDispLine"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="66dp"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingLeft="4dp"
         android:paddingRight="4dp">
 
-        <TextView
-            android:id="@+id/suggestDisp"
-            android:layout_width="wrap_content"
-            android:layout_height="64dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:singleLine="true"
-            android:text="h4建议值(mm)"
-            android:textColor="@color/md_black"
-            android:textSize="18.9dp"
-            />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/suggestDispTest"
-            android:layout_width="84dp"
-            android:layout_height="28dp"
-            android:layout_gravity="center"
-            android:background="@drawable/dv_shape_bg"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="0.000"
-            android:textColor="@color/md_black"
-            android:textSize="18.9dp"
-            />
+            <TextView
+                android:id="@+id/suggestDisp"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="h4建议值(mm)"
+                android:textColor="@color/md_black"
+                android:textSize="18.9dp"
+                />
+
+            <TextView
+                android:id="@+id/suggestDispTest"
+                android:layout_width="84dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/dv_shape_bg"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:singleLine="true"
+                android:text="0.000"
+                android:textColor="@color/md_black"
+                android:textSize="18.9dp"
+                />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/suggestDispTips"
             android:layout_width="wrap_content"
-            android:layout_height="64dp"
+            android:layout_height="32dp"
             android:layout_gravity="center_vertical"
             android:drawableLeft="@drawable/cel_3"
             android:gravity="center_vertical"
