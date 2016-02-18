@@ -53,13 +53,13 @@
 
             <TextView
                 android:id="@+id/measDispTest"
-                android:layout_width="84dp"
+                android:layout_width="80dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:background="@drawable/dv_shape_bg"
                 android:gravity="center"
                 android:singleLine="true"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:text="0.000"
                 android:textColor="@color/md_black"
                 android:textSize="18.9dp"
@@ -112,19 +112,19 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="h4建议值(mm)"
+                android:text="建议斜铁升程垫片厚度为(mm)"
                 android:textColor="@color/md_black"
                 android:textSize="18.9dp"
                 />
 
             <TextView
                 android:id="@+id/suggestDispTest"
-                android:layout_width="84dp"
+                android:layout_width="80dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:background="@drawable/dv_shape_bg"
                 android:gravity="center"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:singleLine="true"
                 android:text="0.000"
                 android:textColor="@color/md_black"

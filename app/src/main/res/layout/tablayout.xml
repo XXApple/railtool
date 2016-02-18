@@ -3,6 +3,7 @@
     android:id="@+id/type2Line"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="516dp"
+    android:visibility="gone"
     android:layout_height="match_parent"
     android:orientation="vertical">
 

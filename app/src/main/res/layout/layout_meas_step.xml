@@ -6,8 +6,7 @@
     android:layout_height="230dp"
     android:layout_marginRight="20dp"
     android:background="@drawable/dv_white_shape_bg"
-    android:orientation="vertical"
-    android:visibility="gone">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/testSpecTv"
