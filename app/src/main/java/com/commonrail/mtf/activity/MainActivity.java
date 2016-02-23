@@ -13,9 +13,10 @@ import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
+import com.commonrail.mtf.po.FileListItem;
+import com.commonrail.mtf.po.FileUpload;
 import com.commonrail.mtf.po.Injector;
 import com.commonrail.mtf.po.Result;
-import com.commonrail.mtf.po.StepList;
 import com.commonrail.mtf.po.Update;
 import com.commonrail.mtf.po.User;
 import com.commonrail.mtf.util.Api.Config;
@@ -25,13 +26,16 @@ import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.DateTimeUtil;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
+import com.commonrail.mtf.util.common.NetUtils;
 import com.commonrail.mtf.util.retrofit.RxUtils;
 import com.yw.filedownloader.BaseDownloadTask;
 import com.yw.filedownloader.FileDownloadListener;
+import com.yw.filedownloader.FileDownloadQueueSet;
 import com.yw.filedownloader.FileDownloader;
 import com.yw.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,9 +62,21 @@ public class MainActivity extends BaseActivity {
     TextView dateTime;
 
 
-    private RtApi api;
     private IndexAdapter mIndexAdapter;
     private CompositeSubscription subscription = new CompositeSubscription();
+    private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        RxUtils.unsubscribeIfNotNull(subscription);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -81,7 +97,7 @@ public class MainActivity extends BaseActivity {
         });
 
         final float scale = getActivity().getResources().getDisplayMetrics().density;
-        L.e("scale:"+scale+"");
+        L.e("scale:" + scale + "");
 
 //        String url = "http://dl.game.qidian.com/apknew/game/dzz/dzz.apk";
 //        String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "tmp1";
@@ -98,6 +114,7 @@ public class MainActivity extends BaseActivity {
     public Activity getActivity() {
         return this;
     }
+
 
     private void doLogin(final String username) {
         subscription.add(api.getUserInfo(username)
@@ -283,9 +300,9 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<StepList>, StepList>() {
+                .map(new Func1<Result<FileUpload>, FileUpload>() {
                     @Override
-                    public StepList call(Result<StepList> t) {
+                    public FileUpload call(Result<FileUpload> t) {
                         L.e("getUserInfo： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
@@ -295,12 +312,17 @@ public class MainActivity extends BaseActivity {
                         return t.getData();
                     }
                 })
-                .subscribe(new Action1<StepList>() {
+                .subscribe(new Action1<FileUpload>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void call(StepList t) {
-                        if (t == null) {
-
+                    public void call(FileUpload t) {
+                        if (t != null) {
+//                            if(t.getVersionCode()){
+//                            }
+                            //wifi网络下自动下载最新图片和视频资源
+                            if (NetUtils.isWifi(MainActivity.this)) {
+                                downloadFiles(t.getFileList());
+                            }
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -310,6 +332,76 @@ public class MainActivity extends BaseActivity {
                         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                     }
                 }));
+    }
+
+    private void downloadFiles(final List<FileListItem> fileList) {
+        final FileDownloadListener queueTarget = new FileDownloadListener() {
+            @Override
+            protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            }
+
+            @Override
+            protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+            }
+
+            @Override
+            protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            }
+
+            @Override
+            protected void blockComplete(BaseDownloadTask task) {
+            }
+
+            @Override
+            protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
+
+            }
+
+            @Override
+            protected void completed(BaseDownloadTask task) {
+                final int index = (int) task.getTag();
+                FileListItem fileListItem = fileList.get(index);
+                String fileType = fileListItem.getFileType();
+                String filePath = task.getPath();
+                /**
+                 * TODO 将下载完成的对应的文件按照类型拷贝至对应文件夹下，待开发
+                 *
+                 */
+            }
+
+            @Override
+            protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            }
+
+            @Override
+            protected void error(BaseDownloadTask task, Throwable e) {
+            }
+
+            @Override
+            protected void warn(BaseDownloadTask task) {
+            }
+        };
+
+        final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
+
+        final List<BaseDownloadTask> tasks = new ArrayList<>();
+
+        String URLS[] = new String[fileList.size()];
+        for (int i = 0; i < fileList.size(); i++) {
+            URLS[i] = fileList.get(0).getUrl();
+        }
+        String filePath = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "railtool" + File.separator;
+        for (int i = 0; i < URLS.length; i++) {
+            tasks.add(FileDownloader.getImpl().create(URLS[i]).setTag(i).setPath(filePath));
+        }
+        queueSet.disableCallbackProgressTimes(); // do not need for each task callback `FileDownloadListener#progress`,
+// we just consider which task will complete. so in this way reduce ipc will be effective optimization
+
+// each task will auto retry 1 time if download fail
+        queueSet.setAutoRetryTimes(1);
+        queueSet.downloadSequentially(tasks);//队列一个一个下载
+        queueSet.downloadTogether(tasks);//同时下载
+        queueSet.start();
     }
 
 

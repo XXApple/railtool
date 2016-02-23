@@ -2,6 +2,7 @@ package com.commonrail.mtf.util.Api;
 
 
 import com.commonrail.mtf.po.Bosch;
+import com.commonrail.mtf.po.FileUpload;
 import com.commonrail.mtf.po.Injector;
 import com.commonrail.mtf.po.Module;
 import com.commonrail.mtf.po.Result;
@@ -56,7 +57,7 @@ public interface RtApi {
 
     @FormUrlEncoded
     @POST(Config.UPDATE_FILE)
-    Observable<Result<StepList>> updateFile(@Field("") String injectorType);
+    Observable<Result<FileUpload>> updateFile(@Field("") String injectorType);
 
 
 }

@@ -156,7 +156,9 @@ public class Step2Activity extends BaseActivity {
     private ModuleItem mItem = null;
     private StepList mStepList;
     private int curStepOrder = 0;
-    private RtApi api;
+    private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+
+
     private CompositeSubscription subscription = new CompositeSubscription();
     private String mDeviceAddress;
     private String mDeviceName;
@@ -660,6 +662,7 @@ public class Step2Activity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        RxUtils.unsubscribeIfNotNull(subscription);
         mOkVideoView.onPause();
         unregisterReceiver(mGattUpdateReceiver);
     }
@@ -673,6 +676,7 @@ public class Step2Activity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
         mOkVideoView.onResume(mUri);
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {

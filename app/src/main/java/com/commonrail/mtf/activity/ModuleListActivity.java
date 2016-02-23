@@ -55,8 +55,8 @@ public class ModuleListActivity extends BaseActivity {
     RecyclerView itemList;
     @Bind(R.id.tips)
     TextView tips;
-    
-    
+
+
     @Bind(R.id.left_tips)
     LinearLayout leftTips;
     @Bind(R.id.left_bosch_tips)
@@ -73,16 +73,28 @@ public class ModuleListActivity extends BaseActivity {
     @Bind(R.id.fzjxh)
     TextView fzjxh;
 
-    private RtApi api;
     private ModuleListAdapter mIndexAdapter;
-    private CompositeSubscription subscription = new CompositeSubscription();
     private boolean isBosch = false;
     private Bosch mBosch = null;
     private String injectorType;
     private String language;
     private int moduleId = 0;
-    private String moduleName="";
+    private String moduleName = "";
     private String xh = "";
+    private CompositeSubscription subscription = new CompositeSubscription();
+    private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        RxUtils.unsubscribeIfNotNull(subscription);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -91,7 +103,6 @@ public class ModuleListActivity extends BaseActivity {
         toolbar.setSubtitle(R.string.title_activity_main);
         tips.setText(R.string.module_list_tips);
         injectorTypeEt.clearFocus();
-        api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
         String injectorType = getIntent().getStringExtra("injectorType");
         String language = getIntent().getStringExtra("language");
         getModuleList(injectorType, language);
@@ -254,7 +265,7 @@ public class ModuleListActivity extends BaseActivity {
                     toolbar.setSubtitle(mDeviceName);
                     L.e("链接蓝牙设备", mDeviceName);
                 }
-                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId,moduleName, xh, mDeviceName, mDeviceAddress);
+                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, mDeviceName, mDeviceAddress);
 
             }
         }

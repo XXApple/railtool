@@ -24,9 +24,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     ext {
         supportVersion = "23.1.1"
-        retrofitVersion = "2.0.0-beta2"
+        retrofitVersion = '2.0.0-beta2'
         leakcanaryVersion = "1.3.1"
         reactivexVersion = "1.1.0"
+        okHttpVersion = '3.1.2'
         frescoVersion = "0.8.1"
     }
     compile "com.android.support:appcompat-v7:$supportVersion"
@@ -52,7 +53,8 @@ dependencies {
     compile "io.reactivex:rxjava:$reactivexVersion"
 
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
+    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 //    compile 'com.liulishuo.filedownloader:library:0.1.9'
 
     compile 'com.pgyersdk:sdk:2.2.2'
