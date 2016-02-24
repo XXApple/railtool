@@ -14,18 +14,14 @@ import android.widget.TextView;
 
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
-import com.commonrail.mtf.activity.bluetooth.DeviceScanActivity;
 import com.commonrail.mtf.adapter.ModuleListAdapter;
 import com.commonrail.mtf.base.BaseActivity;
 import com.commonrail.mtf.po.Bosch;
 import com.commonrail.mtf.po.Module;
 import com.commonrail.mtf.po.Result;
-import com.commonrail.mtf.util.Api.Config;
-import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
-import com.commonrail.mtf.util.retrofit.RxUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +32,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * 项目名称：railtool
@@ -81,20 +76,8 @@ public class ModuleListActivity extends BaseActivity {
     private int moduleId = 0;
     private String moduleName = "";
     private String xh = "";
-    private CompositeSubscription subscription = new CompositeSubscription();
-    private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        RxUtils.unsubscribeIfNotNull(subscription);
-    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -161,9 +144,10 @@ public class ModuleListActivity extends BaseActivity {
                                 }
                                 moduleName = mModule.getModuleName();
                                 moduleId = mModule.getId();
-                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
-
-                                ModuleListActivity.this.startActivityForResult(intent, 0);
+//                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
+//
+//                                ModuleListActivity.this.startActivityForResult(intent, 0);
+                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, "BluetoothQFB", "7C:66:9D:99:FD:F5");
                             }
                         });
                         mIndexAdapter.notifyDataSetChanged();
@@ -265,7 +249,7 @@ public class ModuleListActivity extends BaseActivity {
                     toolbar.setSubtitle(mDeviceName);
                     L.e("链接蓝牙设备", mDeviceName);
                 }
-                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, mDeviceName, mDeviceAddress);
+//                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, mDeviceName, mDeviceAddress);
 
             }
         }

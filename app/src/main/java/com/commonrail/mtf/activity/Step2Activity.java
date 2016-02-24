@@ -662,7 +662,6 @@ public class Step2Activity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        RxUtils.unsubscribeIfNotNull(subscription);
         mOkVideoView.onPause();
         unregisterReceiver(mGattUpdateReceiver);
     }
@@ -676,7 +675,6 @@ public class Step2Activity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
         mOkVideoView.onResume(mUri);
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {

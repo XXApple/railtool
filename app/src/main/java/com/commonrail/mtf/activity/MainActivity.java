@@ -44,7 +44,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends BaseActivity {
 
@@ -63,8 +62,6 @@ public class MainActivity extends BaseActivity {
 
 
     private IndexAdapter mIndexAdapter;
-    private CompositeSubscription subscription = new CompositeSubscription();
-    private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
 
     @Override
     protected void onResume() {
@@ -73,7 +70,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         RxUtils.unsubscribeIfNotNull(subscription);
     }

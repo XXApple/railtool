@@ -10,9 +10,13 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.commonrail.mtf.R;
+import com.commonrail.mtf.util.Api.Config;
+import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.common.ViewUtils;
+import com.commonrail.mtf.util.retrofit.RxUtils;
 
 import butterknife.ButterKnife;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * 项目名称：jianyue
@@ -27,7 +31,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static String TAG = "BaseActivity";
     protected Toolbar toolbar;
     protected ProgressDialog mProgressDialog = null;
-
+    protected CompositeSubscription subscription = new CompositeSubscription();
+    protected RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,5 +81,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 //        RefWatcher refWatcher = AppClient.getRefWatcher(getActivity());
 //        refWatcher.watch(getActivity());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        RxUtils.unsubscribeIfNotNull(subscription);
     }
 }
