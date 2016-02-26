@@ -40,14 +40,14 @@ public class IntentUtils {
     }
 
 
-    public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId,String moduleName, String xh, String mDeviceName, String mDeviceAddress) {
+    public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId,String moduleName, String xh, String mDeviceAddress) {
         Intent intent = new Intent(context, Step2Activity.class);
         intent.putExtra("injectorType", injectorType);
         intent.putExtra("language", language);
         intent.putExtra("moduleId", moduleId);
         intent.putExtra("moduleName",moduleName);
         intent.putExtra("xh", xh);
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, mDeviceName);
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);

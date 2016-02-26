@@ -4,6 +4,9 @@ import android.os.Environment;
 import android.os.StatFs;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
  * SD卡相关的辅助类
@@ -11,6 +14,7 @@ import java.io.File;
  * @author zhy
  */
 public class SDCardUtils {
+    private final static String TAG = "SDCardUtils";
     private SDCardUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
@@ -79,6 +83,41 @@ public class SDCardUtils {
      */
     public static String getRootDirectoryPath() {
         return Environment.getRootDirectory().getAbsolutePath();
+    }
+
+
+    /**
+     * 复制单个文件  
+     * @param oldPath String 原文件路径 如：c:/fqf.txt  
+     * @param newPath String 复制后路径 如：f:/fqf.txt  
+     * @return boolean
+     */
+    public static void copyFile(String oldPath, String newPath) {
+        try {
+            int bytesum = 0;
+            int byteread = 0;
+            L.e(TAG,"原文件:"+oldPath+" 新文件:"+newPath);
+            File oldfile = new File(oldPath);
+            if (!oldfile.exists()) { //文件不存在时   
+                InputStream inStream = new FileInputStream(oldPath); //读入原文件   
+                FileOutputStream fs = new FileOutputStream(newPath);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ( (byteread = inStream.read(buffer)) != -1) {
+                    bytesum += byteread; //字节数 文件大小   
+                    System.out.println(bytesum);
+                    fs.write(buffer, 0, byteread);
+                }
+                inStream.close();
+                L.e(TAG,oldPath+"拷贝结束");
+            }
+        }
+        catch (Exception e) {
+            System.out.println("复制单个文件操作出错");
+            e.printStackTrace();
+
+        }
+
     }
 
 

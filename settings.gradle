@@ -1,1 +1,1 @@
-include ':app',':rtplayer',':filedownloader'
+include ':app',':rtplayer',':filedownloader',':MyDaoGenerator'

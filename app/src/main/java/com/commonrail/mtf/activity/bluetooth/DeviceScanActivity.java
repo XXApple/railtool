@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.base.BaseActivity;
+import com.commonrail.mtf.util.common.L;
 
 import java.util.ArrayList;
 
@@ -242,6 +243,7 @@ public class DeviceScanActivity extends BaseActivity {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
         final Intent intent = new Intent();
+        L.e(TAG,device.getAddress());
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         if (mScanning) {

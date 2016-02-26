@@ -5,12 +5,14 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$USER_HOME$/.gradle/daemon/gradle-2.8" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.8" />
         <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/MyDaoGenerator" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/filedownloader" />
             <option value="$PROJECT_DIR$/rtplayer" />
           </set>
         </option>

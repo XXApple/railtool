@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
     private String uname = "";
+    private String amesdialMac = "";
 
     public String getUname() {
         return uname;
@@ -20,5 +21,13 @@ public class User implements Serializable {
 
     public void setUname(String mUname) {
         uname = mUname;
+    }
+
+    public String getAmesdialMac() {
+        return amesdialMac;
+    }
+
+    public void setAmesdialMac(String mAmesdialMac) {
+        amesdialMac = mAmesdialMac;
     }
 }

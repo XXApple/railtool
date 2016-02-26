@@ -17,6 +17,7 @@ import java.io.Serializable;
 public class FileListItem implements Serializable {
     private String url = "";
     private String fileType = "";
+    private String localUrl = "";
     private String fileLength = "";
 
     public String getUrl() {
@@ -41,5 +42,13 @@ public class FileListItem implements Serializable {
 
     public void setFileLength(final String mFileLength) {
         fileLength = mFileLength;
+    }
+
+    public String getLocalUrl() {
+        return localUrl;
+    }
+
+    public void setLocalUrl(String mLocalUrl) {
+        localUrl = mLocalUrl;
     }
 }

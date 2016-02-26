@@ -20,8 +20,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -205,9 +203,6 @@ public class Step2Activity extends BaseActivity {
                 if (!TextUtils.isEmpty(mDeviceName)) {
                     toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.connected) + mDeviceAddress);
                     L.e("已链接蓝牙设备", mDeviceName);
-                    if (mProgressDialog != null) {
-                        mProgressDialog.dismiss();
-                    }
                 }
                 invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
@@ -216,9 +211,6 @@ public class Step2Activity extends BaseActivity {
                 if (!TextUtils.isEmpty(mDeviceName)) {
                     toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.disconnected));
                     L.e("未链接蓝牙设备", mDeviceName);
-                    mProgressDialog.setMessage("蓝牙连接已断开，正在重新连接，请稍等...");
-                    mProgressDialog.setIndeterminate(true);
-                    mProgressDialog.show();
                     mBluetoothLeService.connect(mDeviceAddress);
                 }
 //                updateConnectionState(R.string.disconnected);
@@ -612,10 +604,8 @@ public class Step2Activity extends BaseActivity {
             testSpecTv2.setText(mStep.getTestSpec());
         }
 
-
         videoPicUrl.setImageURI(AppUtils.getFileFrescoUri(mStep.getShowPicUrl()));
         dispStepNameTv.setText(mStep.getDispStepName());
-
 
     }
 
@@ -834,47 +824,47 @@ public class Step2Activity extends BaseActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.gatt_services, menu);
-        if (mConnected) {
-            menu.findItem(R.id.menu_connect).setVisible(false);
-            menu.findItem(R.id.menu_disconnect).setVisible(true);
-        } else {
-            menu.findItem(R.id.menu_connect).setVisible(true);
-            menu.findItem(R.id.menu_disconnect).setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_connect:
-                mProgressDialog.setMessage("正在连接蓝牙设备，请稍等...");
-                mProgressDialog.setIndeterminate(true);
-                mProgressDialog.show();
-                mBluetoothLeService.connect(mDeviceAddress);
-                return true;
-            case R.id.menu_disconnect:
-//                mBluetoothLeService.disconnect();
-                return true;
-            case R.id.menu_refresh:
-                if (!mConnected) {
-                    mProgressDialog.setMessage("正在连接蓝牙设备，请稍等...");
-                    mProgressDialog.setIndeterminate(true);
-                    mProgressDialog.show();
-                    mBluetoothLeService.connect(mDeviceAddress);
-                } else {
-                    GlobalUtils.showToastShort(getActivity(), "蓝牙已连接");
-                }
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.gatt_services, menu);
+//        if (mConnected) {
+//            menu.findItem(R.id.menu_connect).setVisible(false);
+//            menu.findItem(R.id.menu_disconnect).setVisible(true);
+//        } else {
+//            menu.findItem(R.id.menu_connect).setVisible(true);
+//            menu.findItem(R.id.menu_disconnect).setVisible(false);
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.menu_connect:
+//                mProgressDialog.setMessage("正在连接蓝牙设备，请稍等...");
+//                mProgressDialog.setIndeterminate(true);
+//                mProgressDialog.show();
+//                mBluetoothLeService.connect(mDeviceAddress);
+//                return true;
+//            case R.id.menu_disconnect:
+////                mBluetoothLeService.disconnect();
+//                return true;
+//            case R.id.menu_refresh:
+//                if (!mConnected) {
+//                    mProgressDialog.setMessage("正在连接蓝牙设备，请稍等...");
+//                    mProgressDialog.setIndeterminate(true);
+//                    mProgressDialog.show();
+//                    mBluetoothLeService.connect(mDeviceAddress);
+//                } else {
+//                    GlobalUtils.showToastShort(getActivity(), "蓝牙已连接");
+//                }
+//                return true;
+//            case android.R.id.home:
+//                onBackPressed();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void uploadMesResult(HashMap<String, Object> map) {
         Gson mGson = new Gson();

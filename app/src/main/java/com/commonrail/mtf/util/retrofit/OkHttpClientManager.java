@@ -81,9 +81,9 @@ public class OkHttpClientManager {
             String appName = AppClient.getInstance().getApplicationInfo().loadLabel(pm).toString();
 
 
-            L.e("deviceMac：" + "123456");
-            L.e("osName" + osName);
-            L.e("appName" + appName);
+            L.e(TAG,"deviceMac：" + deviceMac);
+            L.e(TAG,"osName" + osName);
+            L.e(TAG,"appName" + appName);
 
 
             Request request = original.newBuilder()
@@ -93,10 +93,10 @@ public class OkHttpClientManager {
 
 //                    .header("terminal-type", "pad")
 //                    .header("device-number", deviceId)
-                    .header("device-mac", "123456")
-//                    .header("device-imei", deviceId)
+                    .header("device-mac", deviceMac)
+                    .header("device-imei", deviceId)
 //                    .header("device-model", deviceId)
-//                    .header("os-name",osName)
+//                    .header("os-name",osName) 
 //                    .header("os-version", android.os.Build.VERSION.RELEASE)
 //                    .header("app-name", appName)
 //                    .header("app-id", deviceId)
@@ -109,11 +109,11 @@ public class OkHttpClientManager {
 
 
             long t1 = System.nanoTime();
-            L.e(String.format("Sending request %s on %s%n%s",
+            L.e(TAG,String.format("Sending request %s on %s%n%s",
                     request.url(), chain.connection(), request.headers()));
             Response response = chain.proceed(request);
             long t2 = System.nanoTime();
-            L.e(String.format("Received response for %s in %.1fms%n%s",
+            L.e(TAG,String.format("Received response for %s in %.1fms%n%s",
                     response.request().url(), (t2 - t1) / 1e6d, response.headers()));
 
             return response;
