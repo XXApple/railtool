@@ -102,9 +102,8 @@ public class MainActivity extends BaseActivity {
                 AppUtils.callPhone(MainActivity.this, callFb.getText().toString().trim());
             }
         });
-
-        final float scale = getActivity().getResources().getDisplayMetrics().density;
-        L.e("scale:" + scale + "");
+//        final float scale = getActivity().getResources().getDisplayMetrics().density;
+//        L.e("scale:" + scale + "");
 
 //        String url = "http://dl.game.qidian.com/apknew/game/dzz/dzz.apk";
 //        String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "tmp1";
@@ -207,7 +206,7 @@ public class MainActivity extends BaseActivity {
                 .map(new Func1<Result<Update>, Update>() {
                     @Override
                     public Update call(Result<Update> t) {
-                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        L.e("checkUpdate： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
@@ -244,7 +243,7 @@ public class MainActivity extends BaseActivity {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        L.e("" + throwable.toString());
+                        L.e("checkUpdate" + throwable.toString());
                         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                     }
                 }));
@@ -332,6 +331,7 @@ public class MainActivity extends BaseActivity {
                             L.e("updateFile", "请求结果为空");
                             return;
                         }
+                        L.e("updateFile", "请求结果不为空"+t.toString());
                         //wifi网络下自动下载最新图片和视频资源
                         if (NetUtils.isWifi(MainActivity.this)) {
                             if (t.getFileList() == null || t.getFileList().isEmpty()) {
@@ -349,7 +349,7 @@ public class MainActivity extends BaseActivity {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        L.e("updateFile" + throwable.toString());
+                        L.e("updateFile", throwable.toString());
                         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                     }
                 }));
@@ -431,6 +431,7 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void completed(BaseDownloadTask task) {
             String localUrl = (String) task.getTag();
+            
             if (localUrl.endsWith(".mp4")) {
 
             } else if (localUrl.endsWith(".jpg")) {

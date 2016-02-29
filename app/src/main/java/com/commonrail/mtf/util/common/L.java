@@ -51,7 +51,7 @@ public class L {
 
     public static void e(String tag, String msg) {
         if (isDebug)
-            Log.i(tag, msg);
+            Log.e(tag, msg);
     }
 
     public static void v(String tag, String msg) {

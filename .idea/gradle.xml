@@ -10,9 +10,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/MyDaoGenerator" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/filedownloader" />
+            <option value="$PROJECT_DIR$/rtgreendaogenerator" />
             <option value="$PROJECT_DIR$/rtplayer" />
           </set>
         </option>

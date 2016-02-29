@@ -59,7 +59,10 @@ public class IndexAdapter
             ((ViewHolder) holder).mItem = mInjectors.get(position);
             ((ViewHolder) holder).mContentView.setText(mInjectors.get(position).getInjectorName());
             ((ViewHolder) holder).mIdView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            ((ViewHolder) holder).mIdView.setImageURI(AppUtils.getFileFrescoUri("/images/logo0" + (position + 1) + ".png"));
+            
+            L.e("IndexAdapter", ((ViewHolder) holder).mItem.getIconUrl());
+            String localUrl = ((ViewHolder) holder).mItem.getIconUrl();
+                    ((ViewHolder) holder).mIdView.setImageURI(AppUtils.getFileFrescoUri(localUrl));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {

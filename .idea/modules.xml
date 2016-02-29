@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyDaoGenerator/MyDaoGenerator.iml" filepath="$PROJECT_DIR$/MyDaoGenerator/MyDaoGenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/filedownloader/filedownloader.iml" filepath="$PROJECT_DIR$/filedownloader/filedownloader.iml" />
       <module fileurl="file://$PROJECT_DIR$/railtool.iml" filepath="$PROJECT_DIR$/railtool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rtgreendaogenerator/rtgreendaogenerator.iml" filepath="$PROJECT_DIR$/rtgreendaogenerator/rtgreendaogenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/rtplayer/rtplayer.iml" filepath="$PROJECT_DIR$/rtplayer/rtplayer.iml" />
     </modules>
   </component>

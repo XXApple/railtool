@@ -55,9 +55,10 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
-//    compile 'com.liulishuo.filedownloader:library:0.1.9'
-
+    compile 'com.malinskiy:superrecyclerview:1.1.1'
     compile 'com.pgyersdk:sdk:2.2.2'
+
+    compile 'de.greenrobot:greendao:2.1.0'
     compile project(':rtplayer')
     compile project(':filedownloader')
 }

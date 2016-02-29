@@ -40,4 +40,13 @@ public class FileUpload implements Serializable {
     public void setFileList(final List<FileListItem> mFileList) {
         fileList = mFileList;
     }
+
+
+    @Override
+    public String toString() {
+        return "FileUpload{" +
+                "versionCode=" + versionCode +
+                ", fileList=" + fileList +
+                '}';
+    }
 }

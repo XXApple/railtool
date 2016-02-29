@@ -1,14 +1,15 @@
-package pl.surecase.eu;
+package com.commonrail.mtf.greendao.generator;
 
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
 import de.greenrobot.daogenerator.Schema;
 
-public class MyDaoGenerator {
+public class RtGreenDaoGenerator {
 
     public static void main(String args[]) throws Exception {
         Schema schema = new Schema(1, "com.commonrail.mtf.db");
         initFilesEntuty(schema);
+
         new DaoGenerator().generateAll(schema, args[0]);
     }
 
