@@ -14,7 +14,7 @@ import com.commonrail.mtf.util.common.L;
 import java.util.List;
 
 /*********
- * @author: wengyiming
+ * wengyiming
  *********/
 public class DbHelp {
 
@@ -60,10 +60,6 @@ public class DbHelp {
     }
 
     public void deleteTrip(int status) {
-        if (status == 0) {
-
-        }
-        Log.i(TAG, "delete");
     }
 
     public void deleteFiles(Files mFiles) {
@@ -126,17 +122,6 @@ public class DbHelp {
             }
         }
         L.e("DBHelp insert InjectorLists items" + i);
-
-
-//        mInjectorDbDao.getSession().runInTx(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                for (int i = 0; i < list.size(); i++) {
-//                    mInjectorDbDao.insertOrReplace(list.get(i));
-//                }
-//            }
-//        });
     }
 
     public List<InjectorDb> loadAllInjector() {

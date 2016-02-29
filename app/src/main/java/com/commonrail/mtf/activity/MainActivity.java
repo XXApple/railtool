@@ -16,7 +16,6 @@ import com.commonrail.mtf.base.BaseActivity;
 import com.commonrail.mtf.db.Files;
 import com.commonrail.mtf.db.FilesDao;
 import com.commonrail.mtf.db.InjectorDb;
-import com.commonrail.mtf.db.InjectorDbDao;
 import com.commonrail.mtf.po.FileListItem;
 import com.commonrail.mtf.po.FileUpload;
 import com.commonrail.mtf.po.Result;
@@ -71,8 +70,6 @@ public class MainActivity extends BaseActivity {
 
 
     private IndexAdapter mIndexAdapter;
-    private FilesDao mFilesDao;
-    private InjectorDbDao mInjectorDbDao;
 
     @Override
     protected void onResume() {
@@ -93,13 +90,14 @@ public class MainActivity extends BaseActivity {
         toolbar.setSubtitle(R.string.title_activity_main);
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
 
+
+        api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+        
         mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
         itemList.setAdapter(mIndexAdapter);
 
 
-        api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
-        mFilesDao = DbHelp.getInstance(this).getFilesDao();
-        mInjectorDbDao = DbHelp.getInstance(this).getInjectorDbDao();
+      
         doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
@@ -378,7 +376,7 @@ public class MainActivity extends BaseActivity {
         final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
         final List<BaseDownloadTask> tasks = new ArrayList<>();
 
-        List<Files> mFilesDbQuene = mFilesDao.loadAll();
+        List<Files> mFilesDbQuene =  DbHelp.getInstance(this).getFilesDao().loadAll();
         List<Files> mFileTmpQuene = new ArrayList<>();//创建一个临时的待下载队列
         if (mFilesDbQuene == null || mFilesDbQuene.size() <= 0) {
             //本地没有任何记录,说明需要更新
@@ -396,7 +394,7 @@ public class MainActivity extends BaseActivity {
                 DbHelp.getInstance(MainActivity.this).saveFileLists(mFileTmpQuene);//保存队列
             }
         } else {//如果本地有未完成的记录,将未完成的任务加入待下载队列
-            Query query = mFilesDao.queryBuilder()
+            Query query =  DbHelp.getInstance(this).getFilesDao().queryBuilder()
                     .where(FilesDao.Properties.FileStatus.eq(0))
                     .build();
             List mFiles = query.list();
@@ -449,7 +447,6 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void completed(BaseDownloadTask task) {
             String localUrl = (String) task.getTag();
-
             if (localUrl.endsWith(".mp4")) {
 
             } else if (localUrl.endsWith(".jpg")) {
