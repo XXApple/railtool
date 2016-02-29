@@ -7,6 +7,9 @@ import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.db.DaoSession;
 import com.commonrail.mtf.db.Files;
 import com.commonrail.mtf.db.FilesDao;
+import com.commonrail.mtf.db.InjectorDb;
+import com.commonrail.mtf.db.InjectorDbDao;
+import com.commonrail.mtf.util.common.L;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class DbHelp {
     private static Context appContext;
     private DaoSession mDaoSession;
     private FilesDao mFilesDao;
+    private InjectorDbDao mInjectorDbDao;
 
     private DbHelp() {
     }
@@ -32,8 +36,13 @@ public class DbHelp {
             }
             instance.mDaoSession = AppClient.getDaoSession();
             instance.mFilesDao = instance.mDaoSession.getFilesDao();
+            instance.mInjectorDbDao = instance.mDaoSession.getInjectorDbDao();
         }
         return instance;
+    }
+
+    public InjectorDbDao getInjectorDbDao() {
+        return mInjectorDbDao;
     }
 
     public FilesDao getFilesDao() {
@@ -51,8 +60,8 @@ public class DbHelp {
     }
 
     public void deleteTrip(int status) {
-        if (status==0) {
-            
+        if (status == 0) {
+
         }
         Log.i(TAG, "delete");
     }
@@ -65,6 +74,7 @@ public class DbHelp {
     public Files queryFilesByStatus(long status) {
         return mFilesDao.load(status);
     }
+
     public Files loadFiles(long id) {
         return mFilesDao.load(id);
     }
@@ -103,5 +113,35 @@ public class DbHelp {
         });
     }
 
-    
+
+    public void saveInjectorLists(final List<InjectorDb> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        long i = 0;
+        for (InjectorDb mInjectorDb : list) {
+            long row = mInjectorDbDao.insertOrReplace(mInjectorDb);
+            if (row != -1) {
+                i++;
+            }
+        }
+        L.e("DBHelp insert InjectorLists items" + i);
+
+
+//        mInjectorDbDao.getSession().runInTx(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                for (int i = 0; i < list.size(); i++) {
+//                    mInjectorDbDao.insertOrReplace(list.get(i));
+//                }
+//            }
+//        });
+    }
+
+    public List<InjectorDb> loadAllInjector() {
+        return mInjectorDbDao.loadAll();
+    }
+
+
 }

@@ -8,11 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.commonrail.mtf.R;
-import com.commonrail.mtf.po.Injector;
+import com.commonrail.mtf.db.InjectorDb;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.L;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +28,16 @@ import java.util.List;
 public class IndexAdapter
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public void setInjectors(final List<InjectorDb> mInjectors) {
+        this.mInjectors = mInjectors;
+    }
+
     //    private final static int HEADER = 0;
 //    private final static int ITEM = 1;
-    private final List<Injector> mInjectors;
+    private List<InjectorDb> mInjectors;
     private Click mClick;
 
-    public IndexAdapter(List<Injector> items) {
+    public IndexAdapter(ArrayList<InjectorDb> items) {
         mInjectors = items;
         L.e("IndexAdapter:" + mInjectors.size());
     }
@@ -102,7 +107,7 @@ public class IndexAdapter
         public final View mView;
         public final SimpleDraweeView mIdView;
         public final TextView mContentView;
-        public Injector mItem;
+        public InjectorDb mItem;
 
         public ViewHolder(View view) {
             super(view);

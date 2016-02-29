@@ -15,9 +15,10 @@ import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
 import com.commonrail.mtf.db.Files;
 import com.commonrail.mtf.db.FilesDao;
+import com.commonrail.mtf.db.InjectorDb;
+import com.commonrail.mtf.db.InjectorDbDao;
 import com.commonrail.mtf.po.FileListItem;
 import com.commonrail.mtf.po.FileUpload;
-import com.commonrail.mtf.po.Injector;
 import com.commonrail.mtf.po.Result;
 import com.commonrail.mtf.po.Update;
 import com.commonrail.mtf.po.User;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity {
 
     private IndexAdapter mIndexAdapter;
     private FilesDao mFilesDao;
+    private InjectorDbDao mInjectorDbDao;
 
     @Override
     protected void onResume() {
@@ -90,8 +92,14 @@ public class MainActivity extends BaseActivity {
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
+
+        mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
+        itemList.setAdapter(mIndexAdapter);
+
+
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
         mFilesDao = DbHelp.getInstance(this).getFilesDao();
+        mInjectorDbDao = DbHelp.getInstance(this).getInjectorDbDao();
         doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
@@ -135,6 +143,7 @@ public class MainActivity extends BaseActivity {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
                         }
+
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
                         return t.getData();
                     }
@@ -162,31 +171,26 @@ public class MainActivity extends BaseActivity {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<List<Injector>>, List<Injector>>() {
+                .map(new Func1<Result<List<InjectorDb>>, List<InjectorDb>>() {
                     @Override
-                    public List<Injector> call(Result<List<Injector>> t) {
-                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                    public List<InjectorDb> call(Result<List<InjectorDb>> t) {
+                        L.e("getIndexList： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
                         }
+                      
+                        DbHelp.getInstance(MainActivity.this).saveInjectorLists(t.getData());
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
                         return t.getData();
                     }
                 })
-                .subscribe(new Action1<List<Injector>>() {
+                .subscribe(new Action1<List<InjectorDb>>() {
                     @Override
-                    public void call(final List<Injector> t) {
+                    public void call(final List<InjectorDb> t) {
+                        if (t == null) return;
                         if (!t.isEmpty()) {
-                            mIndexAdapter = new IndexAdapter(t);
-                            itemList.setAdapter(mIndexAdapter);
-                            mIndexAdapter.setClick(new IndexAdapter.Click() {
-                                @Override
-                                public void itemClick(int p) {
-                                    IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), language);
-                                }
-                            });
-                            mIndexAdapter.notifyDataSetChanged();
+                            fillRvData(t, language);
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -194,8 +198,22 @@ public class MainActivity extends BaseActivity {
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
                         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+                        L.e("getIndexList： load from db", DbHelp.getInstance(MainActivity.this).loadAllInjector().size()+"");
+                        fillRvData(DbHelp.getInstance(MainActivity.this).loadAllInjector(), language);
+
                     }
                 }));
+    }
+
+    private void fillRvData(final List<InjectorDb> t, final String language) {
+        mIndexAdapter.setInjectors(t);
+        mIndexAdapter.notifyDataSetChanged();
+        mIndexAdapter.setClick(new IndexAdapter.Click() {
+            @Override
+            public void itemClick(int p) {
+                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), language);
+            }
+        });
     }
 
     private void checkUpdate() {
@@ -331,7 +349,7 @@ public class MainActivity extends BaseActivity {
                             L.e("updateFile", "请求结果为空");
                             return;
                         }
-                        L.e("updateFile", "请求结果不为空"+t.toString());
+                        L.e("updateFile", "请求结果不为空" + t.toString());
                         //wifi网络下自动下载最新图片和视频资源
                         if (NetUtils.isWifi(MainActivity.this)) {
                             if (t.getFileList() == null || t.getFileList().isEmpty()) {
@@ -431,7 +449,7 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void completed(BaseDownloadTask task) {
             String localUrl = (String) task.getTag();
-            
+
             if (localUrl.endsWith(".mp4")) {
 
             } else if (localUrl.endsWith(".jpg")) {

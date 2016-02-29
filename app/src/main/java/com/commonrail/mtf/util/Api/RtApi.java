@@ -1,9 +1,9 @@
 package com.commonrail.mtf.util.Api;
 
 
+import com.commonrail.mtf.db.InjectorDb;
 import com.commonrail.mtf.po.Bosch;
 import com.commonrail.mtf.po.FileUpload;
-import com.commonrail.mtf.po.Injector;
 import com.commonrail.mtf.po.Module;
 import com.commonrail.mtf.po.Result;
 import com.commonrail.mtf.po.StepList;
@@ -35,7 +35,7 @@ public interface RtApi {
 
 
     @POST(Config.HOME_INDEX)
-    Observable<Result<List<Injector>>> getIndexList(@Body HashMap<String, String> body);
+    Observable<Result<List<InjectorDb>>> getIndexList(@Body HashMap<String, String> body);
 
     @POST(Config.MODULE_LIST)
     Observable<Result<List<Module>>> getModuleList(@Body HashMap<String, String> body);

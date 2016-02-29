@@ -183,11 +183,7 @@ public class AppUtils {
     }
 
     public static Uri getFileFrescoUri(String fileName) {
-        
         String path = SDCardUtils.getSDCardPath() + fileName;
-        if(path.contains(".png")){
-            path = path.replace(".png",".jpg");
-        }
         L.e(path);
         return Uri.parse("file://" + path);
     }
