@@ -13,6 +13,8 @@ import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.adapter.IndexAdapter;
 import com.commonrail.mtf.base.BaseActivity;
+import com.commonrail.mtf.db.Files;
+import com.commonrail.mtf.db.FilesDao;
 import com.commonrail.mtf.po.FileListItem;
 import com.commonrail.mtf.po.FileUpload;
 import com.commonrail.mtf.po.Injector;
@@ -21,12 +23,16 @@ import com.commonrail.mtf.po.Update;
 import com.commonrail.mtf.po.User;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
+import com.commonrail.mtf.util.DbHelp;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.AppUtils;
+import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.DateTimeUtil;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.common.NetUtils;
+import com.commonrail.mtf.util.common.SDCardUtils;
+import com.commonrail.mtf.util.common.SPUtils;
 import com.commonrail.mtf.util.retrofit.RxUtils;
 import com.yw.filedownloader.BaseDownloadTask;
 import com.yw.filedownloader.FileDownloadListener;
@@ -37,9 +43,11 @@ import com.yw.filedownloader.util.FileDownloadUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
+import de.greenrobot.dao.query.Query;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -62,6 +70,7 @@ public class MainActivity extends BaseActivity {
 
 
     private IndexAdapter mIndexAdapter;
+    private FilesDao mFilesDao;
 
     @Override
     protected void onResume() {
@@ -82,6 +91,7 @@ public class MainActivity extends BaseActivity {
         toolbar.setSubtitle(R.string.title_activity_main);
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+        mFilesDao = DbHelp.getInstance(this).getFilesDao();
         doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
@@ -292,15 +302,20 @@ public class MainActivity extends BaseActivity {
                 }).start();
     }
 
+
     private void updateFile() {
-        subscription.add(api.updateFile("")
+        final int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
+        HashMap<String, Integer> mHashMap = new HashMap<>();
+        mHashMap.put(Constant.FILE_VERSION, localFileVersion);
+        L.e("updateFile", mHashMap.toString());
+        subscription.add(api.updateFile(mHashMap)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new Func1<Result<FileUpload>, FileUpload>() {
                     @Override
                     public FileUpload call(Result<FileUpload> t) {
-                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+                        L.e("updateFile： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
@@ -313,99 +328,126 @@ public class MainActivity extends BaseActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void call(FileUpload t) {
-                        if (t != null) {
-//                            if(t.getVersionCode()){
-//                            }
-                            //wifi网络下自动下载最新图片和视频资源
-                            if (NetUtils.isWifi(MainActivity.this)) {
-                                downloadFiles(t.getFileList());
+                        if (t == null) {
+                            L.e("updateFile", "请求结果为空");
+                            return;
+                        }
+                        //wifi网络下自动下载最新图片和视频资源
+                        if (NetUtils.isWifi(MainActivity.this)) {
+                            if (t.getFileList() == null || t.getFileList().isEmpty()) {
+                                L.e("updateFile", " 文件列表为空,当前版本即最新版本:" + localFileVersion + " 最新文件版本号为:" + t.getVersionCode());
+                                return;
                             }
+                            L.e("updateFile", "本地文件版本号:" + localFileVersion + " 服务器文件版本号" + t.getVersionCode());
+                            if (localFileVersion < t.getVersionCode()) {//如果服务器文件版本大于本地文件版本,则有新的更新
+                                L.e("updateFile", "发现新的文件");
+                                downloadFiles(t.getFileList(), t.getVersionCode());
+                            }
+
                         }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        L.e("" + throwable.toString());
+                        L.e("updateFile" + throwable.toString());
                         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                     }
                 }));
     }
-    
-    
-    
-    
-    
-    
 
-    private void downloadFiles(final List<FileListItem> fileList) {
-        final FileDownloadListener queueTarget = new FileDownloadListener() {
-            @Override
-            protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            }
 
-            @Override
-            protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
-            }
-
-            @Override
-            protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            }
-
-            @Override
-            protected void blockComplete(BaseDownloadTask task) {
-            }
-
-            @Override
-            protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
-
-            }
-
-            @Override
-            protected void completed(BaseDownloadTask task) {
-                final int index = (int) task.getTag();
-                FileListItem fileListItem = fileList.get(index);
-                String fileType = fileListItem.getFileType();
-                String filePath = task.getPath();
-                /**
-                 * TODO 将下载完成的对应的文件按照类型拷贝至对应文件夹下，待开发
-                 *
-                 */
-            }
-
-            @Override
-            protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            }
-
-            @Override
-            protected void error(BaseDownloadTask task, Throwable e) {
-            }
-
-            @Override
-            protected void warn(BaseDownloadTask task) {
-            }
-        };
-
+    private void downloadFiles(final List<FileListItem> fileList, int latestVersion) {
         final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
-
         final List<BaseDownloadTask> tasks = new ArrayList<>();
 
-        String URLS[] = new String[fileList.size()];
-        for (int i = 0; i < fileList.size(); i++) {
-            URLS[i] = fileList.get(0).getUrl();
+        List<Files> mFilesDbQuene = mFilesDao.loadAll();
+        List<Files> mFileTmpQuene = new ArrayList<>();//创建一个临时的待下载队列
+        if (mFilesDbQuene == null || mFilesDbQuene.size() <= 0) {
+            //本地没有任何记录,说明需要更新
+            if (mFilesDbQuene == null || mFilesDbQuene.isEmpty()) {//如果本地没有下载记录,创建记录,并开始下载
+                for (int i = 0; i < fileList.size(); i++) {
+                    FileListItem mFileListItem = fileList.get(i);
+                    Files localFile = new Files();
+                    localFile.setFileStatus(0);
+                    localFile.setFileLen(mFileListItem.getFileLength());
+                    localFile.setFileLocalUrl(mFileListItem.getLocalUrl());
+                    localFile.setFileType(mFileListItem.getFileType());
+                    localFile.setFileUrl(mFileListItem.getUrl());
+                    mFileTmpQuene.add(localFile);//加入待下载任务
+                }
+                DbHelp.getInstance(MainActivity.this).saveFileLists(mFileTmpQuene);//保存队列
+            }
+        } else {//如果本地有未完成的记录,将未完成的任务加入待下载队列
+            Query query = mFilesDao.queryBuilder()
+                    .where(FilesDao.Properties.FileStatus.eq(0))
+                    .build();
+            List mFiles = query.list();
+            if (mFiles != null && mFiles.size() > 0) {//且未完成数大于0,则继续下载
+                mFileTmpQuene.addAll(mFiles);
+            } else {//本地有完整的记录,未完成的为0,即全部都已完成,保存最新文件版本号
+                SPUtils.put(MainActivity.this, Constant.FILE_VERSION, latestVersion);
+            }
         }
-        String filePath = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "railtool" + File.separator;
-        for (int i = 0; i < URLS.length; i++) {
-            tasks.add(FileDownloader.getImpl().create(URLS[i]).setTag(i).setPath(filePath));
+        //循环创建下载任务
+        for (int i = 0; i < mFileTmpQuene.size(); i++) {
+            Files mFilesDb = mFileTmpQuene.get(i);
+            tasks.add(FileDownloader.
+                    getImpl()
+                    .create(mFilesDb.getFileUrl())
+                    .setPath(SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + mFilesDb.getFileLocalUrl())
+                    .setTag(fileList.get(i).getLocalUrl()));
         }
-        queueSet.disableCallbackProgressTimes(); // do not need for each task callback `FileDownloadListener#progress`,
-// we just consider which task will complete. so in this way reduce ipc will be effective optimization
-
-// each task will auto retry 1 time if download fail
+        // 由于是队列任务, 这里是我们假设了现在不需要每个任务都回调`FileDownloadListener#progress`, 我们只关系每个任务是否完成, 所以这里这样设置可以很有效的减少ipc.
+        queueSet.disableCallbackProgressTimes();
+        // 所有任务在下载失败的时候都自动重试一次
         queueSet.setAutoRetryTimes(1);
-        queueSet.downloadSequentially(tasks);//队列一个一个下载
-        queueSet.downloadTogether(tasks);//同时下载
-        queueSet.start();
+        // 串行执行该任务队列
+        queueSet.downloadSequentially(tasks);
+        // 并行执行该任务队列
+        queueSet.downloadTogether(tasks);
     }
 
+    final FileDownloadListener queueTarget = new FileDownloadListener() {
+        @Override
+        protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+        }
 
+        @Override
+        protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+        }
+
+        @Override
+        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+        }
+
+        @Override
+        protected void blockComplete(BaseDownloadTask task) {
+        }
+
+        @Override
+        protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
+        }
+
+        @Override
+        protected void completed(BaseDownloadTask task) {
+            String localUrl = (String) task.getTag();
+            if (localUrl.endsWith(".mp4")) {
+
+            } else if (localUrl.endsWith(".jpg")) {
+
+            }
+        }
+
+        @Override
+        protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+        }
+
+        @Override
+        protected void error(BaseDownloadTask task, Throwable e) {
+        }
+
+        @Override
+        protected void warn(BaseDownloadTask task) {
+        }
+    };
 }

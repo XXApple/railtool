@@ -55,9 +55,8 @@ public interface RtApi {
     @POST(Config.APP_VERSION)
     Observable<Result<Update>> appVersion(@Field("") String injectorType);
 
-    @FormUrlEncoded
     @POST(Config.UPDATE_FILE)
-    Observable<Result<FileUpload>> updateFile(@Field("") String injectorType);
+    Observable<Result<FileUpload>> updateFile(@Body HashMap<String,Integer> currentVersion);
 
 
 }

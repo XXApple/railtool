@@ -22,14 +22,14 @@ import java.util.List;
  * 修改备注：
  */
 public class FileUpload implements Serializable {
-    private String versionCode = "";
+    private int versionCode = 0;
     private List<FileListItem> fileList;
 
-    public String getVersionCode() {
+    public int getVersionCode() {
         return versionCode;
     }
 
-    public void setVersionCode(final String mVersionCode) {
+    public void setVersionCode(final int mVersionCode) {
         versionCode = mVersionCode;
     }
 

@@ -147,7 +147,7 @@ public class ModuleListActivity extends BaseActivity {
 //                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
 //
 //                                ModuleListActivity.this.startActivityForResult(intent, 0);
-                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, "BluetoothQFB", "7C:66:9D:99:FD:F5");
+                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, "7C:66:9D:99:FD:F5");
                             }
                         });
                         mIndexAdapter.notifyDataSetChanged();

@@ -21,4 +21,5 @@ public class Constant {
 
     public static final String DATABASE_NAME = "rt_file_db";
     public static final int DATABASE_VERSION = 1;
+    public static final String FILE_VERSION = "currentVersion";
 }
