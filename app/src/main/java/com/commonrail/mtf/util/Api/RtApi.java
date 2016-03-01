@@ -2,13 +2,13 @@ package com.commonrail.mtf.util.Api;
 
 
 import com.commonrail.mtf.db.InjectorDb;
-import com.commonrail.mtf.po.Bosch;
-import com.commonrail.mtf.po.FileUpload;
-import com.commonrail.mtf.po.Module;
-import com.commonrail.mtf.po.Result;
-import com.commonrail.mtf.po.StepList;
-import com.commonrail.mtf.po.Update;
-import com.commonrail.mtf.po.User;
+import com.commonrail.mtf.mvp.model.entity.Bosch;
+import com.commonrail.mtf.mvp.model.entity.FileUpload;
+import com.commonrail.mtf.mvp.model.entity.Module;
+import com.commonrail.mtf.mvp.model.entity.Result;
+import com.commonrail.mtf.mvp.model.entity.StepList;
+import com.commonrail.mtf.mvp.model.entity.Update;
+import com.commonrail.mtf.mvp.model.entity.User;
 
 import java.util.HashMap;
 import java.util.List;

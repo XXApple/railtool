@@ -10,7 +10,10 @@ import com.yw.filedownloader.FileDownloader;
 
 /**
  * 项目名称：
- * 类描述：
+ * 类描述：本app是为android 平板写的工具app，使用rxjava,okhttp,retrofit,greendao,使用mvp设计模式进行解耦分层
+ *
+ * mvp模型主要参考：http://rocko.xyz/2015/02/06/Android%E4%B8%AD%E7%9A%84MVP/#more
+ *
  * 创建人：wengyiming
  * 创建时间：16/01/06 下午10:34
  * 修改人：wengyiming

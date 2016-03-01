@@ -111,7 +111,7 @@ public void *(android.view.View);
     public static int e(...);
 }
 
--dontwarn com.commonrail.mtf.po.**
+-dontwarn com.commonrail.mtf.mvp.model.entity.**
 
 -keepclassmembers class * {
    public <init>(org.json.JSONObject);

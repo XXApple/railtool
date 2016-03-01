@@ -6,7 +6,7 @@
              android:layout_height="match_parent"
              android:background="@drawable/bg2"
              android:orientation="vertical"
-             tools:context="com.commonrail.mtf.activity.ModuleListActivity">
+             tools:context=".mvp.ui.activity.ModuleListActivity">
 
     <include layout="@layout/sub_toolbar"/>
 

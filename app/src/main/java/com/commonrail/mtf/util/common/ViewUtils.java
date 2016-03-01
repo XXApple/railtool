@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.commonrail.mtf.base.BaseActivity;
+import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 
 
 /**

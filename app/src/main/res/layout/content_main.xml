@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
     android:orientation="vertical"
-    tools:context="com.commonrail.mtf.activity.MainActivity">
+    tools:context=".mvp.ui.activity.MainActivity">
     <!--android:background="@android:color/transparent"-->
     <ScrollView
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:fillViewport="true"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context="com.commonrail.mtf.activity.MainActivity"
+            tools:context=".mvp.ui.activity.MainActivity"
             tools:showIn="@layout/app_bar_main">
 
 

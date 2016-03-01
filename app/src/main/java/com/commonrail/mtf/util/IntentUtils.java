@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.commonrail.mtf.R;
-import com.commonrail.mtf.activity.MainActivity;
-import com.commonrail.mtf.activity.ModuleListActivity;
-import com.commonrail.mtf.activity.Step2Activity;
-import com.commonrail.mtf.activity.VideoPlayActivity;
-import com.commonrail.mtf.activity.bluetooth.DeviceControlActivity;
-import com.commonrail.mtf.activity.bluetooth.DeviceScanActivity;
+import com.commonrail.mtf.mvp.ui.activity.MainActivity;
+import com.commonrail.mtf.mvp.ui.activity.ModuleListActivity;
+import com.commonrail.mtf.mvp.ui.activity.Step2Activity;
+import com.commonrail.mtf.mvp.ui.activity.VideoPlayActivity;
+import com.commonrail.mtf.mvp.ui.activity.bluetooth.DeviceControlActivity;
+import com.commonrail.mtf.mvp.ui.activity.bluetooth.DeviceScanActivity;
 
 
 /**
