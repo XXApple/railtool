@@ -159,6 +159,7 @@ public class MainActivity extends BaseActivity {
                         if (t == null) return;
                         String name = t.getUname();
                         uname.setText(name + "你好，欢迎！");
+                        SPUtils.put(MainActivity.this,"amesdialMac",t.getAmesdialMac());
                     }
                 }, new Action1<Throwable>() {
                     @Override

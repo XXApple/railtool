@@ -22,6 +22,7 @@ import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
+import com.commonrail.mtf.util.common.SPUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -147,7 +148,7 @@ public class ModuleListActivity extends BaseActivity {
 //                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
 //
 //                                ModuleListActivity.this.startActivityForResult(intent, 0);
-                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, "7C:66:9D:99:FD:F5");
+                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, (String) SPUtils.get(ModuleListActivity.this,"amesdialMac",""));
                             }
                         });
                         mIndexAdapter.notifyDataSetChanged();
