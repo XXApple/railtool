@@ -3,6 +3,45 @@ package com.commonrail.mtf.po;
 import java.io.Serializable;
 import java.util.List;
 
+
+//
+//{
+//        "data": {
+//        "versionList": [
+//        {
+//        "fileList": [
+//        {
+//        "fileLength": 49146,
+//        "fileType": "jpg",
+//        "localUrl": "/video/b.jpg",
+//        "url": "http://139.196.110.128:8280/railtool/images/b.jpg"
+//        }
+//        ],
+//        "versionCode": 20160229
+//        },
+//        {
+//        "fileList": [
+//        {
+//        "fileLength": 49146,
+//        "fileType": "jpg",
+//        "localUrl": "/images/a.jpg",
+//        "url": "http://139.196.110.128:8280/railtool/images/a.jpg"
+//        },
+//        {
+//        "fileLength": 25059433,
+//        "fileType": "mp4",
+//        "localUrl": "/video/a.mp4",
+//        "url": "http://139.196.110.128:8280/railtool/video/a.mp4"
+//        }
+//        ],
+//        "versionCode": 20151231
+//        }
+//        ]
+//        },
+//        "msg": "查询成功",
+//        "status": 200
+//        }
+
 /**
  * 项目名称：railtool
  * 类描述：

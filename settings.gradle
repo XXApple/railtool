@@ -1,3 +1,3 @@
-include ':app',':rtplayer',':filedownloader', ':rtgreendaogenerator'
+include ':rtgreendaogenerator', ':app', ':filedownloader', ':rtplayer'
 
 //,':MyDaoGenerator'

@@ -13,9 +13,18 @@ import com.squareup.okhttp.Response;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateFactory;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 
 /**
@@ -56,10 +65,15 @@ public class OkHttpClientManager {
                     sInstance.setConnectTimeout(20, TimeUnit.SECONDS);
                     sInstance.interceptors().add(new LoggingInterceptor());
                     sInstance.networkInterceptors().add(REWRITE_CACHE_CONTROL_INTERCEPTOR);
+//                    try {
+//                        setCertificates(AppClient.getInstance().getAssets().open("railtoolapi.keystore"));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+
                     File cacheFile = new File(AppClient.getInstance().getCacheDir(), AppClient.getInstance().getExternalCacheDir().getPath());
                     Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
                     sInstance.setCache(cache);
-
                 }
             }
         }
@@ -81,9 +95,9 @@ public class OkHttpClientManager {
             String appName = AppClient.getInstance().getApplicationInfo().loadLabel(pm).toString();
 
 
-            L.e(TAG,"deviceMac：" + deviceMac);
-            L.e(TAG,"osName" + osName);
-            L.e(TAG,"appName" + appName);
+            L.e(TAG, "deviceMac：" + deviceMac);
+            L.e(TAG, "osName" + osName);
+            L.e(TAG, "appName" + appName);
 
 
             Request request = original.newBuilder()
@@ -109,14 +123,48 @@ public class OkHttpClientManager {
 
 
             long t1 = System.nanoTime();
-            L.e(TAG,String.format("Sending request %s on %s%n%s",
+            L.e(TAG, String.format("Sending request %s on %s%n%s",
                     request.url(), chain.connection(), request.headers()));
             Response response = chain.proceed(request);
             long t2 = System.nanoTime();
-            L.e(TAG,String.format("Received response for %s in %.1fms%n%s",
+            L.e(TAG, String.format("Received response for %s in %.1fms%n%s",
                     response.request().url(), (t2 - t1) / 1e6d, response.headers()));
 
             return response;
         }
     }
+
+    public static void setCertificates(InputStream... certificates) throws KeyStoreException {
+        try {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", "BC");
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null);
+            int index = 0;
+            for (InputStream certificate : certificates) {
+                String certificateAlias = Integer.toString(index++);
+                keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
+                try {
+                    if (certificate != null)
+                        certificate.close();
+                } catch (IOException e) {
+                }
+            }
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, "railtoolapi".toCharArray());
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom()
+            );
+            sInstance.setSslSocketFactory(sslContext.getSocketFactory());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
 }

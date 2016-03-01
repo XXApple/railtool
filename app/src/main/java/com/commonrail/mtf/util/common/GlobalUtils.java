@@ -120,10 +120,6 @@ public class GlobalUtils {
      * @return the version name of the application
      */
     public static String getVersionName(boolean flag) {
-        if (flag) {
-            return Constant.VERSION_NAME;// 接口使用的版本号
-        }
-
         Context context = GlobalUtils.getApplicationContext();
         String versionName = "unknown version";
         try {

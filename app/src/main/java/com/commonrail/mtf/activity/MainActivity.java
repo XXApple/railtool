@@ -23,7 +23,6 @@ import com.commonrail.mtf.po.Update;
 import com.commonrail.mtf.po.User;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
-import com.commonrail.mtf.util.DbHelp;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.Constant;
@@ -33,6 +32,10 @@ import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.common.NetUtils;
 import com.commonrail.mtf.util.common.SDCardUtils;
 import com.commonrail.mtf.util.common.SPUtils;
+import com.commonrail.mtf.util.db.DbCore;
+import com.commonrail.mtf.util.db.DbUtil;
+import com.commonrail.mtf.util.db.FilesService;
+import com.commonrail.mtf.util.db.InjectorService;
 import com.commonrail.mtf.util.retrofit.RxUtils;
 import com.yw.filedownloader.BaseDownloadTask;
 import com.yw.filedownloader.FileDownloadListener;
@@ -47,7 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
-import de.greenrobot.dao.query.Query;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -70,6 +72,10 @@ public class MainActivity extends BaseActivity {
 
 
     private IndexAdapter mIndexAdapter;
+    private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
+    private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
+    private FilesService filesService;
+    private InjectorService injectorService;
 
     @Override
     protected void onResume() {
@@ -89,15 +95,15 @@ public class MainActivity extends BaseActivity {
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
-
-
+        DbCore.enableQueryBuilderLog();
+        filesService = DbUtil.getFilesService();
+        injectorService = DbUtil.getInjectorService();
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
-        
+
         mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
         itemList.setAdapter(mIndexAdapter);
 
 
-      
         doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
@@ -177,8 +183,7 @@ public class MainActivity extends BaseActivity {
                             GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
                         }
-                      
-                        DbHelp.getInstance(MainActivity.this).saveInjectorLists(t.getData());
+                        injectorService.saveOrUpdate(t.getData());
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
                         return t.getData();
                     }
@@ -196,8 +201,8 @@ public class MainActivity extends BaseActivity {
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
                         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                        L.e("getIndexList： load from db", DbHelp.getInstance(MainActivity.this).loadAllInjector().size()+"");
-                        fillRvData(DbHelp.getInstance(MainActivity.this).loadAllInjector(), language);
+                        L.e("getIndexList： load from db", injectorService.queryAll().size() + "");
+                        fillRvData(injectorService.queryAll(), language);
 
                     }
                 }));
@@ -373,59 +378,62 @@ public class MainActivity extends BaseActivity {
 
 
     private void downloadFiles(final List<FileListItem> fileList, int latestVersion) {
+        L.e("downloadFiles", "服务器需要下载文件数" + fileList.size());
         final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
         final List<BaseDownloadTask> tasks = new ArrayList<>();
 
-        List<Files> mFilesDbQuene =  DbHelp.getInstance(this).getFilesDao().loadAll();
+        List<Files> mFilesDbQuene = filesService.queryAll();
+        L.e("downloadFiles", "本地记录条数：" + mFilesDbQuene.size());
         List<Files> mFileTmpQuene = new ArrayList<>();//创建一个临时的待下载队列
-        if (mFilesDbQuene == null || mFilesDbQuene.size() <= 0) {
+        if (mFilesDbQuene == null || mFilesDbQuene.isEmpty()) {
             //本地没有任何记录,说明需要更新
-            if (mFilesDbQuene == null || mFilesDbQuene.isEmpty()) {//如果本地没有下载记录,创建记录,并开始下载
-                for (int i = 0; i < fileList.size(); i++) {
-                    FileListItem mFileListItem = fileList.get(i);
-                    Files localFile = new Files();
-                    localFile.setFileStatus(0);
-                    localFile.setFileLen(mFileListItem.getFileLength());
-                    localFile.setFileLocalUrl(mFileListItem.getLocalUrl());
-                    localFile.setFileType(mFileListItem.getFileType());
-                    localFile.setFileUrl(mFileListItem.getUrl());
-                    mFileTmpQuene.add(localFile);//加入待下载任务
-                }
-                DbHelp.getInstance(MainActivity.this).saveFileLists(mFileTmpQuene);//保存队列
+            L.e("downloadFiles", "本地没有任何记录,说明需要更新");
+            for (int i = 0; i < fileList.size(); i++) {
+                FileListItem mFileListItem = fileList.get(i);
+                Files localFile = new Files();
+                localFile.setFileStatus(0);
+                localFile.setFileLen(mFileListItem.getFileLength());
+                localFile.setFileLocalUrl(mFileListItem.getLocalUrl());
+                localFile.setFileType(mFileListItem.getFileType());
+                localFile.setFileUrl(mFileListItem.getUrl());
+                mFileTmpQuene.add(localFile);//加入待下载任务
+                filesService.save(localFile);
             }
         } else {//如果本地有未完成的记录,将未完成的任务加入待下载队列
-            Query query =  DbHelp.getInstance(this).getFilesDao().queryBuilder()
-                    .where(FilesDao.Properties.FileStatus.eq(0))
-                    .build();
-            List mFiles = query.list();
+            List mFiles = filesService.queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
             if (mFiles != null && mFiles.size() > 0) {//且未完成数大于0,则继续下载
+                L.e("downloadFiles", "且未完成数大于0,则继续下载");
                 mFileTmpQuene.addAll(mFiles);
             } else {//本地有完整的记录,未完成的为0,即全部都已完成,保存最新文件版本号
+                L.e("downloadFiles", "本地有完整的记录,未完成的为0,即全部都已完成,保存最新文件版本号");
                 SPUtils.put(MainActivity.this, Constant.FILE_VERSION, latestVersion);
             }
         }
-        //循环创建下载任务
+        //创建下载任务
         for (int i = 0; i < mFileTmpQuene.size(); i++) {
             Files mFilesDb = mFileTmpQuene.get(i);
             tasks.add(FileDownloader.
                     getImpl()
                     .create(mFilesDb.getFileUrl())
-                    .setPath(SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + mFilesDb.getFileLocalUrl())
-                    .setTag(fileList.get(i).getLocalUrl()));
+                    .setPath(TMP_PATH + mFilesDb.getFileLocalUrl())
+                    .setTag(mFilesDb.getFileLocalUrl()));
+            L.e("downloadFiles", "循环创建下载任务" + mFilesDb.getFileLocalUrl());
         }
         // 由于是队列任务, 这里是我们假设了现在不需要每个任务都回调`FileDownloadListener#progress`, 我们只关系每个任务是否完成, 所以这里这样设置可以很有效的减少ipc.
         queueSet.disableCallbackProgressTimes();
         // 所有任务在下载失败的时候都自动重试一次
         queueSet.setAutoRetryTimes(1);
-        // 串行执行该任务队列
-        queueSet.downloadSequentially(tasks);
+//        // 串行执行该任务队列
+//        queueSet.downloadSequentially(tasks);
         // 并行执行该任务队列
         queueSet.downloadTogether(tasks);
+        queueSet.start();
     }
 
     final FileDownloadListener queueTarget = new FileDownloadListener() {
         @Override
         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            L.e("FileDownloadListener", task.getTag().toString());
         }
 
         @Override
@@ -447,10 +455,13 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void completed(BaseDownloadTask task) {
             String localUrl = (String) task.getTag();
-            if (localUrl.endsWith(".mp4")) {
-
-            } else if (localUrl.endsWith(".jpg")) {
-
+            L.e("completed", localUrl + " 下载完成");
+            try {
+                File tmpFile = new File(TMP_PATH + localUrl);
+                File targetFile = new File(TARGET_PATH + localUrl);
+                SDCardUtils.copyfile(tmpFile, targetFile, true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

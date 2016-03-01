@@ -39,7 +39,6 @@ public class IndexAdapter
 
     public IndexAdapter(ArrayList<InjectorDb> items) {
         mInjectors = items;
-        L.e("IndexAdapter:" + mInjectors.size());
     }
 
     @Override
@@ -64,7 +63,7 @@ public class IndexAdapter
             ((ViewHolder) holder).mItem = mInjectors.get(position);
             ((ViewHolder) holder).mContentView.setText(mInjectors.get(position).getInjectorName());
             ((ViewHolder) holder).mIdView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            
+
             L.e("IndexAdapter", ((ViewHolder) holder).mItem.getIconUrl());
             String localUrl = ((ViewHolder) holder).mItem.getIconUrl();
                     ((ViewHolder) holder).mIdView.setImageURI(AppUtils.getFileFrescoUri(localUrl));

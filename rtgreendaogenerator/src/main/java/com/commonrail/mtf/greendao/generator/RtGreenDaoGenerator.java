@@ -6,7 +6,7 @@ import de.greenrobot.daogenerator.Schema;
 
 
 /**
- * 此类用于生产数据库和表结构,编译时提前产生,非运行时
+ * for create db in pre runtime
  */
 public class RtGreenDaoGenerator {
 
@@ -20,18 +20,18 @@ public class RtGreenDaoGenerator {
     //生成购物车表
     private static void initFilesEntuty(Schema schema) {
         Entity files = schema.addEntity("Files");
-        files.addIdProperty().notNull().primaryKey().unique();
+//        files.addIdProperty().notNull().primaryKey().unique();
         files.addStringProperty("fileType").notNull();
-        files.addStringProperty("fileUrl").notNull();
+        files.addStringProperty("fileUrl").notNull().unique();
         files.addStringProperty("fileLocalUrl").notNull();
         files.addStringProperty("fileLen").notNull();
-        files.addIntProperty("fileStatus").notNull();//0 未下载,1已下载
+        files.addIntProperty("fileStatus").notNull();//0 not downloaded,1download completed
 
         Entity homeItem = schema.addEntity("InjectorDb");
         homeItem.addStringProperty("injectorType").notNull().unique();
-        homeItem.addIntProperty("orderNum").notNull().unique();
-        homeItem.addStringProperty("injectorName").notNull().unique();
-        homeItem.addStringProperty("iconUrl").notNull().unique();
+        homeItem.addIntProperty("orderNum").notNull();
+        homeItem.addStringProperty("injectorName");
+        homeItem.addStringProperty("iconUrl").notNull();
         
     }
 

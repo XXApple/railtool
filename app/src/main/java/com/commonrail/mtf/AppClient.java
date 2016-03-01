@@ -2,11 +2,9 @@ package com.commonrail.mtf;
 
 import android.app.Application;
 
-import com.commonrail.mtf.db.DaoMaster;
-import com.commonrail.mtf.db.DaoSession;
 import com.commonrail.mtf.util.FrescoConfig;
-import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.L;
+import com.commonrail.mtf.util.db.DbCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yw.filedownloader.FileDownloader;
 
@@ -21,8 +19,6 @@ import com.yw.filedownloader.FileDownloader;
  */
 public class AppClient extends Application {
     private static AppClient sInstance;
-    private static DaoMaster daoMaster;
-    private static DaoSession daoSession;
 
 //    private RefWatcher refWatcher;
 
@@ -41,35 +37,19 @@ public class AppClient extends Application {
         FileDownloader.init(this);
         L.isDebug = true;
         sInstance = this;
+        DbCore.init(this);
+
+
 //        PgyCrashManager.register(sInstance);
 //        refWatcher = LeakCanary.install(sInstance);
+//        OkHttpClientManager.getInstance();
+//        try {
+//            OkHttpClientManager.setCertificates(getAssets().open("railtoolapi.keystore"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         Fresco.initialize(sInstance, FrescoConfig.getImagePipelineConfig(sInstance));
-    }
-
-
-    /**
-     * 取得DaoMaster
-     */
-    public static DaoMaster getDaoMaster() {
-        if (daoMaster == null) {
-            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(sInstance, Constant.DB_NAME, null);
-            daoMaster = new DaoMaster(helper.getWritableDatabase());
-        }
-        return daoMaster;
-    }
-
-    /**
-     * 取得DaoSession
-     */
-    public static DaoSession getDaoSession() {
-        if (daoSession == null) {
-            if (daoMaster == null) {
-                daoMaster = getDaoMaster();
-            }
-            daoSession = daoMaster.newSession();
-        }
-
-        return daoSession;
     }
 
 }

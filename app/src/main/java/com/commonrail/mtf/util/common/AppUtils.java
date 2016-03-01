@@ -184,7 +184,7 @@ public class AppUtils {
 
     public static Uri getFileFrescoUri(String fileName) {
         String path = SDCardUtils.getSDCardPath() + fileName;
-        L.e(path);
+//        L.e(path);
         return Uri.parse("file://" + path);
     }
 

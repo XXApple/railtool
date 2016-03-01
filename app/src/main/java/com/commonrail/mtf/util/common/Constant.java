@@ -10,16 +10,5 @@ package com.commonrail.mtf.util.common;
  * 修改备注：
  */
 public class Constant {
-
-
-    // 内存卡缓存路径
-    public final static String SD_CACHE_DIR = "LinChu/Cache";
-    public final static String DB_NAME = "LinChu_db.db";
-    // 接口对应版本号
-    public final static String VERSION_NAME = "1.5.2";
-
-
-    public static final String DATABASE_NAME = "rt_file_db";
-    public static final int DATABASE_VERSION = 1;
     public static final String FILE_VERSION = "currentVersion";
 }

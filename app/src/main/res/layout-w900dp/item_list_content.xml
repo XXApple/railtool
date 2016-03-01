@@ -4,24 +4,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="200dp"
+    android:layout_height="88dp"
     android:layout_margin="10dp"
     app:cardBackgroundColor="@color/md_white"
-    app:cardCornerRadius="8dp"
+    app:cardCornerRadius="16dp"
     >
 
     <LinearLayout
-        android:layout_width="85dp"
-        android:layout_height="39dp"
+        android:layout_width="190dp"
+        android:layout_height="78dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image"
-            android:layout_width="85dp"
-            android:layout_height="39dp"
+            android:layout_width="190dp"
+            android:layout_height="78dp"
             fresco:actualImageScaleType="fitCenter"
             fresco:fadeDuration="300"
             fresco:failureImage="@drawable/ic_launcher"

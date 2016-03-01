@@ -4,9 +4,7 @@ import android.os.Environment;
 import android.os.StatFs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 
 /**
  * SD卡相关的辅助类
@@ -15,6 +13,7 @@ import java.io.InputStream;
  */
 public class SDCardUtils {
     private final static String TAG = "SDCardUtils";
+
     private SDCardUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
@@ -86,38 +85,41 @@ public class SDCardUtils {
     }
 
 
-    /**
-     * 复制单个文件  
-     * @param oldPath String 原文件路径 如：c:/fqf.txt  
-     * @param newPath String 复制后路径 如：f:/fqf.txt  
-     * @return boolean
-     */
-    public static void copyFile(String oldPath, String newPath) {
+    public static void copyfile(File fromFile, File toFile, Boolean rewrite) {
+        if (!fromFile.exists()) {
+            return;
+        }
+        if (!fromFile.isFile()) {
+            return;
+        }
+        if (!fromFile.canRead()) {
+            return;
+        }
+        if (!toFile.getParentFile().exists()) {
+            toFile.getParentFile().mkdirs();
+        }
+        if (toFile.exists() && rewrite) {
+            toFile.delete();
+        }
+        //当文件不存时，canWrite一直返回的都是false
+        // if (!toFile.canWrite()) {
+        // MessageDialog.openError(new Shell(),"错误信息","不能够写将要复制的目标文件" + toFile.getPath());
+        // Toast.makeText(this,"不能够写将要复制的目标文件", Toast.LENGTH_SHORT);
+        // return ;// }
         try {
-            int bytesum = 0;
-            int byteread = 0;
-            L.e(TAG,"原文件:"+oldPath+" 新文件:"+newPath);
-            File oldfile = new File(oldPath);
-            if (!oldfile.exists()) { //文件不存在时   
-                InputStream inStream = new FileInputStream(oldPath); //读入原文件   
-                FileOutputStream fs = new FileOutputStream(newPath);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ( (byteread = inStream.read(buffer)) != -1) {
-                    bytesum += byteread; //字节数 文件大小   
-                    System.out.println(bytesum);
-                    fs.write(buffer, 0, byteread);
-                }
-                inStream.close();
-                L.e(TAG,oldPath+"拷贝结束");
+
+            java.io.FileInputStream fosfrom = new java.io.FileInputStream(fromFile);
+            java.io.FileOutputStream fosto = new FileOutputStream(toFile);
+            byte bt[] = new byte[1024];
+            int c;
+            while ((c = fosfrom.read(bt)) > 0) {
+                fosto.write(bt, 0, c); //将内容写到新文件当中
             }
+            fosfrom.close();
+            fosto.close();
+        } catch (Exception ex) {
+            L.e("readfile", ex.getMessage());
         }
-        catch (Exception e) {
-            System.out.println("复制单个文件操作出错");
-            e.printStackTrace();
-
-        }
-
     }
 
 
