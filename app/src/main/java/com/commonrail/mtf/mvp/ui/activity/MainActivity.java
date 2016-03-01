@@ -1,6 +1,5 @@
 package com.commonrail.mtf.mvp.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -11,14 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.db.Files;
 import com.commonrail.mtf.db.FilesDao;
 import com.commonrail.mtf.db.InjectorDb;
 import com.commonrail.mtf.mvp.model.entity.FileListItem;
 import com.commonrail.mtf.mvp.model.entity.FileUpload;
-import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.Update;
 import com.commonrail.mtf.mvp.model.entity.User;
 import com.commonrail.mtf.mvp.presenter.MainPresenter;
@@ -51,14 +48,9 @@ import com.yw.filedownloader.util.FileDownloadUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity implements MainView {
 
@@ -75,6 +67,7 @@ public class MainActivity extends BaseActivity implements MainView {
     @Bind(R.id.dateTime)
     TextView dateTime;
 
+
     private Dialog loadingDialog;
     private IndexAdapter mIndexAdapter;
     private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
@@ -84,6 +77,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
 
     private MainPresenter mainPresenter;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -109,15 +103,17 @@ public class MainActivity extends BaseActivity implements MainView {
 
         mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
         itemList.setAdapter(mIndexAdapter);
-        mainPresenter = new MainPresenterIml(this); //传入WeatherView
+        mainPresenter = new MainPresenterIml(this);
         loadingDialog = new ProgressDialog(this);
-        loadingDialog.setTitle("加载天气中...");
+        loadingDialog.setTitle("加载数据...");
         mainPresenter.getUser(subscription, api);
-        mainPresenter.getInjectors(subscription, api,"zh_CN");
+        mainPresenter.getInjectors(subscription, api);
+        mainPresenter.checkUpdate(subscription, api);
+        mainPresenter.updateFile(subscription, api);
 //        doLogin("");
-        getIndexList("zh_CN");//"zh_CN";//en_US
-        checkUpdate();
-        updateFile();
+//        getIndexList("zh_CN");//"zh_CN";//en_US
+//        checkUpdate();
+//        updateFile();
         callFb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -136,143 +132,114 @@ public class MainActivity extends BaseActivity implements MainView {
         return this;
     }
 
-
-    private void doLogin(final String username) {
-        subscription.add(api.getUserInfo(username)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<User>, User>() {
-                    @Override
-                    public User call(Result<User> t) {
-                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
-                            return null;
-                        }
-
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<User>() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void call(User t) {
-                        if (t == null) return;
-                        String name = t.getUname();
-                        uname.setText(name + "你好，欢迎！");
-                        SPUtils.put(MainActivity.this,"amesdialMac",t.getAmesdialMac());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                    }
-                }));
+    @Override
+    public void showLoading() {
+        loadingDialog.show();
     }
 
-
-    private void getIndexList(final String language) {
-        subscription.add(api.getIndexList(AppUtils.getMap("language", language))
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<List<InjectorDb>>, List<InjectorDb>>() {
-                    @Override
-                    public List<InjectorDb> call(Result<List<InjectorDb>> t) {
-                        L.e("getIndexList： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
-                            return null;
-                        }
-                        injectorService.saveOrUpdate(t.getData());
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<List<InjectorDb>>() {
-                    @Override
-                    public void call(final List<InjectorDb> t) {
-                        if (t == null) return;
-                        if (!t.isEmpty()) {
-                            fillRvData(t, language);
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                        L.e("getIndexList： load from db", injectorService.queryAll().size() + "");
-                        fillRvData(injectorService.queryAll(), language);
-
-                    }
-                }));
+    @Override
+    public void hideLoading() {
+        loadingDialog.hide();
     }
 
-    private void fillRvData(final List<InjectorDb> t, final String language) {
+    @Override
+    public void showUserError() {
+        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+        L.e("showUserError", "获取用户信息失败");
+        GlobalUtils.showToastShort(this,"获取用户信息失败");
+    }
+
+    @Override
+    public void showInjectorsError() {
+        L.e("showInjectorsError", "查找设备无结果");
+        GlobalUtils.showToastShort(this, "查找设备型号无结果");
+        L.e("从缓存数据库中加载", injectorService.queryAll().size() + "");
+        fillRvData(injectorService.queryAll());
+    }
+
+    @Override
+    public void showCheckUpdaterError() {
+        L.e("showCheckUpdaterError", "无更新");
+    }
+
+    @Override
+    public void showUpdateFileError() {
+        GlobalUtils.showToastShort(this, "文件版本是最新的");
+        L.e("showUpdateFileError", "无新版文件");
+
+    }
+
+    @Override
+    public void setUserInfo(User t) {
+        String name = t.getUname();
+        uname.setText(name + "你好，欢迎！");
+        SPUtils.put(MainActivity.this, "amesdialMac", t.getAmesdialMac());
+    }
+
+    @Override
+    public void setInjectors(List<InjectorDb> t) {
+        injectorService.saveOrUpdate(t);
+        fillRvData(t);
+    }
+
+    @Override
+    public void checkUpdate(Update t) {
+        if (t == null) return;
+        final String vc = t.getAppVersionCode();
+        boolean forced = t.getForced();
+        final String url = t.getUrl();
+        L.e(t.toString());
+        if (!AppUtils.checkVersion(vc)) return;
+        GlobalUtils.ShowDialog(MainActivity.this, "提示", "发现新版本，是否更新", !forced, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //download and update
+                String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "railtool" + vc + ".apk";
+                downloadApkAndUpdate(url, savePath1);
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null) dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void updateFile(FileUpload t) {
+        if (t == null) {
+            L.e("updateFile", "请求结果为空");
+            return;
+        }
+        final int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
+        L.e("updateFile", "请求结果不为空" + t.toString());
+        //wifi网络下自动下载最新图片和视频资源
+        if (NetUtils.isWifi(MainActivity.this)) {
+            if (t.getFileList() == null || t.getFileList().isEmpty()) {
+                L.e("updateFile", " 文件列表为空,当前版本即最新版本:" + localFileVersion + " 最新文件版本号为:" + t.getVersionCode());
+                return;
+            }
+            L.e("updateFile", "本地文件版本号:" + localFileVersion + " 服务器文件版本号" + t.getVersionCode());
+            if (localFileVersion < t.getVersionCode()) {//如果服务器文件版本大于本地文件版本,则有新的更新
+                L.e("updateFile", "发现新的文件");
+                downloadFiles(t.getFileList(), t.getVersionCode());
+            }
+
+        }
+    }
+
+    private void fillRvData(final List<InjectorDb> t) {
         mIndexAdapter.setInjectors(t);
         mIndexAdapter.notifyDataSetChanged();
         mIndexAdapter.setClick(new IndexAdapter.Click() {
             @Override
             public void itemClick(int p) {
-                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), language);
+                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), Constant.LANGUAGE);
             }
         });
     }
 
-    private void checkUpdate() {
-        subscription.add(api.appVersion("")
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<Update>, Update>() {
-                    @Override
-                    public Update call(Result<Update> t) {
-                        L.e("checkUpdate： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
-                            return null;
-                        }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<Update>() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void call(Update t) {
-                        if (t == null) return;
-                        final String vc = t.getAppVersionCode();
-                        boolean forced = t.getForced();
-                        final String url = t.getUrl();
-                        L.e(t.toString());
-                        if (!AppUtils.checkVersion(vc)) return;
-                        GlobalUtils.ShowDialog(MainActivity.this, "提示", "发现新版本，是否更新", !forced, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //download and update
-                                String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "railtool" + vc + ".apk";
-                                downloadApkAndUpdate(url, savePath1);
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (dialog != null) dialog.dismiss();
-                            }
-                        });
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        L.e("checkUpdate" + throwable.toString());
-                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                    }
-                }));
-    }
 
     private void downloadApkAndUpdate(String url, String savePath) {
         FileDownloader.getImpl().create(url)
@@ -327,67 +294,13 @@ public class MainActivity extends BaseActivity implements MainView {
     }
 
 
-    private void updateFile() {
-        final int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
-        HashMap<String, Integer> mHashMap = new HashMap<>();
-        mHashMap.put(Constant.FILE_VERSION, localFileVersion);
-        L.e("updateFile", mHashMap.toString());
-        subscription.add(api.updateFile(mHashMap)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<FileUpload>, FileUpload>() {
-                    @Override
-                    public FileUpload call(Result<FileUpload> t) {
-                        L.e("updateFile： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
-                            return null;
-                        }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<FileUpload>() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void call(FileUpload t) {
-                        if (t == null) {
-                            L.e("updateFile", "请求结果为空");
-                            return;
-                        }
-                        L.e("updateFile", "请求结果不为空" + t.toString());
-                        //wifi网络下自动下载最新图片和视频资源
-                        if (NetUtils.isWifi(MainActivity.this)) {
-                            if (t.getFileList() == null || t.getFileList().isEmpty()) {
-                                L.e("updateFile", " 文件列表为空,当前版本即最新版本:" + localFileVersion + " 最新文件版本号为:" + t.getVersionCode());
-                                return;
-                            }
-                            L.e("updateFile", "本地文件版本号:" + localFileVersion + " 服务器文件版本号" + t.getVersionCode());
-                            if (localFileVersion < t.getVersionCode()) {//如果服务器文件版本大于本地文件版本,则有新的更新
-                                L.e("updateFile", "发现新的文件");
-                                downloadFiles(t.getFileList(), t.getVersionCode());
-                            }
-
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        L.e("updateFile", throwable.toString());
-                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-                    }
-                }));
-    }
-
-
     private void downloadFiles(final List<FileListItem> fileList, int latestVersion) {
         L.e("downloadFiles", "服务器需要下载文件数" + fileList.size());
         final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
         final List<BaseDownloadTask> tasks = new ArrayList<>();
 
         List<Files> mFilesDbQuene = filesService.queryAll();
-        L.e("downloadFiles", "本地记录条数：" + mFilesDbQuene.size());
+//        L.e("downloadFiles", "本地记录条数：" + mFilesDbQuene.size());
         List<Files> mFileTmpQuene = new ArrayList<>();//创建一个临时的待下载队列
         if (mFilesDbQuene == null || mFilesDbQuene.isEmpty()) {
             //本地没有任何记录,说明需要更新
@@ -464,8 +377,22 @@ public class MainActivity extends BaseActivity implements MainView {
                 File tmpFile = new File(TMP_PATH + localUrl);
                 File targetFile = new File(TARGET_PATH + localUrl);
                 SDCardUtils.copyfile(tmpFile, targetFile, true);
+                List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileLocalUrl.eq(localUrl)).build().list();
+                for (Files mFiles : mFilesList) {
+                    mFiles.setFileStatus(1);
+                    L.e("completed", localUrl + " 标记为已完成");
+                    filesService.saveOrUpdate(mFiles);
+//                    filesService.refresh(mFiles);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+            List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
+            if (mFilesList != null && mFilesList.size() > 0) {//且未完成数大于0,则继续下载
+                L.e("downloadFiles", "且未完成数大于0");
+            } else {
+                L.e("downloadFiles", "下载记录中全部都已完成");
             }
         }
 
@@ -482,40 +409,186 @@ public class MainActivity extends BaseActivity implements MainView {
         }
     };
 
-    @Override
-    public void showLoading() {
-        loadingDialog.show();
-    }
 
-    @Override
-    public void hideLoading() {
-        loadingDialog.hide();
-    }
+//    private void updateFile() {
+//        final int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
+//        HashMap<String, Integer> mHashMap = new HashMap<>();
+//        mHashMap.put(Constant.FILE_VERSION, localFileVersion);
+//        L.e("updateFile", mHashMap.toString());
+//        subscription.add(api.updateFile(mHashMap)
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(new Func1<Result<FileUpload>, FileUpload>() {
+//                    @Override
+//                    public FileUpload call(Result<FileUpload> t) {
+//                        L.e("updateFile： " + t.getStatus() + t.getMsg());
+//                        if (t.getStatus() != 200) {
+//                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+//                            return null;
+//                        }
+//                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+//                        return t.getData();
+//                    }
+//                })
+//                .subscribe(new Action1<FileUpload>() {
+//                    @SuppressLint("SetTextI18n")
+//                    @Override
+//                    public void call(FileUpload t) {
+//                        if (t == null) {
+//                            L.e("updateFile", "请求结果为空");
+//                            return;
+//                        }
+//                        L.e("updateFile", "请求结果不为空" + t.toString());
+//                        //wifi网络下自动下载最新图片和视频资源
+//                        if (NetUtils.isWifi(MainActivity.this)) {
+//                            if (t.getFileList() == null || t.getFileList().isEmpty()) {
+//                                L.e("updateFile", " 文件列表为空,当前版本即最新版本:" + localFileVersion + " 最新文件版本号为:" + t.getVersionCode());
+//                                return;
+//                            }
+//                            L.e("updateFile", "本地文件版本号:" + localFileVersion + " 服务器文件版本号" + t.getVersionCode());
+//                            if (localFileVersion < t.getVersionCode()) {//如果服务器文件版本大于本地文件版本,则有新的更新
+//                                L.e("updateFile", "发现新的文件");
+//                                downloadFiles(t.getFileList(), t.getVersionCode());
+//                            }
+//
+//                        }
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        L.e("updateFile", throwable.toString());
+//                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+//                    }
+//                }));
+//    }
 
-    @Override
-    public void showError() {
 
-    }
+//    private void doLogin(final String username) {
+//        subscription.add(api.getUserInfo(username)
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(new Func1<Result<User>, User>() {
+//                    @Override
+//                    public User call(Result<User> t) {
+//                        L.e("getUserInfo： " + t.getStatus() + t.getMsg());
+//                        if (t.getStatus() != 200) {
+//                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+//                            return null;
+//                        }
+//
+//                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+//                        return t.getData();
+//                    }
+//                })
+//                .subscribe(new Action1<User>() {
+//                    @SuppressLint("SetTextI18n")
+//                    @Override
+//                    public void call(User t) {
+//                        if (t == null) return;
+//                        String name = t.getUname();
+//                        uname.setText(name + "你好，欢迎！");
+//                        SPUtils.put(MainActivity.this,"amesdialMac",t.getAmesdialMac());
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        L.e("" + throwable.toString());
+//                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+//                    }
+//                }));
+//    }
+//
+//
+//    private void getIndexList(final String language) {
+//        subscription.add(api.getIndexList(AppUtils.getMap("language", language))
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(new Func1<Result<List<InjectorDb>>, List<InjectorDb>>() {
+//                    @Override
+//                    public List<InjectorDb> call(Result<List<InjectorDb>> t) {
+//                        L.e("getIndexList： " + t.getStatus() + t.getMsg());
+//                        if (t.getStatus() != 200) {
+//                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+//                            return null;
+//                        }
+//                        injectorService.saveOrUpdate(t.getData());
+//                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+//                        return t.getData();
+//                    }
+//                })
+//                .subscribe(new Action1<List<InjectorDb>>() {
+//                    @Override
+//                    public void call(final List<InjectorDb> t) {
+//                        if (t == null) return;
+//                        if (!t.isEmpty()) {
+//                            fillRvData(t);
+//                        }
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        L.e("" + throwable.toString());
+//                       
+//
+//                    }
+//                }));
+//    }
 
-    @Override
-    public void setUserInfo(User t) {
-        String name = t.getUname();
-        uname.setText(name + "你好，欢迎！");
-        SPUtils.put(MainActivity.this,"amesdialMac",t.getAmesdialMac());
-    }
 
-    @Override
-    public void setInjectors(List<InjectorDb> injectors) {
+//    private void checkUpdate() {
+//        subscription.add(api.appVersion("")
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(new Func1<Result<Update>, Update>() {
+//                    @Override
+//                    public Update call(Result<Update> t) {
+//                        L.e("checkUpdate： " + t.getStatus() + t.getMsg());
+//                        if (t.getStatus() != 200) {
+//                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+//                            return null;
+//                        }
+//                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+//                        return t.getData();
+//                    }
+//                })
+//                .subscribe(new Action1<Update>() {
+//                    @SuppressLint("SetTextI18n")
+//                    @Override
+//                    public void call(Update t) {
+//                        if (t == null) return;
+//                        final String vc = t.getAppVersionCode();
+//                        boolean forced = t.getForced();
+//                        final String url = t.getUrl();
+//                        L.e(t.toString());
+//                        if (!AppUtils.checkVersion(vc)) return;
+//                        GlobalUtils.ShowDialog(MainActivity.this, "提示", "发现新版本，是否更新", !forced, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                //download and update
+//                                String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "railtool" + vc + ".apk";
+//                                downloadApkAndUpdate(url, savePath1);
+//                            }
+//                        }, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (dialog != null) dialog.dismiss();
+//                            }
+//                        });
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//                        L.e("checkUpdate" + throwable.toString());
+//                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+//                    }
+//                }));
+//    }
+//    
 
-    }
 
-    @Override
-    public void checkUpdate(String url, String savePath1) {
-
-    }
-
-    @Override
-    public void updateFile(List<FileListItem> fileListItems, int versionCode) {
-
-    }
 }

@@ -1,7 +1,8 @@
 package com.commonrail.mtf.mvp.ui.view;
 
 import com.commonrail.mtf.db.InjectorDb;
-import com.commonrail.mtf.mvp.model.entity.FileListItem;
+import com.commonrail.mtf.mvp.model.entity.FileUpload;
+import com.commonrail.mtf.mvp.model.entity.Update;
 import com.commonrail.mtf.mvp.model.entity.User;
 
 import java.util.List;
@@ -14,13 +15,17 @@ public interface MainView {
 
     void hideLoading();
 
-    void showError();
+    void showUserError();
+    void showInjectorsError();
+    void showCheckUpdaterError();
+    void showUpdateFileError();
+    
 
     void setUserInfo(User user);
 
     void setInjectors(List<InjectorDb> injectors);
 
-    void checkUpdate(String url, String savePath1);
+    void checkUpdate(Update mUpdate);
 
-    void updateFile(List<FileListItem> fileListItems, int versionCode);
+    void updateFile(FileUpload t);
 }

@@ -13,9 +13,9 @@ public interface MainPresenter {
      */
     void getUser(CompositeSubscription subscription,RtApi api);
 
-    void getInjectors(CompositeSubscription subscription, RtApi api, String language);
+    void getInjectors(CompositeSubscription subscription, RtApi api);
 
-    void checkUpdate();
+    void checkUpdate(CompositeSubscription subscription, RtApi api);
 
-    void updateFile(int localFileVersion);
+    void updateFile(CompositeSubscription subscription, RtApi api);
 }
