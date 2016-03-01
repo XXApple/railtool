@@ -27,6 +27,9 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 
 - 2016/1/25-27 add rxjava map operation,add appversion downloader and updater
 
+- 2016/1/27 - 2016/2/14 use dp to match px  (px/dp = 180/160, dp = px/1.125,for this pad device)
+
+- 2016/2/14 - 2016/3/1 start to do mvp for MainActivity,next step make other activity use mvp 
 
 
 ###thanks to 
