@@ -23,7 +23,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class UserModelImpl implements UserModel {
     @Override
-    public void loadUser(CompositeSubscription subscription, RtApi api, OnUserListener listener) {
+    public void loadUser(CompositeSubscription subscription, RtApi api, final OnUserListener listener) {
         subscription.add(api.getUserInfo("")
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
@@ -45,13 +45,17 @@ public class UserModelImpl implements UserModel {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void call(User t) {
-                        if (t == null) return;
-                        String name = t.getUname();
+                        if (t == null) {
+                            listener.onError();
+                            return;
+                        }
+                        listener.onSuccess(t);
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
+                        listener.onError();
 //                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
                     }
                 }));

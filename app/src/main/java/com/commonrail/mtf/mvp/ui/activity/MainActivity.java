@@ -2,6 +2,8 @@ package com.commonrail.mtf.mvp.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +13,6 @@ import android.widget.TextView;
 
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
-import com.commonrail.mtf.mvp.ui.adapter.IndexAdapter;
-import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.db.Files;
 import com.commonrail.mtf.db.FilesDao;
 import com.commonrail.mtf.db.InjectorDb;
@@ -21,6 +21,11 @@ import com.commonrail.mtf.mvp.model.entity.FileUpload;
 import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.Update;
 import com.commonrail.mtf.mvp.model.entity.User;
+import com.commonrail.mtf.mvp.presenter.MainPresenter;
+import com.commonrail.mtf.mvp.presenter.impl.MainPresenterIml;
+import com.commonrail.mtf.mvp.ui.adapter.IndexAdapter;
+import com.commonrail.mtf.mvp.ui.base.BaseActivity;
+import com.commonrail.mtf.mvp.ui.view.MainView;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
@@ -55,7 +60,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainView {
 
     @Bind(R.id.wendu)
     TextView wendu;
@@ -70,13 +75,15 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.dateTime)
     TextView dateTime;
 
-
+    private Dialog loadingDialog;
     private IndexAdapter mIndexAdapter;
     private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
     private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
     private FilesService filesService;
     private InjectorService injectorService;
 
+
+    private MainPresenter mainPresenter;
     @Override
     protected void onResume() {
         super.onResume();
@@ -102,9 +109,12 @@ public class MainActivity extends BaseActivity {
 
         mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
         itemList.setAdapter(mIndexAdapter);
-
-
-        doLogin("");
+        mainPresenter = new MainPresenterIml(this); //传入WeatherView
+        loadingDialog = new ProgressDialog(this);
+        loadingDialog.setTitle("加载天气中...");
+        mainPresenter.getUser(subscription, api);
+        mainPresenter.getInjectors(subscription, api,"zh_CN");
+//        doLogin("");
         getIndexList("zh_CN");//"zh_CN";//en_US
         checkUpdate();
         updateFile();
@@ -114,13 +124,6 @@ public class MainActivity extends BaseActivity {
                 AppUtils.callPhone(MainActivity.this, callFb.getText().toString().trim());
             }
         });
-//        final float scale = getActivity().getResources().getDisplayMetrics().density;
-//        L.e("scale:" + scale + "");
-
-//        String url = "http://dl.game.qidian.com/apknew/game/dzz/dzz.apk";
-//        String savePath1 = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "tmp1";
-//        L.e("savePath"+savePath1);
-//        downloadApkAndUpdate(url, savePath1);
     }
 
     @Override
@@ -478,4 +481,41 @@ public class MainActivity extends BaseActivity {
         protected void warn(BaseDownloadTask task) {
         }
     };
+
+    @Override
+    public void showLoading() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        loadingDialog.hide();
+    }
+
+    @Override
+    public void showError() {
+
+    }
+
+    @Override
+    public void setUserInfo(User t) {
+        String name = t.getUname();
+        uname.setText(name + "你好，欢迎！");
+        SPUtils.put(MainActivity.this,"amesdialMac",t.getAmesdialMac());
+    }
+
+    @Override
+    public void setInjectors(List<InjectorDb> injectors) {
+
+    }
+
+    @Override
+    public void checkUpdate(String url, String savePath1) {
+
+    }
+
+    @Override
+    public void updateFile(List<FileListItem> fileListItems, int versionCode) {
+
+    }
 }
