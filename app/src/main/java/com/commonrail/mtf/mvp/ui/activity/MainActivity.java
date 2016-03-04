@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements MainView {
     public void showUserError() {
         GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
         L.e("showUserError", "获取用户信息失败");
-        GlobalUtils.showToastShort(this,"获取用户信息失败");
+        GlobalUtils.showToastShort(this, "获取用户信息失败");
     }
 
     @Override
