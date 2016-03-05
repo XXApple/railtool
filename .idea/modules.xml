@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/filedownloader/filedownloader.iml" filepath="$PROJECT_DIR$/filedownloader/filedownloader.iml" />
       <module fileurl="file://$PROJECT_DIR$/railtool.iml" filepath="$PROJECT_DIR$/railtool.iml" />
       <module fileurl="file://$PROJECT_DIR$/rtgreendaogenerator/rtgreendaogenerator.iml" filepath="$PROJECT_DIR$/rtgreendaogenerator/rtgreendaogenerator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rtgreendaogenerator/rtgreendaogenerator.iml" filepath="$PROJECT_DIR$/rtgreendaogenerator/rtgreendaogenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/rtplayer/rtplayer.iml" filepath="$PROJECT_DIR$/rtplayer/rtplayer.iml" />
     </modules>
   </component>

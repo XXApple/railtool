@@ -35,7 +35,7 @@ public class ChannelUtil {
      * @return String
      */
     public static String getChannel(Context context) {
-        return getChannel(context, "");
+        return getChannel(context, "0");
     }
 
     /**

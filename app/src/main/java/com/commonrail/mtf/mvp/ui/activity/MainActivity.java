@@ -27,6 +27,7 @@ import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.AppUtils;
+import com.commonrail.mtf.util.common.ChannelUtil;
 import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.DateTimeUtil;
 import com.commonrail.mtf.util.common.GlobalUtils;
@@ -212,7 +213,10 @@ public class MainActivity extends BaseActivity implements MainView {
             L.e("updateFile", "请求结果为空");
             return;
         }
-        final int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
+        int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
+        if (localFileVersion == 0) {
+            localFileVersion = Integer.parseInt(ChannelUtil.getChannel(this));
+        }
         L.e("updateFile", "请求结果不为空" + t.toString());
         //wifi网络下自动下载最新图片和视频资源
         if (NetUtils.isWifi(MainActivity.this)) {
@@ -235,7 +239,7 @@ public class MainActivity extends BaseActivity implements MainView {
         mIndexAdapter.setClick(new IndexAdapter.Click() {
             @Override
             public void itemClick(int p) {
-                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), Constant.LANGUAGE);
+                IntentUtils.enterModuleListActivity(MainActivity.this, t.get(p).getInjectorType(), t.get(p).getIconUrl());
             }
         });
     }

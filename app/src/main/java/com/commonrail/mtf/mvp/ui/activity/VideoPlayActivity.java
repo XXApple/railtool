@@ -23,8 +23,8 @@ import android.widget.TextView;
 
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
+import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
-import com.commonrail.mtf.util.common.SDCardUtils;
 import com.commonrail.mtf.util.common.SysUtils;
 import com.commonrail.mtf.util.common.ViewUtils;
 import com.commonrail.rtplayer.RtPlayer;
@@ -89,7 +89,7 @@ public class VideoPlayActivity extends BaseActivity {
     @Bind(R.id.rt_video_view)
     RtVideoView mOkVideoView;
     private AudioManager mAudioManager;
-    private String mVideoId;
+    private String mVideoUrl;
     private String mSourceId;
     private String mSourceType;
     private String mSourceTitle;
@@ -204,17 +204,14 @@ public class VideoPlayActivity extends BaseActivity {
                 }
             }
         });
-//        String videourl = "http://7xkbzx.com1.z0.glb.clouddn.com/SampleVideo_1080x720_20mb.mp4";
-
-        String videourl = SDCardUtils.getSDCardPath() + "1.mp4";
-        mUri = Uri.parse(videourl);
+        mUri = Uri.parse(AppUtils.getVideoPath(mVideoUrl));
         mOkVideoView.setVideoUri(mUri);
         mOkVideoView.seekTo(currentPosition);
 
     }
 
     private void initDate() {
-        mVideoId = getIntent().getStringExtra("");
+        mVideoUrl = getIntent().getStringExtra("videoUrl");
         mSourceId = getIntent().getStringExtra("");
         mSourceType = getIntent().getStringExtra("");
         mSourceTitle = getIntent().getStringExtra("");

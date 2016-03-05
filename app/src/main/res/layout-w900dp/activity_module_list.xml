@@ -36,12 +36,29 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
+                <!--<ImageView-->
+                    <!--android:id="@+id/injectorTypeImage"-->
+                    <!--android:layout_width="488dp"-->
+                    <!--android:layout_height="88dp"-->
+                    <!--android:layout_marginBottom="26dp"-->
+                    <!--android:scaleType="centerInside"-->
+                    <!--android:src="@drawable/bosch"/>-->
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/injectorTypeImage"
                     android:layout_width="488dp"
                     android:layout_height="88dp"
                     android:layout_marginBottom="26dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/bosch"/>
+                    android:layout_marginTop="16dp"
+                    app:actualImageScaleType="centerInside"
+                    app:fadeDuration="300"
+                    app:failureImage="@drawable/logo"
+                    app:failureImageScaleType="centerInside"
+                    app:placeholderImage="@color/white"
+                    app:placeholderImageScaleType="centerInside"
+                    app:retryImage="@drawable/logo"
+                    app:retryImageScaleType="centerInside"
+                    />
 
                 <include
                     layout="@layout/left_tips"/>

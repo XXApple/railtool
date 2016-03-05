@@ -25,10 +25,10 @@ import com.commonrail.mtf.mvp.ui.activity.bluetooth.DeviceScanActivity;
 public class IntentUtils {
     private final static int NO_ANIMOTION = -1;
 
-    public static void enterModuleListActivity(Activity context, String injectorType, String language) {
+    public static void enterModuleListActivity(Activity context, String injectorType, String injectorIcon) {
         Intent intent = new Intent(context, ModuleListActivity.class);
         intent.putExtra("injectorType", injectorType);
-        intent.putExtra("language", language);
+        intent.putExtra("injectorIcon", injectorIcon);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
@@ -40,10 +40,10 @@ public class IntentUtils {
     }
 
 
-    public static void enterStep2Activity(Activity context, String injectorType, String language, int moduleId,String moduleName, String xh, String mDeviceAddress) {
+    public static void enterStep2Activity(Activity context, String injectorType, int moduleId,String moduleName, String xh, String mDeviceAddress) {
         Intent intent = new Intent(context, Step2Activity.class);
         intent.putExtra("injectorType", injectorType);
-        intent.putExtra("language", language);
+//        intent.putExtra("language", language);
         intent.putExtra("moduleId", moduleId);
         intent.putExtra("moduleName",moduleName);
         intent.putExtra("xh", xh);
@@ -53,9 +53,10 @@ public class IntentUtils {
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
 
-    public static void enterVideoPlayActivity(Activity activity, long currentPosition) {
+    public static void enterVideoPlayActivity(Activity activity, final String mVideoUrl, long currentPosition) {
         Intent intent = new Intent(activity, VideoPlayActivity.class);
         intent.putExtra("currentPosition", currentPosition);
+        intent.putExtra("videoUrl",mVideoUrl);
         activity.startActivityForResult(intent, 0);
     }
 

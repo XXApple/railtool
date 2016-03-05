@@ -14,15 +14,18 @@ import android.widget.TextView;
 
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
-import com.commonrail.mtf.mvp.ui.adapter.ModuleListAdapter;
-import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.mvp.model.entity.Bosch;
 import com.commonrail.mtf.mvp.model.entity.Module;
 import com.commonrail.mtf.mvp.model.entity.Result;
+import com.commonrail.mtf.mvp.ui.adapter.ModuleListAdapter;
+import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.util.IntentUtils;
+import com.commonrail.mtf.util.common.AppUtils;
+import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.common.SPUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,12 +71,13 @@ public class ModuleListActivity extends BaseActivity {
     TextView yzxh;
     @Bind(R.id.fzjxh)
     TextView fzjxh;
+    @Bind(R.id.injectorTypeImage)
+    SimpleDraweeView injectorIcon;
 
     private ModuleListAdapter mIndexAdapter;
     private boolean isBosch = false;
     private Bosch mBosch = null;
     private String injectorType;
-    private String language;
     private int moduleId = 0;
     private String moduleName = "";
     private String xh = "";
@@ -88,8 +92,9 @@ public class ModuleListActivity extends BaseActivity {
         tips.setText(R.string.module_list_tips);
         injectorTypeEt.clearFocus();
         String injectorType = getIntent().getStringExtra("injectorType");
-        String language = getIntent().getStringExtra("language");
-        getModuleList(injectorType, language);
+        String injectorIconUrl = getIntent().getStringExtra("injectorIcon");
+        injectorIcon.setImageURI(AppUtils.getFileFrescoUri(injectorIconUrl));
+        getModuleList(injectorType);
         initBoschInfoView(injectorType);
     }
 
@@ -103,12 +108,11 @@ public class ModuleListActivity extends BaseActivity {
         return this;
     }
 
-    private void getModuleList(final String injectorType, final String language) {
+    private void getModuleList(final String injectorType) {
         HashMap<String, String> map = new HashMap<>();
         map.put("injectorType", injectorType);
-        map.put("language", language);
+        map.put("language", Constant.LANGUAGE);
         this.injectorType = injectorType;
-        this.language = language;
         L.e(map.toString());
         subscription.add(api.getModuleList(map)
                 .observeOn(Schedulers.io())
@@ -148,7 +152,7 @@ public class ModuleListActivity extends BaseActivity {
 //                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
 //
 //                                ModuleListActivity.this.startActivityForResult(intent, 0);
-                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, (String) SPUtils.get(ModuleListActivity.this,"amesdialMac",""));
+                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, moduleId, moduleName, xh, (String) SPUtils.get(ModuleListActivity.this,"amesdialMac",""));
                             }
                         });
                         mIndexAdapter.notifyDataSetChanged();
@@ -163,6 +167,7 @@ public class ModuleListActivity extends BaseActivity {
     }
 
     private void initBoschInfoView(final String mInjectorType) {
+       
         if (TextUtils.equals(mInjectorType, "Bosch")) {
             isBosch = true;
             leftTips.setVisibility(View.GONE);
