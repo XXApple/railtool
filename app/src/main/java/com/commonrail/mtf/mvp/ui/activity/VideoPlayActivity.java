@@ -9,24 +9,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
-import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.SysUtils;
-import com.commonrail.mtf.util.common.ViewUtils;
 import com.commonrail.rtplayer.RtPlayer;
 import com.commonrail.rtplayer.listener.RtPlayerListener;
 import com.commonrail.rtplayer.view.RtVideoView;
@@ -89,10 +86,6 @@ public class VideoPlayActivity extends BaseActivity {
     @Bind(R.id.rt_video_view)
     RtVideoView mOkVideoView;
     private AudioManager mAudioManager;
-    private String mVideoUrl;
-    private String mSourceId;
-    private String mSourceType;
-    private String mSourceTitle;
     private boolean isSeekBarThreadRun = false;
     private boolean isPlayOver = false;
     private Uri mUri;
@@ -101,13 +94,13 @@ public class VideoPlayActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        View decorView = getWindow().getDecorView();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ViewUtils.toggleHideyBar(decorView);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        View decorView = getWindow().getDecorView();
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        ViewUtils.toggleHideyBar(decorView);
         super.onCreate(savedInstanceState);
         initView();
-        danmuku();
+
     }
 
     @Override
@@ -132,23 +125,15 @@ public class VideoPlayActivity extends BaseActivity {
 
     public void initView() {
         initDate();
-        if (mSourceTitle != null) {
-            mTvTitle.setText(mSourceTitle);
-        }
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mGestureDetector = new GestureDetector(this, new CustomTouchListener());
-        currentPosition = getIntent().getLongExtra("currentPosition", 0);
-        if (currentPosition > 10000) {
-            currentPosition = currentPosition - 2000;
-        }
-        if (TextUtils.isEmpty(mSourceType)) {
-            GlobalUtils.showToastShort(this, "读取视频源出错");
-        }
-
+        initplayer();
+        mOkVideoView.setVideoUri(mUri);
+        mOkVideoView.seekTo(currentPosition);
     }
 
-    private void danmuku() {
 
+    private void initplayer() {
         mOkVideoView.addListener(new RtPlayerListener() {
             @Override
             public void onStateChanged(boolean playWhenReady, int playbackState) {
@@ -157,10 +142,9 @@ public class VideoPlayActivity extends BaseActivity {
                     mPbRate.setMax((int) mOkVideoView.getDuration());
                     mPbRate.setProgress((int) mOkVideoView.getDuration());
                     mFlDownloadRate.setVisibility(View.GONE);
-
+                    mOkVideoView.setVideoUri(mUri);
                 } else if (playbackState == RtPlayer.STATE_READY) {
                     mFlDownloadRate.setVisibility(View.GONE);
-
                     if (playWhenReady) {
                         mFlLoading.setVisibility(View.GONE);
                         if (!isSeekBarThreadRun) {
@@ -175,7 +159,8 @@ public class VideoPlayActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-
+                Toast.makeText(VideoPlayActivity.this, "视频打开出错", Toast.LENGTH_SHORT).show();
+                VideoPlayActivity.this.finish();
             }
 
             @Override
@@ -204,17 +189,15 @@ public class VideoPlayActivity extends BaseActivity {
                 }
             }
         });
-        mUri = Uri.parse(AppUtils.getVideoPath(mVideoUrl));
-        mOkVideoView.setVideoUri(mUri);
-        mOkVideoView.seekTo(currentPosition);
 
     }
 
     private void initDate() {
-        mVideoUrl = getIntent().getStringExtra("videoUrl");
-        mSourceId = getIntent().getStringExtra("");
-        mSourceType = getIntent().getStringExtra("");
-        mSourceTitle = getIntent().getStringExtra("");
+        mUri = getIntent().getParcelableExtra("videoUrl");
+        currentPosition = getIntent().getLongExtra("currentPosition", 0);
+        if (currentPosition > 10000) {
+            currentPosition = currentPosition - 2000;
+        }
     }
 
     private void onSeekBarRun() {

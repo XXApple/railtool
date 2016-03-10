@@ -3,6 +3,7 @@ package com.commonrail.mtf.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.ui.activity.MainActivity;
@@ -53,7 +54,7 @@ public class IntentUtils {
         context.overridePendingTransition(R.anim.slide_in_right, NO_ANIMOTION);
     }
 
-    public static void enterVideoPlayActivity(Activity activity, final String mVideoUrl, long currentPosition) {
+    public static void enterVideoPlayActivity(Activity activity, final Uri mVideoUrl, long currentPosition) {
         Intent intent = new Intent(activity, VideoPlayActivity.class);
         intent.putExtra("currentPosition", currentPosition);
         intent.putExtra("videoUrl",mVideoUrl);

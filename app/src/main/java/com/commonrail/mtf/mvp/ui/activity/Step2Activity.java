@@ -428,9 +428,10 @@ public class Step2Activity extends BaseActivity {
                     public StepList call(Result<StepList> t) {
                         L.e("getRepairStep " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                             return null;
                         }
+                        Toast.makeText(AppClient.getInstance(), t.getMsg(), Toast.LENGTH_SHORT).show();
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
                         return t.getData();
                     }
@@ -448,7 +449,7 @@ public class Step2Activity extends BaseActivity {
                             if (mStep == null) return;
                             L.e("mStep.getVideoUrl()" + mStep.getVideoUrl());
                             startVideo(mStep.getVideoUrl());
-                            setStepOrderInfo(curStepOrder);
+                            setStepOrderInfo();
 
 
                         }
@@ -459,7 +460,7 @@ public class Step2Activity extends BaseActivity {
                         progress.setVisibility(View.GONE);
                         rootLine.setVisibility(View.GONE);
                         L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
@@ -485,6 +486,7 @@ public class Step2Activity extends BaseActivity {
                     isPlayOver = true;
                     mOkVideoView.setVideoUri(mUri);
                 } else if (playbackState == RtPlayer.STATE_READY) {
+                    mOkVideoView.setVisibility(View.VISIBLE);
                     GlobalUtils.showToastShort(Step2Activity.this, "视频准备中...");
                 } else if (playbackState == RtPlayer.STATE_BUFFERING) {
                     GlobalUtils.showToastShort(Step2Activity.this, "视频缓冲中...");
@@ -494,7 +496,7 @@ public class Step2Activity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(Step2Activity.this, "视频打开出错", Toast.LENGTH_SHORT).show();
+                mOkVideoView.setVisibility(View.INVISIBLE);
 
             }
 
@@ -503,11 +505,10 @@ public class Step2Activity extends BaseActivity {
 
             }
         });
-        mUri = Uri.parse(AppUtils.getVideoPath(videoName));
-        mOkVideoView.setVideoUri(mUri);
+
     }
 
-    private void setStepOrderInfo(final int curStepOrder) {
+    private void setStepOrderInfo() {
         if (curValue != null) {
 //            L.e("添加一个value: stepId:" + curValue.getStepId() + "stepNum: " + curValue.getStepNum()
 //                            + "measResult: " + curValue.getMeasResult()
@@ -521,6 +522,10 @@ public class Step2Activity extends BaseActivity {
 
         Step mStep = checkStep(curStepOrder);
         if (mStep == null) return;
+        mUri = Uri.parse(AppUtils.getVideoPath(mStep.getVideoUrl()));
+        mOkVideoView.pause();
+        mOkVideoView.release();
+        mOkVideoView.setVideoUri(mUri);
         L.e("mStep.toString()" + mStep.toString());
         if (TextUtils.equals(mStep.getPageType(), "1")) {
             layoutRightBg.setBackground(ContextCompat.getDrawable(this, R.drawable.dv_white_shape_bg));
@@ -632,7 +637,7 @@ public class Step2Activity extends BaseActivity {
     void onVideoViewClick(View v) {
         if (mOkVideoView != null) {
             long p = mOkVideoView.getCurrentPosition();
-            IntentUtils.enterVideoPlayActivity(this, mStepList.getStepList().get(curStepOrder).getVideoUrl(), p);
+            IntentUtils.enterVideoPlayActivity(this, mUri, p);
         }
     }
 
@@ -711,7 +716,7 @@ public class Step2Activity extends BaseActivity {
 //        if (curStepOrder >= maxSteps) {
 //            curStepOrder = 0;
 //        }
-        setStepOrderInfo(curStepOrder);
+        setStepOrderInfo();
     }
 
     @OnClick(R.id.nextBtn)
@@ -726,7 +731,7 @@ public class Step2Activity extends BaseActivity {
             } else {
                 if (!TextUtils.isEmpty(mStep.getMeasKey()) || !TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
                     if (curValue.getMeasResult() == 0) {
-                         Toast.makeText(Step2Activity.this, "请完成当前步骤的测量过程,才能进入下一步", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Step2Activity.this, "请完成当前步骤的测量过程,才能进入下一步", Toast.LENGTH_SHORT).show();
 //                        GlobalUtils.showToastShort(this, "请完成当前步骤的测量,才能进入下一步");
                         L.e("请完成当前步骤的测量过程,才能进入下一步");
                         return;
@@ -736,191 +741,190 @@ public class Step2Activity extends BaseActivity {
                 }
             }
         }
-            ++curStepOrder;
-            int maxSteps = mStepList.getStepList().size();
-            if (curStepOrder > maxSteps - 1) {
-                curStepOrder = maxSteps - 1;
+        curStepOrder++;
+        int maxSteps = mStepList.getStepList().size();
+        if (curStepOrder > maxSteps - 1) {
+            curStepOrder = maxSteps - 1;
+            return;
+        }
+
+        setStepOrderInfo();
+        if (curStepOrder == mStepList.getStepList().size() - 1) {
+            //提交测试结果
+            if (mItem == null) {
                 return;
             }
-
-
-            setStepOrderInfo(curStepOrder);
-            if (curStepOrder == mStepList.getStepList().size() - 1) {
-                //提交测试结果
-                if (mItem == null) {
-                    return;
-                }
-                int moduleId = mItem.getId();
-                String injectorType = injectorTv.getText().toString().trim();
-                HashMap<String, Object> mMap = new HashMap<>();
-                mMap.put("moduleId", moduleId);
-                mMap.put("injectorType", injectorType);
-                mMap.put("values", values);
-                uploadMesResult(mMap);
-            }
-        }
-
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-        private void displayGattServices (List < BluetoothGattService > gattServices) {
-            if (gattServices == null)
-                return;
-            String uuid;
-            // String unknownServiceString =
-            // getResources().getString(R.string.unknown_service);
-            // String unknownCharaString =
-            // getResources().getString(R.string.unknown_characteristic);
-            ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<>();
-            ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<>();
-            mGattCharacteristics = new ArrayList<>();
-
-            // Loops through available GATT Services.
-            final String mLIST_NAME = "NAME";
-            final String mLIST_UUID = "UUID";
-            for (BluetoothGattService gattService : gattServices) {
-                HashMap<String, String> currentServiceData = new HashMap<>();
-                uuid = gattService.getUuid().toString();
-                // if (uuid.equals("0000fff0-0000-1000-8000-00805f9b34fb")) {
-                currentServiceData.put(mLIST_NAME,
-                        SampleGattAttributes.lookup(uuid, "Data CharaString"));
-                currentServiceData.put(mLIST_UUID, uuid);
-                gattServiceData.add(currentServiceData);
-
-                ArrayList<HashMap<String, String>> gattCharacteristicGroupData = new ArrayList<>();
-                List<BluetoothGattCharacteristic> gattCharacteristics = gattService
-                        .getCharacteristics();
-                ArrayList<BluetoothGattCharacteristic> charas = new ArrayList<>();
-
-                // Loops through available Characteristics.
-                for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                    // charas.add(gattCharacteristic);
-                    HashMap<String, String> currentCharaData = new HashMap<>();
-                    uuid = gattCharacteristic.getUuid().toString();
-
-                    // if (uuid.equals("0000fff4-0000-1000-8000-00805f9b34fb")) {
-                    charas.add(gattCharacteristic);
-                    currentCharaData.put(mLIST_NAME,
-                            SampleGattAttributes.lookup(uuid, "Data CharaString"));
-                    currentCharaData.put(mLIST_UUID, uuid);
-                    gattCharacteristicGroupData.add(currentCharaData);
-                    // }
-                }
-                mGattCharacteristics.add(charas);
-                gattCharacteristicData.add(gattCharacteristicGroupData);
-                // }
-            }
-
-            new Thread() {
-
-                @Override
-                public void run() {
-                    // TODO Auto-generated method stub
-                    super.run();
-
-                    if (mGattCharacteristics != null) {
-                        final BluetoothGattCharacteristic characteristic = mGattCharacteristics
-                                .get(3).get(3);
-                        final int charaProp = characteristic.getProperties();
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-                            // If there is an active notification on a
-                            // characteristic, clear
-                            // it first so it doesn't update the data field on the
-                            // user interface.
-                            if (mNotifyCharacteristic != null) {
-                                mBluetoothLeService.setCharacteristicNotification(
-                                        mNotifyCharacteristic, false);
-                                mNotifyCharacteristic = null;
-                            }
-                            mBluetoothLeService.readCharacteristic(characteristic);
-
-                            // mProgressBar.setVisibility(View.GONE);
-
-                            characteristic.getUuid();
-                        }
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                            mNotifyCharacteristic = characteristic;
-                            mBluetoothLeService.setCharacteristicNotification(
-                                    characteristic, true);
-                        }
-
-                    }
-
-                }
-
-            }.start();
-
-
-        }
-
-        @Override
-        public boolean onCreateOptionsMenu (Menu menu){
-            getMenuInflater().inflate(R.menu.gatt_services, menu);
-            if (mConnected) {
-                menu.findItem(R.id.menu_connect).setVisible(false);
-                menu.findItem(R.id.menu_disconnect).setVisible(true);
-            } else {
-                menu.findItem(R.id.menu_connect).setVisible(true);
-                menu.findItem(R.id.menu_disconnect).setVisible(false);
-            }
-            return true;
-        }
-
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
-            switch (item.getItemId()) {
-                case R.id.menu_connect:
-                    mBluetoothLeService.connect(mDeviceAddress);
-                    return true;
-                case R.id.menu_disconnect:
-                    GlobalUtils.showToastShort(getActivity(), "很难连的，不要断吧");
-//                mBluetoothLeService.disconnect();
-                    return true;
-                case R.id.menu_refresh:
-                    if (!mConnected) {
-                        mBluetoothLeService.connect(mDeviceAddress);
-                    } else {
-                        GlobalUtils.showToastShort(getActivity(), "蓝牙已连接");
-                    }
-                    return true;
-                case android.R.id.home:
-                    onBackPressed();
-                    return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-
-        private void uploadMesResult (HashMap < String, Object > map){
-            Gson mGson = new Gson();
-            String mJsonObject = mGson.toJson(map);
-            L.e("map2JsonString: " + mJsonObject);
-            L.e("map2String: " + map.toString());
-            subscription.add(api.uploadMesResult(map)
-                    .observeOn(Schedulers.io())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map(new Func1<Result<String>, String>() {
-                        @Override
-                        public String call(Result<String> t) {
-                            L.e("uploadMesResult " + t.getStatus() + t.getMsg());
-                            if (t.getStatus() != 200) {
-                                GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
-                                return null;
-                            }
-                            GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                            return t.getData();
-                        }
-                    })
-                    .subscribe(new Action1<String>() {
-                        @Override
-                        public void call(String t) {
-
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            rootLine.setVisibility(View.GONE);
-                            L.e("Throwable", throwable.toString());
-                            GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
-                        }
-                    }));
+            int moduleId = mItem.getId();
+            String injectorType = injectorTv.getText().toString().trim();
+            HashMap<String, Object> mMap = new HashMap<>();
+            mMap.put("moduleId", moduleId);
+            mMap.put("injectorType", injectorType);
+            mMap.put("values", values);
+            uploadMesResult(mMap);
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void displayGattServices(List<BluetoothGattService> gattServices) {
+        if (gattServices == null)
+            return;
+        String uuid;
+        // String unknownServiceString =
+        // getResources().getString(R.string.unknown_service);
+        // String unknownCharaString =
+        // getResources().getString(R.string.unknown_characteristic);
+        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<>();
+        mGattCharacteristics = new ArrayList<>();
+
+        // Loops through available GATT Services.
+        final String mLIST_NAME = "NAME";
+        final String mLIST_UUID = "UUID";
+        for (BluetoothGattService gattService : gattServices) {
+            HashMap<String, String> currentServiceData = new HashMap<>();
+            uuid = gattService.getUuid().toString();
+            // if (uuid.equals("0000fff0-0000-1000-8000-00805f9b34fb")) {
+            currentServiceData.put(mLIST_NAME,
+                    SampleGattAttributes.lookup(uuid, "Data CharaString"));
+            currentServiceData.put(mLIST_UUID, uuid);
+            gattServiceData.add(currentServiceData);
+
+            ArrayList<HashMap<String, String>> gattCharacteristicGroupData = new ArrayList<>();
+            List<BluetoothGattCharacteristic> gattCharacteristics = gattService
+                    .getCharacteristics();
+            ArrayList<BluetoothGattCharacteristic> charas = new ArrayList<>();
+
+            // Loops through available Characteristics.
+            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+                // charas.add(gattCharacteristic);
+                HashMap<String, String> currentCharaData = new HashMap<>();
+                uuid = gattCharacteristic.getUuid().toString();
+
+                // if (uuid.equals("0000fff4-0000-1000-8000-00805f9b34fb")) {
+                charas.add(gattCharacteristic);
+                currentCharaData.put(mLIST_NAME,
+                        SampleGattAttributes.lookup(uuid, "Data CharaString"));
+                currentCharaData.put(mLIST_UUID, uuid);
+                gattCharacteristicGroupData.add(currentCharaData);
+                // }
+            }
+            mGattCharacteristics.add(charas);
+            gattCharacteristicData.add(gattCharacteristicGroupData);
+            // }
+        }
+
+        new Thread() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                super.run();
+
+                if (mGattCharacteristics != null) {
+                    final BluetoothGattCharacteristic characteristic = mGattCharacteristics
+                            .get(3).get(3);
+                    final int charaProp = characteristic.getProperties();
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                        // If there is an active notification on a
+                        // characteristic, clear
+                        // it first so it doesn't update the data field on the
+                        // user interface.
+                        if (mNotifyCharacteristic != null) {
+                            mBluetoothLeService.setCharacteristicNotification(
+                                    mNotifyCharacteristic, false);
+                            mNotifyCharacteristic = null;
+                        }
+                        mBluetoothLeService.readCharacteristic(characteristic);
+
+                        // mProgressBar.setVisibility(View.GONE);
+
+                        characteristic.getUuid();
+                    }
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+                    }
+
+                }
+
+            }
+
+        }.start();
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gatt_services, menu);
+        if (mConnected) {
+            menu.findItem(R.id.menu_connect).setVisible(false);
+            menu.findItem(R.id.menu_disconnect).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_connect).setVisible(true);
+            menu.findItem(R.id.menu_disconnect).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_connect:
+                mBluetoothLeService.connect(mDeviceAddress);
+                return true;
+            case R.id.menu_disconnect:
+                GlobalUtils.showToastShort(getActivity(), "很难连的，不要断吧");
+//                mBluetoothLeService.disconnect();
+                return true;
+            case R.id.menu_refresh:
+                if (!mConnected) {
+                    mBluetoothLeService.connect(mDeviceAddress);
+                } else {
+                    GlobalUtils.showToastShort(getActivity(), "蓝牙已连接");
+                }
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void uploadMesResult(HashMap<String, Object> map) {
+        Gson mGson = new Gson();
+        String mJsonObject = mGson.toJson(map);
+        L.e("map2JsonString: " + mJsonObject);
+        L.e("map2String: " + map.toString());
+        subscription.add(api.uploadMesResult(map)
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<Result<String>, String>() {
+                    @Override
+                    public String call(Result<String> t) {
+                        L.e("uploadMesResult " + t.getStatus() + t.getMsg());
+                        if (t.getStatus() != 200) {
+                            GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                            return null;
+                        }
+                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        return t.getData();
+                    }
+                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String t) {
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        rootLine.setVisibility(View.GONE);
+                        L.e("Throwable", throwable.toString());
+                        GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
+                    }
+                }));
+    }
+}

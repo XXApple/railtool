@@ -1,7 +1,8 @@
 package com.commonrail.mtf.mvp.model.impl;
 
+import android.widget.Toast;
+
 import com.commonrail.mtf.AppClient;
-import com.commonrail.mtf.R;
 import com.commonrail.mtf.db.InjectorDb;
 import com.commonrail.mtf.mvp.model.InjectorsModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
@@ -9,7 +10,6 @@ import com.commonrail.mtf.mvp.presenter.OnInjectorsListener;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.Constant;
-import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 
 import java.util.List;
@@ -41,11 +41,10 @@ public class InjectorsModelImpl implements InjectorsModel {
                     public List<InjectorDb> call(Result<List<InjectorDb>> t) {
                         L.e("getIndexList： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error));
                             return null;
                         }
 //                        injectorService.saveOrUpdate(t.getData());
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        Toast.makeText(AppClient.getInstance(),t.getMsg(),Toast.LENGTH_SHORT).show();
                         return t.getData();
                     }
                 })

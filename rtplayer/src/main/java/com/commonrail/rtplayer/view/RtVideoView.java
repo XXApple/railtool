@@ -169,6 +169,8 @@ public class RtVideoView extends FrameLayout implements
         uri = videoUri;
 
         if (uri == null) {
+            okPlayer.release();
+            okPlayer = null;
             return;
         }
 
@@ -200,10 +202,13 @@ public class RtVideoView extends FrameLayout implements
         release();
     }
 
+    RtPlayerListener listener;
+
     public void addListener(RtPlayerListener listener) {
         if (okPlayer == null) {
             return;
         }
+        this.listener = listener;
         okPlayer.addListener(listener);
     }
 
@@ -279,18 +284,22 @@ public class RtVideoView extends FrameLayout implements
      */
     @Override
     public void onStateChanged(boolean playWhenReady, int playbackState) {
-
+        if (listener != null)
+            listener.onStateChanged(playWhenReady, playbackState);
     }
 
     @Override
     public void onError(Exception e) {
-
+        if (listener != null)
+            listener.onError(e);
     }
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
 //        //视频比例改变时,同时改变videoFrame的高宽比例
 //        videoFrame.setAspectRatio(height == 0 ? 1 : (width * pixelWidthHeightRatio) / height);
+        if (listener != null)
+            listener.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio);
     }
 
     /**

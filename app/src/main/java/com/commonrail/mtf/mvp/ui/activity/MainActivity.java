@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.db.Files;
 import com.commonrail.mtf.db.FilesDao;
@@ -145,13 +147,15 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void showUserError() {
-        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
+        uname.setVisibility(View.INVISIBLE);
+        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
         L.e("showUserError", "获取用户信息失败");
         GlobalUtils.showToastShort(this, "获取用户信息失败");
     }
 
     @Override
     public void showInjectorsError() {
+        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
         L.e("showInjectorsError", "查找设备无结果");
         GlobalUtils.showToastShort(this, "查找设备型号无结果");
         L.e("从缓存数据库中加载", injectorService.queryAll().size() + "");
@@ -160,11 +164,13 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void showCheckUpdaterError() {
+//        Toast.makeText(AppClient.getInstance(), "当前app是最新版本", Toast.LENGTH_SHORT).show();
         L.e("showCheckUpdaterError", "无更新");
     }
 
     @Override
     public void showUpdateFileError() {
+//        Toast.makeText(AppClient.getInstance(), "当前数据是最新版本", Toast.LENGTH_SHORT).show();
         GlobalUtils.showToastShort(this, "文件版本是最新的");
         L.e("showUpdateFileError", "无新版文件");
 
@@ -172,6 +178,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void setUserInfo(User t) {
+        uname.setVisibility(View.VISIBLE);
         String name = t.getUname();
         uname.setText(name + "你好，欢迎！");
         SPUtils.put(MainActivity.this, "amesdialMac", t.getAmesdialMac());

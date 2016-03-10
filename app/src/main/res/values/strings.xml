@@ -19,7 +19,7 @@
     <string name="error_field_required">此项必填</string>
     <string name="permission_rationale">"联系人权限用于帮助登录"
     </string>
-    <string name="net_error">网络连接异常</string>
+    <string name="net_error">网络连接异常,请稍后再试</string>
     <string name="title_items_list">Items</string>
     <string name="title_items_detail">items Detail</string>
     <string name="title_item_list">Items</string>

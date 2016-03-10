@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
@@ -123,10 +124,9 @@ public class ModuleListActivity extends BaseActivity {
                     public List<Module> call(Result<List<Module>> t) {
                         L.e("getModuleList " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
                             return null;
                         }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
+                        Toast.makeText(AppClient.getInstance(), t.getMsg(), Toast.LENGTH_SHORT).show();
                         return t.getData();
                     }
                 })
@@ -134,6 +134,7 @@ public class ModuleListActivity extends BaseActivity {
                     @Override
                     public void call(final List<Module> t) {
                         if (t == null || t.isEmpty()) {
+                            Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         mIndexAdapter = new ModuleListAdapter(t);
@@ -161,7 +162,7 @@ public class ModuleListActivity extends BaseActivity {
                     @Override
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                        Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
@@ -213,7 +214,7 @@ public class ModuleListActivity extends BaseActivity {
                     public Bosch call(Result<Bosch> t) {
                         L.e("searchBosch： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), getString(R.string.net_error));
+                            Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                             return null;
                         }
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
@@ -234,7 +235,7 @@ public class ModuleListActivity extends BaseActivity {
                     @Override
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
-                        GlobalUtils.showToastShort(ModuleListActivity.this, getString(R.string.net_error));
+                        Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
