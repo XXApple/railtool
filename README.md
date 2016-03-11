@@ -32,7 +32,7 @@ This will be a android pad app ,It's started now for my personal use,So,I think 
 - 2016/2/14 - 2016/3/1 start to do mvp for MainActivity,next step make other activity use mvp 
 
 
-- 2016/3/11 - 2016/3/1 fix ui 
+- 2016/3/1 - 2016/3/11 fix ui 
 
 ###thanks to 
 
