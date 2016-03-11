@@ -18,7 +18,7 @@
         android:layout_gravity="top"
         android:background="@color/video_background"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/video_back"
@@ -71,7 +71,7 @@
         android:background="@color/video_background"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_play"

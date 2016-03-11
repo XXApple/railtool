@@ -275,6 +275,11 @@ public class VideoPlayActivity extends BaseActivity {
         mOkVideoView.onResume(mUri);
     }
 
+    @OnClick(R.id.video_play_content)
+    void onClick() {
+        VideoPlayActivity.this.finish();
+    }
+
     @OnTouch(R.id.video_play_content)
     boolean onDanmakuViewTouch(View v, MotionEvent event) {
         switch (event.getActionMasked()) {
