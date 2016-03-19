@@ -106,9 +106,9 @@ public class Step2Activity extends BaseActivity {
     @Bind(R.id.ljTv)
     TextView ljTv;
     @Bind(R.id.preBtn)
-    TextView preBtn;
+    ImageView preBtn;
     @Bind(R.id.nextBtn)
-    TextView nextBtn;
+    ImageView nextBtn;
     @Bind(R.id.measDisp)
     TextView measDisp;
     @Bind(R.id.suggestDisp)

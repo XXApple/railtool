@@ -10,12 +10,13 @@
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="356dp"
-        android:layout_height="82dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/bg_module_item"
+        android:background="@drawable/module_item_bg"
         android:gravity="center"
         android:text="dasdsadsadsa"
+        android:paddingBottom="16dp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/md_white"
         android:textSize="23.7dp"/>

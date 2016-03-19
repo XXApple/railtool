@@ -1,105 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/main_bg"
-    android:orientation="vertical"
-    tools:context=".mvp.ui.activity.MainActivity">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/main_bg"
+             android:orientation="vertical"
+             tools:context="com.commonrail.mtf.mvp.ui.activity.MainActivity">
     <!--android:background="@android:color/transparent"-->
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".mvp.ui.activity.MainActivity"
+        tools:showIn="@layout/app_bar_main"
+        >
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginLeft="82dp"
+            android:layout_marginRight="88dp"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:src="@drawable/home_title"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:fillViewport="true"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".mvp.ui.activity.MainActivity"
-            tools:showIn="@layout/app_bar_main">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:shadowColor="@color/black4"
-                android:shadowDx="3"
-                android:shadowDy="3"
-                android:shadowRadius="1"
-                android:text="欢迎使用共轨之家喷油器智能精密维修系统"
-                android:textColor="@color/md_white"
-                android:textSize="20sp" />
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_horizontal"
+                android:gravity="start|center_horizontal"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
+                    android:layout_width="375dp"
+                    android:layout_height="358dp"
+                    android:layout_gravity="center_horizontal|start"
+                    android:layout_marginBottom="36dp"
+                    android:layout_marginLeft="98dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
+                    <include layout="@layout/left_tips"/>
 
-                        <include layout="@layout/left_tips" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="93dp"
-                        android:layout_marginRight="98dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:background="@drawable/dv_whitea_shape_bg"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="请选择厂商"
-                            android:textColor="@color/black2"
-                            android:textSize="13dp" />
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/item_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="29dp"
-                            app:layoutManager="GridLayoutManager"
-                            app:spanCount="3" />
-
-
-                    </LinearLayout>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="550dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="93dp"
+                    android:layout_marginRight="98dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="88dp"
+                        android:gravity="top|center_horizontal"
+                        android:src="@drawable/choice"
+                        android:text="请选择厂商"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/item_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        app:layoutManager="GridLayoutManager"
+                        app:spanCount="3"/>
+
+
+                </LinearLayout>
             </LinearLayout>
+
+
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -120,7 +107,7 @@
             android:gravity="center_vertical"
             android:text="021-311033839"
             android:textColor="@color/md_white"
-            android:textSize="19dp" />
+            android:textSize="19dp"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -139,7 +126,7 @@
                 android:gravity="center"
                 android:text="上海星融汽车科技有限公司@2016"
                 android:textColor="@color/md_white"
-                android:textSize="11dp" />
+                android:textSize="11dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -148,7 +135,7 @@
                 android:gravity="center"
                 android:text="Shanghai Shineroad Automotive Technology Co.Ltd"
                 android:textColor="@color/md_white"
-                android:textSize="11dp" />
+                android:textSize="11dp"/>
 
         </LinearLayout>
 

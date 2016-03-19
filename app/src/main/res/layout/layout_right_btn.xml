@@ -1,33 +1,24 @@
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="54dp"
     android:layout_gravity="bottom"
     android:layout_marginLeft="20dp"
     android:gravity="center"
-    android:padding="4dp"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="horizontal">
 
-    <TextView
+    <ImageView
         android:id="@+id/preBtn"
-        android:layout_width="144dp"
-        android:layout_height="54dp"
-        android:layout_marginRight="22dp"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="上一步"
-        android:textColor="@color/md_white"
-        android:textSize="18.9dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pre_btn"
 
-    <TextView
+        />
+
+    <ImageView
         android:id="@+id/nextBtn"
-        android:layout_width="144dp"
-        android:layout_height="54dp"
-        android:layout_marginLeft="22dp"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="下一步"
-        android:textColor="@color/md_white"
-        android:textSize="18.9dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/next_btn"/>
 
 </LinearLayout>

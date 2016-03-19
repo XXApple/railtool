@@ -6,6 +6,7 @@
     android:layout_height="73dp"
     android:layout_gravity="end"
     android:background="@color/colorPrimary"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -16,10 +17,18 @@
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
         android:minHeight="82dp"
+        android:visibility="gone"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:subtitle="Common Rail Injector Precision Repair System"
         app:subtitleTextColor="@color/white"
         app:titleTextColor="@color/white"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:src="@drawable/title_logo"
+        />
     <!--android:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
     <!--app:theme="@style/ActionBarTheme">-->
 

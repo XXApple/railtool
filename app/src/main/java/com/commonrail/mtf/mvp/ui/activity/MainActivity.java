@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,8 +62,6 @@ public class MainActivity extends BaseActivity implements MainView {
     RecyclerView itemList;
     @Bind(R.id.uname)
     TextView uname;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.callFb)
     TextView callFb;
     @Bind(R.id.dateTime)
@@ -96,8 +93,8 @@ public class MainActivity extends BaseActivity implements MainView {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setSubtitle(R.string.title_activity_main);
+//        toolbar.setTitle(R.string.app_name);
+//        toolbar.setSubtitle(R.string.title_activity_main);
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         DbCore.enableQueryBuilderLog();
         filesService = DbUtil.getFilesService();

@@ -2,53 +2,57 @@
 <LinearLayout
     android:id="@+id/left_tips"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
+    android:layout_width="375dp"
+    android:layout_height="358dp"
     android:layout_gravity="center_horizontal"
-    android:background="@drawable/side_nav_bar"
-    
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="MOTTO"
-        android:textColor="@color/md_white"
-        android:textSize="14sp"/>
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="62dp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:gravity="center"-->
+    <!--android:text="MOTTO"-->
+    <!--android:textColor="@color/md_white"-->
+    <!--android:textSize="26dp"/>-->
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greya"
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:background="@color/greya"-->
+    <!--/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:layout_marginTop="66dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:scaleType="center"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:src="@drawable/people"/>&ndash;&gt;-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:drawableLeft="@drawable/people"-->
+    <!--android:drawablePadding="33dp"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:text="改变自己，是自救，\n影响别人,是救人。"-->
+    <!--android:textColor="@color/md_white"-->
+    <!--android:textSize="26dp"/>-->
+    <!--</LinearLayout>-->
+
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:contentDescription="@string/app_name"
+               android:src="@drawable/xgss"
         />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-
-        <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:scaleType="center"-->
-        <!--android:src="@drawable/people"/>-->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:drawableLeft="@drawable/people"
-            android:drawablePadding="5dp"
-            android:gravity="center_horizontal"
-            android:text="改变自己，是自救，\n影响别人,是救人。"
-            android:textColor="@color/md_white"
-            android:textSize="14sp"/>
-    </LinearLayout>
 </LinearLayout>

@@ -40,7 +40,7 @@
                 android:layout_height="600dp"
                 android:layout_gravity="top|center_horizontal"
                 android:layout_marginRight="8dp"
-                android:background="@drawable/home_shape_bg"
+                android:background="@drawable/home_shape_b"
                 android:gravity="top|center_horizontal"
                 android:orientation="vertical">
                 <!--android:layout_width="315px"-->

@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:layout_gravity="center"
-             android:background="@drawable/bg2"
+             android:background="@drawable/main_bg"
              android:orientation="vertical"
              tools:context=".mvp.ui.activity.MainActivity">
 
@@ -42,7 +42,7 @@
                 android:layout_marginBottom="3dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="3dp"
-                android:background="@drawable/home_shape_bg"
+                android:background="@drawable/home_shape_b"
                 android:gravity="top|center_horizontal"
                 android:orientation="vertical">
                 <!--android:layout_width="315px"-->
@@ -58,7 +58,7 @@
                     fresco:fadeDuration="300"
                     fresco:failureImage="@drawable/logo"
                     fresco:failureImageScaleType="centerInside"
-                    fresco:placeholderImage="@color/white"
+                    fresco:placeholderImage="@color/colorPrimary"
                     fresco:placeholderImageScaleType="centerInside"
                     fresco:retryImage="@drawable/logo"
                     fresco:retryImageScaleType="centerInside"
