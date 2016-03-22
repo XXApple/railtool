@@ -73,13 +73,27 @@
                         android:src="@drawable/chioce"
                         android:text="请选择厂商"/>
 
-                    <android.support.v7.widget.RecyclerView
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/item_list"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_below="@id/chioce_imv"-->
+                        <!--app:layoutManager="GridLayoutManager"-->
+                        <!--app:spanCount="3"/>-->
+
+                    <com.malinskiy.superrecyclerview.SuperRecyclerView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/item_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/chioce_imv"
+                        app:layout_empty="@layout/emptyview"
+                        app:layout_moreProgress="@layout/more_progress"
+                        app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
+                        app:recyclerClipToPadding="false"
                         app:layoutManager="GridLayoutManager"
-                        app:spanCount="3"/>
+                        app:spanCount="3"
+                        app:scrollbarStyle="insideOverlay"/>
 
 
                 </RelativeLayout>

@@ -17,7 +17,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         android:text="测量结果"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/md_white"
         android:textSize="16sp"
         />
 
@@ -47,7 +47,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:text="h2测量值(mm)"
-                android:textColor="@color/md_black"
+                android:textColor="@color/md_white"
                 android:textSize="18.9dp"
                 />
 
@@ -61,7 +61,7 @@
                 android:singleLine="true"
                 android:layout_marginLeft="10dp"
                 android:text="0.000"
-                android:textColor="@color/md_black"
+                android:textColor="@color/md_white"
                 android:textSize="18.9dp"
                 />
 
@@ -113,7 +113,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:text="建议斜铁升程垫片厚度为(mm)"
-                android:textColor="@color/md_black"
+                android:textColor="@color/md_white"
                 android:textSize="18.9dp"
                 />
 
@@ -127,7 +127,7 @@
                 android:layout_marginLeft="10dp"
                 android:singleLine="true"
                 android:text="0.000"
-                android:textColor="@color/md_black"
+                android:textColor="@color/md_white"
                 android:textSize="18.9dp"
                 />
         </LinearLayout>

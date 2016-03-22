@@ -105,7 +105,7 @@
                         android:layout_toRightOf="@+id/injectorTv"
                         android:gravity="center"
                         android:text="0445120007"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/md_white"
                         android:textSize="16sp"
                         />
 
@@ -116,7 +116,9 @@
                         android:layout_toLeftOf="@+id/chooseTv"
                         android:layout_toRightOf="@+id/xhTv"
                         android:gravity="center"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/white"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="3"
                         android:textSize="24sp"
                         />
 
@@ -128,7 +130,7 @@
                         android:layout_toLeftOf="@+id/measToolNumEt"
                         android:gravity="center"
                         android:text="选择道具编号"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/md_white"
                         android:textSize="16sp"
                         />
 

@@ -160,7 +160,7 @@
                         android:id="@+id/uname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="王小明你好，欢迎！"
+                        android:text="欢迎！"
                         android:textColor="@color/md_white"
                         android:textSize="14dp"/>
 
@@ -168,7 +168,6 @@
                         android:id="@+id/dateTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2016年2月10日 21：00"
                         android:textColor="@color/md_white"
                         android:textSize="14dp"/>
 

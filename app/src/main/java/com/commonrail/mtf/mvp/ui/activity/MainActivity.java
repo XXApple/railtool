@@ -1,11 +1,10 @@
 package com.commonrail.mtf.mvp.ui.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +40,7 @@ import com.commonrail.mtf.util.db.DbUtil;
 import com.commonrail.mtf.util.db.FilesService;
 import com.commonrail.mtf.util.db.InjectorService;
 import com.commonrail.mtf.util.retrofit.RxUtils;
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.yw.filedownloader.BaseDownloadTask;
 import com.yw.filedownloader.FileDownloadListener;
 import com.yw.filedownloader.FileDownloadQueueSet;
@@ -54,12 +54,13 @@ import java.util.List;
 
 import butterknife.Bind;
 
-public class MainActivity extends BaseActivity implements MainView {
+
+public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.wendu)
     TextView wendu;
     @Bind(R.id.item_list)
-    RecyclerView itemList;
+    SuperRecyclerView itemList;
     @Bind(R.id.uname)
     TextView uname;
     @Bind(R.id.callFb)
@@ -68,7 +69,7 @@ public class MainActivity extends BaseActivity implements MainView {
     TextView dateTime;
 
 
-    private Dialog loadingDialog;
+    //    private Dialog loadingDialog;
     private IndexAdapter mIndexAdapter;
     private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
     private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
@@ -103,9 +104,14 @@ public class MainActivity extends BaseActivity implements MainView {
 
         mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
         itemList.setAdapter(mIndexAdapter);
+        itemList.setLayoutManager(new GridLayoutManager(this, 3));
+        itemList.setRefreshListener(this);
+        itemList.setRefreshingColorResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
+
+
         mainPresenter = new MainPresenterIml(this);
-        loadingDialog = new ProgressDialog(this);
-        loadingDialog.setTitle("加载数据...");
+//        loadingDialog = new ProgressDialog(this);
+//        loadingDialog.setTitle("加载数据...");
         mainPresenter.getUser(subscription, api);
         mainPresenter.getInjectors(subscription, api);
         mainPresenter.checkUpdate(subscription, api);
@@ -134,12 +140,25 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void showLoading() {
-        loadingDialog.show();
+//        loadingDialog.show();
+
+        itemList.post(new Runnable() {
+            @Override
+            public void run() {
+                itemList.getSwipeToRefresh().setRefreshing(true);
+            }
+        });
     }
 
     @Override
     public void hideLoading() {
-        loadingDialog.hide();
+//        loadingDialog.hide();
+        itemList.post(new Runnable() {
+            @Override
+            public void run() {
+                itemList.getSwipeToRefresh().setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -416,6 +435,12 @@ public class MainActivity extends BaseActivity implements MainView {
         protected void warn(BaseDownloadTask task) {
         }
     };
+
+    @Override
+    public void onRefresh() {
+        mainPresenter.getUser(subscription, api);
+        mainPresenter.getInjectors(subscription, api);
+    }
 
 
 //    private void updateFile() {

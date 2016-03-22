@@ -72,13 +72,26 @@
                         android:src="@drawable/choice"
                         android:text="请选择厂商"/>
 
-                    <android.support.v7.widget.RecyclerView
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/item_list"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_marginTop="8dp"-->
+                        <!--app:layoutManager="GridLayoutManager"-->
+                        <!--app:spanCount="3"/>-->
+
+                    <com.malinskiy.superrecyclerview.SuperRecyclerView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/item_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        app:layout_empty="@layout/emptyview"
                         android:layout_marginTop="8dp"
-                        app:layoutManager="GridLayoutManager"
-                        app:spanCount="3"/>
+                        app:layout_moreProgress="@layout/more_progress"
+                        app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
+                        app:recyclerClipToPadding="false"
+                        app:scrollbarStyle="insideOverlay"/>
+
 
 
                 </LinearLayout>

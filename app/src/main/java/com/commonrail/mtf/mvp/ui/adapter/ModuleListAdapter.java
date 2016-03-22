@@ -10,7 +10,7 @@ import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.entity.Module;
 import com.commonrail.mtf.util.common.L;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 项目名称：railtool
@@ -24,10 +24,14 @@ import java.util.List;
 public class ModuleListAdapter
         extends RecyclerView.Adapter<ModuleListAdapter.ViewHolder> {
 
-    private final List<Module> mInjectors;
+    public void setInjectors(final ArrayList<Module> mInjectors) {
+        this.mInjectors = mInjectors;
+    }
+
+    private  ArrayList<Module> mInjectors;
     private Click mClick;
 
-    public ModuleListAdapter(List<Module> items) {
+    public ModuleListAdapter(ArrayList<Module> items) {
         mInjectors = items;
         L.e("IndexAdapter:" + mInjectors.size());
     }

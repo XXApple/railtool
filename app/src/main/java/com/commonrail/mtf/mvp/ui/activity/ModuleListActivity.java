@@ -3,7 +3,8 @@ package com.commonrail.mtf.mvp.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,7 +28,9 @@ import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.common.SPUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,12 +50,12 @@ import rx.schedulers.Schedulers;
  * 修改时间：16/1/12 下午8:41
  * 修改备注：
  */
-public class ModuleListActivity extends BaseActivity {
+public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.home_btn)
     LinearLayout homeBtn;
     @Bind(R.id.item_list)
-    RecyclerView itemList;
+    SuperRecyclerView itemList;
     @Bind(R.id.tips)
     TextView tips;
 
@@ -84,7 +87,6 @@ public class ModuleListActivity extends BaseActivity {
     private String xh = "";
 
 
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,9 +94,18 @@ public class ModuleListActivity extends BaseActivity {
         toolbar.setSubtitle(R.string.title_activity_main);
         tips.setText(R.string.module_list_tips);
         injectorTypeEt.clearFocus();
-        String injectorType = getIntent().getStringExtra("injectorType");
+        injectorType = getIntent().getStringExtra("injectorType");
         String injectorIconUrl = getIntent().getStringExtra("injectorIcon");
         injectorIcon.setImageURI(AppUtils.getFileFrescoUri(injectorIconUrl));
+
+        mIndexAdapter = new ModuleListAdapter(new ArrayList<Module>());
+        itemList.setAdapter(mIndexAdapter);
+
+        itemList.setLayoutManager(new LinearLayoutManager(ModuleListActivity.this));
+        itemList.setRefreshListener(ModuleListActivity.this);
+        itemList.setRefreshingColorResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
+
+
         getModuleList(injectorType);
         initBoschInfoView(injectorType);
     }
@@ -134,11 +145,11 @@ public class ModuleListActivity extends BaseActivity {
                     @Override
                     public void call(final List<Module> t) {
                         if (t == null || t.isEmpty()) {
-                            Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        mIndexAdapter = new ModuleListAdapter(t);
-                        itemList.setAdapter(mIndexAdapter);
+
+                        mIndexAdapter.setInjectors((ArrayList<Module>) t);
                         mIndexAdapter.setClick(new ModuleListAdapter.Click() {
                             @Override
                             public void itemClick(int p) {
@@ -153,7 +164,7 @@ public class ModuleListActivity extends BaseActivity {
 //                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
 //
 //                                ModuleListActivity.this.startActivityForResult(intent, 0);
-                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, moduleId, moduleName, xh, (String) SPUtils.get(ModuleListActivity.this,"amesdialMac",""));
+                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, moduleId, moduleName, xh, (String) SPUtils.get(ModuleListActivity.this, "amesdialMac", ""));
                             }
                         });
                         mIndexAdapter.notifyDataSetChanged();
@@ -162,13 +173,13 @@ public class ModuleListActivity extends BaseActivity {
                     @Override
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
-                        Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
 
     private void initBoschInfoView(final String mInjectorType) {
-       
+
         if (TextUtils.equals(mInjectorType, "Bosch")) {
             isBosch = true;
             leftTips.setVisibility(View.GONE);
@@ -203,6 +214,13 @@ public class ModuleListActivity extends BaseActivity {
     }
 
     private void getBoschInfo(final String xh) {
+
+        itemList.post(new Runnable() {
+            @Override
+            public void run() {
+                itemList.getSwipeToRefresh().setRefreshing(true);
+            }
+        });
         HashMap<String, String> map = new HashMap<>();
         map.put("xh", xh);
         subscription.add(api.searchBosch(map)
@@ -214,7 +232,7 @@ public class ModuleListActivity extends BaseActivity {
                     public Bosch call(Result<Bosch> t) {
                         L.e("searchBosch： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                             return null;
                         }
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
@@ -230,12 +248,25 @@ public class ModuleListActivity extends BaseActivity {
                         yzkyh.setText(mBosch.getYzkyh());
                         yzxh.setText(mBosch.getYzxh());
                         fzjxh.setText(mBosch.getFzjxh());
+
+                        itemList.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                itemList.getSwipeToRefresh().setRefreshing(false);
+                            }
+                        });
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
+                        itemList.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                itemList.getSwipeToRefresh().setRefreshing(false);
+                            }
+                        });
                         L.e("" + throwable.toString());
-                        Toast.makeText(AppClient.getInstance(),AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
@@ -260,6 +291,11 @@ public class ModuleListActivity extends BaseActivity {
 
             }
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        getModuleList(injectorType);
     }
 //    private void getRepairStep(final String injectorType, final String language, final int moduleId, final String xh) {
 //

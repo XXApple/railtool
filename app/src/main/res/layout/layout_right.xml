@@ -56,7 +56,7 @@
             android:layout_height="270dp"
             android:padding="8dp"
             android:text="1 jiangjiangjiangjiang"
-            android:textColor="@color/black1"
+            android:textColor="@color/md_white"
             android:textSize="14sp"
             android:visibility="gone"
             />

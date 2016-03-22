@@ -8,8 +8,8 @@
     <color name="colorPrimary">#7f000000</color>
     <color name="colorPrimaryDark">#7f000000</color>
     <color name="colorAccent">#FF4081</color>
-    
-    
+
+    <color name="colorPrimary_30">#59000000</color>
     
     <color name="colorPrimary_t">#000000</color>
     <color name="colorPrimarye">#0b64b0</color>
@@ -19,8 +19,6 @@
 
     <color name="greya">#f2e6e6e9</color>
 
-    md_grey_100
-    
     <color name="whitea">#e5ffffff</color>
 
     <!--黑色-->

@@ -12,13 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:gravity="center"
+        android:gravity="center_horizontal|start"
         android:orientation="vertical">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image"
-            android:layout_width="124dp"
-            android:layout_height="67dp"
+            android:layout_width="130dp"
+            android:layout_height="76dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="center"
             fresco:actualImageScaleType="fitCenter"
             fresco:fadeDuration="300"

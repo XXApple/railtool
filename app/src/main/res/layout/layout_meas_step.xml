@@ -18,7 +18,7 @@
         android:maxWidth="400dp"
         android:paddingLeft="8dp"
         android:text="测量步骤及要点"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/md_white"
         android:textSize="14.23dp"
         />
 
@@ -31,7 +31,7 @@
         android:lineSpacingExtra="7dp"
         android:lineSpacingMultiplier="1.0"
         android:text="步骤：❶ 将喷油器体夹持在专用台虎钳上；❷ 依次将阀半球和衔铁插入座孔；"
-        android:textColor="@color/black1"
+        android:textColor="@color/md_white"
         android:textSize="14.6dp"
         />
 
