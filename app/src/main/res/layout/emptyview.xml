@@ -2,8 +2,9 @@
 <TextView
     android:id="@+id/textView"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:text="Nothing here."
+    android:text="请检查网络设置..."
+    android:textColor="@color/md_white"
     android:textAppearance="?android:attr/textAppearanceMedium"/>

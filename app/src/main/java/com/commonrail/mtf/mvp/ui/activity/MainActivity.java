@@ -1,5 +1,6 @@
 package com.commonrail.mtf.mvp.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -68,8 +69,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Bind(R.id.dateTime)
     TextView dateTime;
 
-
-    //    private Dialog loadingDialog;
     private IndexAdapter mIndexAdapter;
     private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
     private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
@@ -94,8 +93,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        toolbar.setTitle(R.string.app_name);
-//        toolbar.setSubtitle(R.string.title_activity_main);
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         DbCore.enableQueryBuilderLog();
         filesService = DbUtil.getFilesService();
@@ -110,16 +107,10 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
 
         mainPresenter = new MainPresenterIml(this);
-//        loadingDialog = new ProgressDialog(this);
-//        loadingDialog.setTitle("加载数据...");
         mainPresenter.getUser(subscription, api);
         mainPresenter.getInjectors(subscription, api);
         mainPresenter.checkUpdate(subscription, api);
         mainPresenter.updateFile(subscription, api);
-//        doLogin("");
-//        getIndexList("zh_CN");//"zh_CN";//en_US
-//        checkUpdate();
-//        updateFile();
         callFb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -140,8 +131,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     @Override
     public void showLoading() {
-//        loadingDialog.show();
-
         itemList.post(new Runnable() {
             @Override
             public void run() {
@@ -152,7 +141,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     @Override
     public void hideLoading() {
-//        loadingDialog.hide();
         itemList.post(new Runnable() {
             @Override
             public void run() {
@@ -189,14 +177,14 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 //        Toast.makeText(AppClient.getInstance(), "当前数据是最新版本", Toast.LENGTH_SHORT).show();
         GlobalUtils.showToastShort(this, "文件版本是最新的");
         L.e("showUpdateFileError", "无新版文件");
-
     }
 
-    @Override
+    @SuppressLint("SetTextI18n")
+    @Override   
     public void setUserInfo(User t) {
         uname.setVisibility(View.VISIBLE);
         String name = t.getUname();
-        uname.setText(name + "你好，欢迎！");
+        uname.setText(name + " 你好，欢迎！");
         SPUtils.put(MainActivity.this, "amesdialMac", t.getAmesdialMac());
     }
 

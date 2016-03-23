@@ -5,17 +5,10 @@ import android.content.pm.PackageManager;
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.L;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.SecureRandom;
@@ -25,6 +18,12 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
+
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -57,23 +56,17 @@ public class OkHttpClientManager {
             synchronized (OkHttpClientManager.class) {
                 if (sInstance == null) {
                     sInstance = new OkHttpClient();
-                    //cookie enabled
-                    sInstance.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-                    //从主机读取数据超时
-                    sInstance.setReadTimeout(15, TimeUnit.SECONDS);
-                    //连接主机超时
-                    sInstance.setConnectTimeout(20, TimeUnit.SECONDS);
-                    sInstance.interceptors().add(new LoggingInterceptor());
-                    sInstance.networkInterceptors().add(REWRITE_CACHE_CONTROL_INTERCEPTOR);
-//                    try {
-//                        setCertificates(AppClient.getInstance().getAssets().open("railtoolapi.keystore"));
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-
                     File cacheFile = new File(AppClient.getInstance().getCacheDir(), AppClient.getInstance().getExternalCacheDir().getPath());
                     Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
-                    sInstance.setCache(cache);
+
+                     sInstance = new OkHttpClient.Builder()
+                            .addInterceptor(new LoggingInterceptor())
+                            .retryOnConnectionFailure(true)
+                            .connectTimeout(15, TimeUnit.SECONDS)
+                             .cache(cache)
+                            .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                            .build();
+                    
                 }
             }
         }
@@ -158,7 +151,6 @@ public class OkHttpClientManager {
             keyManagerFactory.init(keyStore, "railtoolapi".toCharArray());
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom()
             );
-            sInstance.setSslSocketFactory(sslContext.getSocketFactory());
         } catch (Exception e) {
             e.printStackTrace();
         }
