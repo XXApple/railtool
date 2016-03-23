@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
+import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
@@ -84,7 +85,7 @@ public class FrescoConfig {
         };
 
         //小图片的磁盘配置
-        DiskCacheConfig diskSmallCacheConfig = DiskCacheConfig.newBuilder()
+        DiskCacheConfig diskSmallCacheConfig = DiskCacheConfig.newBuilder(AppClient.getInstance())
                 .setBaseDirectoryPath(context.getApplicationContext().getCacheDir())//缓存图片基路径
                 .setBaseDirectoryName(IMAGE_PIPELINE_SMALL_CACHE_DIR)//文件夹名
 //            .setCacheErrorLogger(cacheErrorLogger)//日志记录器用于日志错误的缓存。
@@ -97,7 +98,7 @@ public class FrescoConfig {
                 .build();
 
         //默认图片的磁盘配置
-        DiskCacheConfig diskCacheConfig = DiskCacheConfig.newBuilder()
+        DiskCacheConfig diskCacheConfig = DiskCacheConfig.newBuilder(AppClient.getInstance())
                 .setBaseDirectoryPath(context.getExternalCacheDir().getAbsoluteFile())//缓存图片基路径
                 .setBaseDirectoryName(IMAGE_PIPELINE_CACHE_DIR)//文件夹名
 //            .setCacheErrorLogger(cacheErrorLogger)//日志记录器用于日志错误的缓存。
@@ -111,8 +112,8 @@ public class FrescoConfig {
 
         //缓存图片配置
 //        ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context).setNetworkFetcher(OkHttpClientManager.getInstance())
-		ImagePipelineConfig.Builder configBuilder = OkHttpImagePipelineConfigFactory
-				.newBuilder(context, new OkHttpClient())
+        ImagePipelineConfig.Builder configBuilder = OkHttpImagePipelineConfigFactory
+                .newBuilder(context, new OkHttpClient())
 
 //            .setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory)//图片加载动画
                 .setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams)//内存缓存配置（一级缓存，已解码的图片）
