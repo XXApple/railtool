@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.commonrail.mtf"
@@ -41,8 +41,8 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
-    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
-    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+//    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+//    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 
     compile "com.facebook.fresco:fresco:$frescoVersion"
     compile "com.facebook.fresco:imagepipeline-okhttp:$frescoVersion"

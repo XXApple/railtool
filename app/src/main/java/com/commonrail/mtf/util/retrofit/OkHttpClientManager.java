@@ -75,7 +75,7 @@ public class OkHttpClientManager {
 
 
     /**
-     * see http://stackoverflow.com/questions/24952199/okhttp-enable-logs
+     * see https://github.com/square/okhttp/wiki/Interceptors
      */
     static class LoggingInterceptor implements Interceptor {
         @Override
@@ -86,18 +86,13 @@ public class OkHttpClientManager {
             String osName = "android" + android.os.Build.VERSION.RELEASE;
             PackageManager pm = AppClient.getInstance().getPackageManager();
             String appName = AppClient.getInstance().getApplicationInfo().loadLabel(pm).toString();
-
-
             L.e(TAG, "deviceMac：" + deviceMac);
             L.e(TAG, "osName" + osName);
             L.e(TAG, "appName" + appName);
-
-
             Request request = original.newBuilder()
 //                    .header("Cache-Control", "public")
 //                    .header("max-age", "604800")
 //                    .header("max-stale", "2419200")
-
 //                    .header("terminal-type", "pad")
 //                    .header("device-number", deviceId)
                     .header("device-mac", deviceMac)
