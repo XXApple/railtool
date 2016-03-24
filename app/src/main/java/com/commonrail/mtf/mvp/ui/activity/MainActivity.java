@@ -42,6 +42,7 @@ import com.commonrail.mtf.util.db.FilesService;
 import com.commonrail.mtf.util.db.InjectorService;
 import com.commonrail.mtf.util.retrofit.RxUtils;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
+import com.pgyersdk.crash.PgyCrashManager;
 import com.yw.filedownloader.BaseDownloadTask;
 import com.yw.filedownloader.FileDownloadListener;
 import com.yw.filedownloader.FileDownloadQueueSet;
@@ -93,6 +94,8 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PgyCrashManager.register(this);
+
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         DbCore.enableQueryBuilderLog();
         filesService = DbUtil.getFilesService();

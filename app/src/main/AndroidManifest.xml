@@ -30,6 +30,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
+    <!-- 必选-->
+
+    <!-- 可选-->
+    <uses-permission android:name="android.permission.READ_LOGS" /> <!-- 获取logcat日志 -->
+
     <application
         android:name=".AppClient"
         android:allowBackup="false"
@@ -50,9 +55,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".mvp.ui.activity.LoginActivity"
-            android:label="@string/title_activity_login"/>
         <activity
             android:name=".mvp.ui.activity.ModuleListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
@@ -87,7 +89,10 @@
         <service
             android:name=".mvp.ui.activity.bluetooth.BluetoothLeService"
             android:enabled="true"/>
-
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="2f4c7e29bfc0717e9ff502313ac50676" >
+        </meta-data>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import com.commonrail.mtf.util.FrescoConfig;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.db.DbCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.pgyersdk.crash.PgyCrashManager;
 import com.yw.filedownloader.FileDownloader;
 
 /**
@@ -41,7 +42,7 @@ public class AppClient extends Application {
         L.isDebug = true;
         sInstance = this;
         DbCore.init(this);
-
+        PgyCrashManager.register(this);
 
 //        PgyCrashManager.register(sInstance);
 //        refWatcher = LeakCanary.install(sInstance);

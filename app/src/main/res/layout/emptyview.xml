@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
-    android:id="@+id/textView"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:text="请检查网络设置..."
-    android:textColor="@color/md_white"
-    android:textAppearance="?android:attr/textAppearanceMedium"/>
+    android:text="@string/net_error"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textColor="@color/md_white" />
