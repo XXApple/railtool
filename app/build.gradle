@@ -58,6 +58,6 @@ dependencies {
     compile 'com.pgyersdk:sdk:2.2.2'
 
     compile 'de.greenrobot:greendao:2.1.0'
-    compile project(':rtplayer')
+    compile project(':rtcommon')
     compile project(':filedownloader')
 }

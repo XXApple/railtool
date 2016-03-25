@@ -29,6 +29,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.commonrail.common.rtplayer.RtPlayer;
+import com.commonrail.common.rtplayer.listener.RtPlayerListener;
+import com.commonrail.common.rtplayer.view.RtVideoView;
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.entity.ModuleItem;
@@ -48,9 +51,6 @@ import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.retrofit.RxUtils;
-import com.commonrail.rtplayer.RtPlayer;
-import com.commonrail.rtplayer.listener.RtPlayerListener;
-import com.commonrail.rtplayer.view.RtVideoView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
@@ -278,6 +278,16 @@ public class Step2Activity extends BaseActivity {
         }
     };
 
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter
+                .addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
     private void checkMeasResult(final Step mStep, final String mResult) {
         if (TextUtils.isEmpty(mResult)) {
             measDispTips.setVisibility(View.GONE);
@@ -361,8 +371,10 @@ public class Step2Activity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
+        toolbar.inflateMenu(R.menu.main);
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
 
         String injectorType = getIntent().getStringExtra("injectorType");
@@ -405,7 +417,6 @@ public class Step2Activity extends BaseActivity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }
-
 
     private void getRepairStep(String injectorType, String language, int moduleId, String xh) {
         HashMap<String, Object> map = new HashMap<>();
@@ -681,16 +692,6 @@ public class Step2Activity extends BaseActivity {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
-    }
-
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter
-                .addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
-        return intentFilter;
     }
 
     @OnClick(R.id.home_btn)

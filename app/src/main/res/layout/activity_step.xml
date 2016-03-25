@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:fresco="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_gravity="center"
+             android:background="@drawable/main_bg"
+             android:orientation="vertical"
+             tools:context=".mvp.ui.activity.MainActivity">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/rootLine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical">
+
+        <include layout="@layout/sub_toolbar"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="248dp"
+                android:layout_height="579dp"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/home_shape_b"
+                android:gravity="top|center_horizontal"
+                android:orientation="vertical">
+                <!--android:layout_width="315px"-->
+                <!--android:layout_height="1101px"-->
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/showPicUrl"
+                    android:layout_width="248dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
+                    fresco:actualImageScaleType="centerInside"
+                    fresco:fadeDuration="300"
+                    fresco:failureImage="@drawable/logo"
+                    fresco:failureImageScaleType="centerInside"
+                    fresco:placeholderImage="@color/colorPrimary"
+                    fresco:placeholderImageScaleType="centerInside"
+                    fresco:retryImage="@drawable/logo"
+                    fresco:retryImageScaleType="centerInside"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="860dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="860dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/dv_grey_shape_bg"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/injectorTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="16dp"
+                        android:gravity="center"
+                        android:text="BOSCH"
+                        android:textColor="@color/md_red_500"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/xhTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/injectorTv"
+                        android:gravity="center"
+                        android:text="0445120007"
+                        android:textColor="@color/md_white"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/dispStepNameTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/chooseTv"
+                        android:layout_toRightOf="@+id/xhTv"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="3"
+                        android:textSize="24sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/chooseTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@+id/measToolNumEt"
+                        android:gravity="center"
+                        android:text="选择道具编号"
+                        android:textColor="@color/md_white"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/measToolNumEt"
+                        android:layout_width="100dp"
+                        android:layout_height="36dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/measToolPic"
+                        android:background="@drawable/dv_white_shape_bg"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/measToolPic"
+                        android:layout_width="69dp"
+                        android:layout_height="35dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="16dp"
+                        fresco:actualImageScaleType="centerInside"
+                        fresco:fadeDuration="300"
+                        fresco:failureImage="@drawable/logo"
+                        fresco:failureImageScaleType="centerInside"
+                        fresco:placeholderImage="@color/white"
+                        fresco:placeholderImageScaleType="centerInside"
+                        fresco:retryImage="@drawable/logo"
+                        fresco:retryImageScaleType="centerInside"
+                        />
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="860dp"
+                    android:layout_height="287dp"
+                    android:layout_marginTop="7dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="420dp"
+                        android:layout_height="287dp"
+                        android:background="@drawable/dv_white_shape_bg"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="42dp"
+                            android:layout_height="128dp"
+                            android:layout_gravity="top|center_horizontal"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:padding="5dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/video_tips"
+                            />
+
+                        <include layout="@layout/layout_video"/>
+                    </LinearLayout>
+
+                    <include layout="@layout/layout_right"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="860dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="13dp"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/layout_meas_step"/>
+
+
+                    <include layout="@layout/tablayout"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="234dp">
+
+                        <include layout="@layout/layout_meas_result"/>
+
+                        <include layout="@layout/layout_right_btn"/>
+                    </FrameLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <include layout="@layout/layout_bottom"/>
+
+</FrameLayout>

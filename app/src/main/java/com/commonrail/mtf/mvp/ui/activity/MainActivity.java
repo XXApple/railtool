@@ -59,6 +59,8 @@ import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
 
+    private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
+    private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
     @Bind(R.id.wendu)
     TextView wendu;
     @Bind(R.id.item_list)
@@ -69,14 +71,70 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     TextView callFb;
     @Bind(R.id.dateTime)
     TextView dateTime;
-
     private IndexAdapter mIndexAdapter;
-    private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
-    private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
     private FilesService filesService;
+    final FileDownloadListener queueTarget = new FileDownloadListener() {
+        @Override
+        protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            L.e("FileDownloadListener", task.getTag().toString());
+        }
+
+        @Override
+        protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+        }
+
+        @Override
+        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+        }
+
+        @Override
+        protected void blockComplete(BaseDownloadTask task) {
+        }
+
+        @Override
+        protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
+        }
+
+        @Override
+        protected void completed(BaseDownloadTask task) {
+            String localUrl = (String) task.getTag();
+            L.e("completed", localUrl + " 下载完成");
+            try {
+                File tmpFile = new File(TMP_PATH + localUrl);
+                File targetFile = new File(TARGET_PATH + localUrl);
+                SDCardUtils.copyfile(tmpFile, targetFile, true);
+                List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileLocalUrl.eq(localUrl)).build().list();
+                for (Files mFiles : mFilesList) {
+                    mFiles.setFileStatus(1);
+                    L.e("completed", localUrl + " 标记为已完成");
+                    filesService.saveOrUpdate(mFiles);
+//                    filesService.refresh(mFiles);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
+            if (mFilesList != null && mFilesList.size() > 0) {//且未完成数大于0,则继续下载
+                L.e("downloadFiles", "且未完成数大于0");
+            } else {
+                L.e("downloadFiles", "下载记录中全部都已完成");
+            }
+        }
+
+        @Override
+        protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+        }
+
+        @Override
+        protected void error(BaseDownloadTask task, Throwable e) {
+        }
+
+        @Override
+        protected void warn(BaseDownloadTask task) {
+        }
+    };
     private InjectorService injectorService;
-
-
     private MainPresenter mainPresenter;
 
     @Override
@@ -183,7 +241,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     }
 
     @SuppressLint("SetTextI18n")
-    @Override   
+    @Override
     public void setUserInfo(User t) {
         uname.setVisibility(View.VISIBLE);
         String name = t.getUname();
@@ -258,7 +316,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         });
     }
 
-
     private void downloadApkAndUpdate(String url, String savePath) {
         FileDownloader.getImpl().create(url)
                 .setPath(savePath)
@@ -310,7 +367,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                     }
                 }).start();
     }
-
 
     private void downloadFiles(final List<FileListItem> fileList, int latestVersion) {
         L.e("downloadFiles", "服务器需要下载文件数" + fileList.size());
@@ -364,68 +420,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         queueSet.downloadTogether(tasks);
         queueSet.start();
     }
-
-    final FileDownloadListener queueTarget = new FileDownloadListener() {
-        @Override
-        protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            L.e("FileDownloadListener", task.getTag().toString());
-        }
-
-        @Override
-        protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
-        }
-
-        @Override
-        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-        }
-
-        @Override
-        protected void blockComplete(BaseDownloadTask task) {
-        }
-
-        @Override
-        protected void retry(final BaseDownloadTask task, final Throwable ex, final int retryingTimes, final int soFarBytes) {
-        }
-
-        @Override
-        protected void completed(BaseDownloadTask task) {
-            String localUrl = (String) task.getTag();
-            L.e("completed", localUrl + " 下载完成");
-            try {
-                File tmpFile = new File(TMP_PATH + localUrl);
-                File targetFile = new File(TARGET_PATH + localUrl);
-                SDCardUtils.copyfile(tmpFile, targetFile, true);
-                List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileLocalUrl.eq(localUrl)).build().list();
-                for (Files mFiles : mFilesList) {
-                    mFiles.setFileStatus(1);
-                    L.e("completed", localUrl + " 标记为已完成");
-                    filesService.saveOrUpdate(mFiles);
-//                    filesService.refresh(mFiles);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
-            if (mFilesList != null && mFilesList.size() > 0) {//且未完成数大于0,则继续下载
-                L.e("downloadFiles", "且未完成数大于0");
-            } else {
-                L.e("downloadFiles", "下载记录中全部都已完成");
-            }
-        }
-
-        @Override
-        protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-        }
-
-        @Override
-        protected void error(BaseDownloadTask task, Throwable e) {
-        }
-
-        @Override
-        protected void warn(BaseDownloadTask task) {
-        }
-    };
 
     @Override
     public void onRefresh() {
