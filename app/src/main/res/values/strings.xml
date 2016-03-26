@@ -42,8 +42,8 @@
     <string name="unknown_service">未知服务</string>
 
     <!-- Menu items -->
-    <string name="menu_connect">连接蓝牙</string>
-    <string name="menu_disconnect">断开蓝牙</string>
+    <string name="menu_connect">重连蓝牙</string>
+    <string name="menu_disconnect">蓝牙已链接</string>
     <string name="menu_scan">查找</string>
     <string name="menu_stop">停止</string>
     

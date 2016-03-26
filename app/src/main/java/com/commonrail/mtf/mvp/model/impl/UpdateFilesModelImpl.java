@@ -3,14 +3,12 @@ package com.commonrail.mtf.mvp.model.impl;
 import android.annotation.SuppressLint;
 
 import com.commonrail.mtf.AppClient;
-import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.UpdateFileModel;
 import com.commonrail.mtf.mvp.model.entity.FileUpload;
 import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.presenter.OnUpdateFileListener;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.common.Constant;
-import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
 import com.commonrail.mtf.util.common.SPUtils;
 
@@ -47,10 +45,8 @@ public class UpdateFilesModelImpl implements UpdateFileModel {
                     public FileUpload call(Result<FileUpload> t) {
                         L.e("updateFile： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error));
                             return null;
                         }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
                         return t.getData();
                     }
                 })

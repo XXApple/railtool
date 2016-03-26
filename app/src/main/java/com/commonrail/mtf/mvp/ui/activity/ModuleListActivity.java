@@ -1,6 +1,9 @@
 package com.commonrail.mtf.mvp.ui.activity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -78,6 +81,11 @@ public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayo
     @Bind(R.id.injectorTypeImage)
     SimpleDraweeView injectorIcon;
 
+
+    private static final int REQUEST_ENABLE_BT = 1;
+    private BluetoothAdapter mBluetoothAdapter;
+
+
     private ModuleListAdapter mIndexAdapter;
     private boolean isBosch = false;
     private Bosch mBosch = null;
@@ -90,14 +98,21 @@ public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayo
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setSubtitle(R.string.title_activity_main);
-        tips.setText(R.string.module_list_tips);
+        if (toolbar != null) {
+            toolbar.setVisibility(View.GONE);
+            toolbar.setTitle(R.string.app_name);
+            toolbar.setSubtitle(R.string.title_activity_main);
+            tips.setText(R.string.module_list_tips);
+        }
+
         injectorTypeEt.clearFocus();
         injectorType = getIntent().getStringExtra("injectorType");
         String injectorIconUrl = getIntent().getStringExtra("injectorIcon");
         injectorIcon.setImageURI(AppUtils.getFileFrescoUri(injectorIconUrl));
 
+        initBoschInfoView(injectorType);
+        
+        
         mIndexAdapter = new ModuleListAdapter(new ArrayList<Module>());
         itemList.setAdapter(mIndexAdapter);
 
@@ -105,9 +120,15 @@ public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayo
         itemList.setRefreshListener(ModuleListActivity.this);
         itemList.setRefreshingColorResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
 
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
 
-        getModuleList(injectorType);
-        initBoschInfoView(injectorType);
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(ModuleListActivity.this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     @Override
@@ -118,6 +139,23 @@ public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayo
     @Override
     public Activity getActivity() {
         return this;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+        // fire an intent to display a dialog asking the user to grant permission to enable it.
+        //弹窗申请打开蓝牙
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+
+        getModuleList(injectorType);
+      
     }
 
     private void getModuleList(final String injectorType) {
@@ -164,7 +202,16 @@ public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayo
 //                                Intent intent = new Intent(ModuleListActivity.this, DeviceScanActivity.class);
 //
 //                                ModuleListActivity.this.startActivityForResult(intent, 0);
-                                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, moduleId, moduleName, xh, (String) SPUtils.get(ModuleListActivity.this, "amesdialMac", ""));
+                                if (!mBluetoothAdapter.isEnabled()) {
+                                    Toast.makeText(ModuleListActivity.this, "请务必打开蓝牙",
+                                            Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                IntentUtils.enterStep2Activity(ModuleListActivity.this,
+                                        injectorType, moduleId,
+                                        moduleName,
+                                        xh,
+                                        (String) SPUtils.get(ModuleListActivity.this, "amesdialMac", ""));
                             }
                         });
                         mIndexAdapter.notifyDataSetChanged();
@@ -279,16 +326,29 @@ public class ModuleListActivity extends BaseActivity implements SwipeRefreshLayo
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(ModuleListActivity.this, "请打开蓝牙",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+
         if (data != null) {
             if (resultCode == RESULT_OK) {
                 String mDeviceName = data.getStringExtra(Step2Activity.EXTRAS_DEVICE_NAME);
                 String mDeviceAddress = data.getStringExtra(Step2Activity.EXTRAS_DEVICE_ADDRESS);
                 if (!TextUtils.isEmpty(mDeviceName)) {
                     toolbar.setSubtitle(mDeviceName);
-                    L.e("链接蓝牙设备", mDeviceName);
                 }
-//                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, language, moduleId, moduleName, xh, mDeviceName, mDeviceAddress);
 
+                String servcerDeviceAddress = (String) SPUtils.get(ModuleListActivity.this, "amesdialMac", "");
+                L.e("扫描的蓝牙设备:", mDeviceAddress);
+                L.e("服务器配置的蓝牙设备:", servcerDeviceAddress);
+
+
+                IntentUtils.enterStep2Activity(ModuleListActivity.this, injectorType, moduleId, moduleName, xh, mDeviceAddress);
             }
         }
     }

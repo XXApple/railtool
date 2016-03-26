@@ -20,7 +20,7 @@
         android:checkable="false"
         android:orderInCategory="1"
         app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/ic_menu_manage"
         android:title=""/>
     
     <item

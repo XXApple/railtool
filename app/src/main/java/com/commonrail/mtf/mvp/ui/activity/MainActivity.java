@@ -59,8 +59,7 @@ import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
 
-    private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
-    private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
+
     @Bind(R.id.wendu)
     TextView wendu;
     @Bind(R.id.item_list)
@@ -71,8 +70,16 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     TextView callFb;
     @Bind(R.id.dateTime)
     TextView dateTime;
+
+
+    private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
+    private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
+
     private IndexAdapter mIndexAdapter;
     private FilesService filesService;
+    private InjectorService injectorService;
+    private MainPresenter mainPresenter;
+    
     final FileDownloadListener queueTarget = new FileDownloadListener() {
         @Override
         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
@@ -134,8 +141,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         protected void warn(BaseDownloadTask task) {
         }
     };
-    private InjectorService injectorService;
-    private MainPresenter mainPresenter;
+
 
     @Override
     protected void onResume() {
@@ -153,7 +159,9 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PgyCrashManager.register(this);
-
+        if (toolbar != null) {
+            toolbar.setVisibility(View.GONE);
+        }
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         DbCore.enableQueryBuilderLog();
         filesService = DbUtil.getFilesService();

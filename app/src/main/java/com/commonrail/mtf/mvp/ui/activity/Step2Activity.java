@@ -3,6 +3,7 @@ package com.commonrail.mtf.mvp.ui.activity;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -44,6 +46,7 @@ import com.commonrail.mtf.mvp.ui.activity.bluetooth.SampleGattAttributes;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
+import com.commonrail.mtf.util.BLTimer;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.ReadAndCalculateUtil;
 import com.commonrail.mtf.util.common.AppUtils;
@@ -77,8 +80,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class Step2Activity extends BaseActivity {
 
-    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
-    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+
     @Bind(R.id.home_btn)
     LinearLayout homeBtn;
     @Bind(R.id.showPicUrl)
@@ -148,9 +150,11 @@ public class Step2Activity extends BaseActivity {
     @Bind(R.id.layout_right_bg)
     LinearLayout layoutRightBg;
 
-    private boolean isPlayOver = false;
-    private Uri mUri;
 
+    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
+    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+
+    private Uri mUri;
     private List<Value> values = new ArrayList<>();
     private Value curValue;
 
@@ -158,243 +162,48 @@ public class Step2Activity extends BaseActivity {
     private StepList mStepList;
     private int curStepOrder = 0;
     private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
-
-
+    private ProgressDialog mProgressDialog;
     private CompositeSubscription subscription = new CompositeSubscription();
     private String mDeviceAddress;
-    private String mDeviceName;
     private BluetoothLeService mBluetoothLeService;
-    // Code to manage Service lifecycle.
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
-        @Override
-        public void onServiceConnected(ComponentName componentName,
-                                       IBinder service) {
-            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
-                    .getService();
-            if (!mBluetoothLeService.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-                finish();
-            }
-            // Automatically connects to the device upon successful start-up
-            // initialization.
-            mBluetoothLeService.connect(mDeviceAddress);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
-        }
-    };
-    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<>();
+    private boolean isConnectTimeOut = false;
     private boolean mConnected = false;
+    private BLTimer mBLTimer = null;//蓝牙链接计时器,2秒触发一次,10秒结束
     private BluetoothGattCharacteristic mNotifyCharacteristic;
-    // Handles various events fired by the Service.
-    // ACTION_GATT_CONNECTED: connected to a GATT server.
-    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
-    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
-    // ACTION_DATA_AVAILABLE: received data from the device. This can be a
-    // result of read
-    // or notification operations.
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                mConnected = true;
-                if (!TextUtils.isEmpty(mDeviceName)) {
-                    toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.connected) + mDeviceAddress);
-                    L.e("已链接蓝牙设备", mDeviceName);
-                    GlobalUtils.showToastLong(Step2Activity.this, "已链接蓝牙设备");
-                }
-                invalidateOptionsMenu();
-            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
-                    .equals(action)) {
-                mConnected = false;
-                if (!TextUtils.isEmpty(mDeviceName)) {
-                    toolbar.setSubtitle(mDeviceName + "" + getResources().getString(R.string.disconnected));
-                    L.e("未链接蓝牙设备", mDeviceName);
-                    GlobalUtils.showToastLong(Step2Activity.this, "蓝牙设备已断开连接");
-                    mBluetoothLeService.connect(mDeviceAddress);
-                }
-//                updateConnectionState(R.string.disconnected);
-                invalidateOptionsMenu();
-//                clearUI();
-            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
-                    .equals(action)) {
-                // Show all the supported services and characteristics on the
-                // user interface.
-                displayGattServices(mBluetoothLeService
-                        .getSupportedGattServices());
-            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                //从蓝牙取得测试结果
-                String testResult = intent
-                        .getStringExtra(BluetoothLeService.EXTRA_DATA);
-                L.e("测试结果", testResult);
-                /**
-                 *
-                 if (!TextUtils.isEmpty(mStep.getReadKey)) {
-                 ReadAndCalculateUtil.setReadKey("");
-                 }
-                 if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
-                 ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
-                 }
-                 *基于前面两条都有set的时候才能计算出建议值的结果
-                 *
-                 */
-                measDispTest.setText(testResult);
-
-                //将测量值，计算出来的建议值和服务器提供的范围分别对比，更UI上的值的提示
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<>();
 
 
-                Step mStep = mStepList.getStepList().get(curStepOrder);
-                String result = testResult.replace("mm", "");
-                curValue.setStepId(Integer.parseInt(mStep.getStepId()));
-                curValue.setStepNum(Integer.parseInt(mStep.getStepOrder()));
-
-                try {
-                    checkMeasResult(mStep, result);
-                    checkSuggetCalc(mStep);
-                } catch (NumberFormatException e) {
-                    L.e(e.toString());
-                }
-
-
-                if (curStepOrder == mStepList.getStepList().size() - 1) {
-                    //提交测试结果
-                    if (mItem == null) {
-                        return;
-                    }
-                    int moduleId = mItem.getId();
-                    String injectorType = injectorTv.getText().toString().trim();
-                    HashMap<String, Object> mMap = new HashMap<>();
-                    mMap.put("moduleId", moduleId);
-                    mMap.put("injectorType", injectorType);
-                    mMap.put("values", values);
-                    uploadMesResult(mMap);
-                }
-            }
-        }
-    };
-
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter
-                .addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
-        return intentFilter;
-    }
-
-    private void checkMeasResult(final Step mStep, final String mResult) {
-        if (TextUtils.isEmpty(mResult)) {
-            measDispTips.setVisibility(View.GONE);
-            measDispTest.setText("0.000");
-            return;
-        }
-        double meadispResult = Double.parseDouble(mResult);
-        L.e("测试结果：" + meadispResult);
-        meadispResult = Math.abs(meadispResult);//取绝对值
-        if (meadispResult == 0.001) {
-            L.e("该结果几乎等于0，已过滤");
-            return;
-        }
-        L.e("value setMeasResult" + meadispResult);
-        curValue.setMeasResult(meadispResult);
-        ReadAndCalculateUtil.handleReadValue(mResult);
-        //解析测试值的范围
-        String measdiap = mStep.getMeasRange();
-        L.e("测试值范围：" + measdiap);
-        String[] measdiapR = measdiap.split("-");
-        double measdiapR1 = Double.parseDouble(measdiapR[0]);
-        double measdiapR2 = Double.parseDouble(measdiapR[1]);
-
-        L.e("测试范围1：" + measdiapR1);
-        L.e("测试范围2：" + measdiapR2);
-        measDispTips.setVisibility(View.VISIBLE);
-        if (meadispResult >= measdiapR1 && meadispResult <= measdiapR2) {
-            measDispTips.setText("您的测试符合正常范围...");
-        } else if (meadispResult < measdiapR1) {
-            measDispTips.setText("您的测试存在错误，测量值偏小...");
-        } else {
-            measDispTips.setText("您的测试存在错误，测量值偏大...");
-        }
-    }
-
-    private void checkSuggetCalc(final Step mStep) {
-        String sgstKey = mStep.getSuggestCalcFun();
-        if (!TextUtils.isEmpty(sgstKey)) {
-            if (ReadAndCalculateUtil.DATA_MAP.get(sgstKey) != null) {
-                String sgtStr = ReadAndCalculateUtil.DATA_MAP.get(sgstKey);
-                if (TextUtils.isEmpty(sgtStr)) {
-                    suggestDispTest.setText("0.000");
-                    return;
-                }
-                double sgt = Double.parseDouble(sgtStr);
-                L.e("value setCalcResult" + sgt);
-                curValue.setCalcResult(sgt);
-                suggestDispTest.setText(String.valueOf(sgt));
-                //解析建议值的范围
-                String sgstRange = mStep.getSgstRange();
-                L.e("建议值范围" + sgstRange);
-                String[] sgstR = sgstRange.split("-");
-                double sgst1 = Double.parseDouble(sgstR[0]);
-                double sgst2 = Double.parseDouble(sgstR[1]);
-                L.e("建议值范围1：" + sgst1);
-                L.e("建议值范围1：" + sgst2);
-
-                L.e("建议值结果：" + sgt);
-                suggestDispTips.setVisibility(View.VISIBLE);
-                //将计算结果和范围对比
-                if (sgt >= sgst1 && sgt <= sgst2) {
-                    suggestDispTips.setText("您的测试符合正常范围...");
-                } else if (sgt < sgst1) {
-                    suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
-                } else {
-                    suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
-                }
-
-            } else {
-                suggestDispTips.setVisibility(View.GONE);
-                suggestDispTips.setText("");
-                suggestDispTest.setText("0.000");
-            }
-        } else {
-            suggestDispTips.setVisibility(View.GONE);
-            suggestDispTips.setText("");
-            suggestDispTest.setText("0.000");
-        }
-    }
-
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void initView() {
         toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
-        toolbar.inflateMenu(R.menu.main);
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
 
         String injectorType = getIntent().getStringExtra("injectorType");
-//        String language = getIntent().getStringExtra("language");
         int moduleId = getIntent().getIntExtra("moduleId", 0);
         String moduleName = getIntent().getStringExtra("moduleName");
         String xh = getIntent().getStringExtra("xh");
         progress.setVisibility(View.VISIBLE);
         rootLine.setVisibility(View.GONE);
 
-        final String mDeviceName = getIntent().getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
-        L.e("mDeviceAddress:" + mDeviceAddress);
+        L.e("蓝牙设备:" + mDeviceAddress);
         toolbar.setTitle(" " + injectorType + "  " + moduleName);
         ReadAndCalculateUtil.init();
         getRepairStep(injectorType, Constant.LANGUAGE, moduleId, xh);
 
+        mProgressDialog = new ProgressDialog(Step2Activity.this);
+        mProgressDialog.setTitle("正在连接蓝牙...请稍后");
+    }
+
+    private void initBL() {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
+        }
         Intent gattServiceIntent = new Intent(getActivity(), BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -407,16 +216,6 @@ public class Step2Activity extends BaseActivity {
         return this;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mOkVideoView != null) {
-            mOkVideoView.onDestroy();
-        }
-        isPlayOver = true;
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
-    }
 
     private void getRepairStep(String injectorType, String language, int moduleId, String xh) {
         HashMap<String, Object> map = new HashMap<>();
@@ -459,7 +258,7 @@ public class Step2Activity extends BaseActivity {
                             Step mStep = checkStep(curStepOrder);
                             if (mStep == null) return;
                             L.e("mStep.getVideoUrl()" + mStep.getVideoUrl());
-                            startVideo(mStep.getVideoUrl());
+                            startVideo();
                             setStepOrderInfo();
 
 
@@ -478,7 +277,7 @@ public class Step2Activity extends BaseActivity {
 
     @Nullable
     private Step checkStep(final int curStepOrder) {
-        if (mStepList == null) {
+        if (mStepList == null || mStepList.getStepList().isEmpty()) {
             return null;
         }
         Step mStep = mStepList.getStepList().get(curStepOrder);
@@ -488,13 +287,12 @@ public class Step2Activity extends BaseActivity {
         return mStep;
     }
 
-    private void startVideo(String videoName) {
+    private void startVideo() {
 
         mOkVideoView.addListener(new RtPlayerListener() {
             @Override
             public void onStateChanged(boolean playWhenReady, int playbackState) {
                 if (playbackState == RtPlayer.STATE_ENDED) {
-                    isPlayOver = true;
                     mOkVideoView.setVideoUri(mUri);
                 } else if (playbackState == RtPlayer.STATE_READY) {
                     mOkVideoView.setVisibility(View.VISIBLE);
@@ -658,7 +456,6 @@ public class Step2Activity extends BaseActivity {
         if (data == null) {
             return;
         }
-
         if (resultCode == RESULT_OK) {
             long p = data.getLongExtra("currentPosition", 0);
             if (p > 10000) {
@@ -690,33 +487,23 @@ public class Step2Activity extends BaseActivity {
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
+            L.e(TAG, "Connect request result=" + result);
         }
     }
 
+
     @OnClick(R.id.home_btn)
     public void homeBtn(View view) {
-////        IntentUtils.enterDeviceScanActivity(this);
-//        Intent intent = new Intent(this, DeviceScanActivity.class);
-//
-//        this.startActivityForResult(intent, 0);
         onBackPressed();
     }
 
     @OnClick(R.id.preBtn)
     public void setPreBtn(View mView) {
-//        int maxSteps = mStepList.getStepList().size();
         --curStepOrder;
         if (curStepOrder < 0) {
             curStepOrder = 0;
             return;
-
-//            curStepOrder = maxSteps - 1;
         }
-//
-//        if (curStepOrder >= maxSteps) {
-//            curStepOrder = 0;
-//        }
         setStepOrderInfo();
     }
 
@@ -733,7 +520,6 @@ public class Step2Activity extends BaseActivity {
                 if (!TextUtils.isEmpty(mStep.getMeasKey()) || !TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
                     if (curValue.getMeasResult() == 0) {
                         Toast.makeText(Step2Activity.this, "请完成当前步骤的测量过程,才能进入下一步", Toast.LENGTH_SHORT).show();
-//                        GlobalUtils.showToastShort(this, "请完成当前步骤的测量,才能进入下一步");
                         L.e("请完成当前步骤的测量过程,才能进入下一步");
                         return;
                     }
@@ -873,17 +659,22 @@ public class Step2Activity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_connect:
-                mBluetoothLeService.connect(mDeviceAddress);
-                return true;
+                if (!mConnected) {
+                    startConnect2BL();
+                    return true;
+                } else {
+                    Toast.makeText(Step2Activity.this, "蓝牙设备已链接,无需刷新", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             case R.id.menu_disconnect:
-                GlobalUtils.showToastShort(getActivity(), "很难连的，不要断吧");
+//                Toast.makeText(Step2Activity.this, "很难连的，不要断吧", Toast.LENGTH_SHORT).show();
 //                mBluetoothLeService.disconnect();
                 return true;
             case R.id.menu_refresh:
                 if (!mConnected) {
-                    mBluetoothLeService.connect(mDeviceAddress);
+                    startConnect2BL();
                 } else {
-                    GlobalUtils.showToastShort(getActivity(), "蓝牙已连接");
+                    Toast.makeText(Step2Activity.this, "蓝牙设备已链接,无需刷新", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case android.R.id.home:
@@ -891,6 +682,19 @@ public class Step2Activity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startConnect2BL() {
+        isConnectTimeOut = false;
+        if (mBLTimer == null) {
+            mBLTimer = new BLTimer(15000, 1000);//
+            mBLTimer.setTimeOut(mTimeOutListener);
+        }
+        mBLTimer.start();
+        mBluetoothLeService.connect(mDeviceAddress);
+        if (mProgressDialog != null && !mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
     }
 
     private void uploadMesResult(HashMap<String, Object> map) {
@@ -928,4 +732,258 @@ public class Step2Activity extends BaseActivity {
                     }
                 }));
     }
+
+    private void checkMeasResult(final Step mStep, final String mResult) {
+        if (TextUtils.isEmpty(mResult)) {
+            measDispTips.setVisibility(View.GONE);
+            measDispTest.setText("0.000");
+            return;
+        }
+        double meadispResult = Double.parseDouble(mResult);
+        L.e("测试结果：" + meadispResult);
+        meadispResult = Math.abs(meadispResult);//取绝对值
+        if (meadispResult == 0.001) {
+            L.e("该结果几乎等于0，已过滤");
+            return;
+        }
+        L.e("value setMeasResult" + meadispResult);
+        curValue.setMeasResult(meadispResult);
+        ReadAndCalculateUtil.handleReadValue(mResult);
+        //解析测试值的范围
+        String measdiap = mStep.getMeasRange();
+        L.e("测试值范围：" + measdiap);
+        String[] measdiapR = measdiap.split("-");
+        double measdiapR1 = Double.parseDouble(measdiapR[0]);
+        double measdiapR2 = Double.parseDouble(measdiapR[1]);
+
+        L.e("测试范围1：" + measdiapR1);
+        L.e("测试范围2：" + measdiapR2);
+        measDispTips.setVisibility(View.VISIBLE);
+        if (meadispResult >= measdiapR1 && meadispResult <= measdiapR2) {
+            measDispTips.setText("您的测试符合正常范围...");
+        } else if (meadispResult < measdiapR1) {
+            measDispTips.setText("您的测试存在错误，测量值偏小...");
+        } else {
+            measDispTips.setText("您的测试存在错误，测量值偏大...");
+        }
+    }
+
+    private void checkSuggetCalc(final Step mStep) {
+        String sgstKey = mStep.getSuggestCalcFun();
+        if (!TextUtils.isEmpty(sgstKey)) {
+            if (ReadAndCalculateUtil.DATA_MAP.get(sgstKey) != null) {
+                String sgtStr = ReadAndCalculateUtil.DATA_MAP.get(sgstKey);
+                if (TextUtils.isEmpty(sgtStr)) {
+                    suggestDispTest.setText("0.000");
+                    return;
+                }
+                double sgt = Double.parseDouble(sgtStr);
+                L.e("value setCalcResult" + sgt);
+                curValue.setCalcResult(sgt);
+                suggestDispTest.setText(String.valueOf(sgt));
+                //解析建议值的范围
+                String sgstRange = mStep.getSgstRange();
+                L.e("建议值范围" + sgstRange);
+                String[] sgstR = sgstRange.split("-");
+                double sgst1 = Double.parseDouble(sgstR[0]);
+                double sgst2 = Double.parseDouble(sgstR[1]);
+                L.e("建议值范围1：" + sgst1);
+                L.e("建议值范围1：" + sgst2);
+
+                L.e("建议值结果：" + sgt);
+                suggestDispTips.setVisibility(View.VISIBLE);
+                //将计算结果和范围对比
+                if (sgt >= sgst1 && sgt <= sgst2) {
+                    suggestDispTips.setText("您的测试符合正常范围...");
+                } else if (sgt < sgst1) {
+                    suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
+                } else {
+                    suggestDispTips.setText("您的测试存在错误，垫片超出合理范围...");
+                }
+
+            } else {
+                suggestDispTips.setVisibility(View.GONE);
+                suggestDispTips.setText("");
+                suggestDispTest.setText("0.000");
+            }
+        } else {
+            suggestDispTips.setVisibility(View.GONE);
+            suggestDispTips.setText("");
+            suggestDispTest.setText("0.000");
+        }
+
+
+    }
+
+    // Handles various events fired by the Service.
+    // ACTION_GATT_CONNECTED: connected to a GATT server.
+    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
+    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
+    // ACTION_DATA_AVAILABLE: received data from the device. This can be a
+    // result of read
+    // or notification operations.
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName,
+                                       IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
+                    .getService();
+            if (!mBluetoothLeService.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+                finish();
+            }
+            Toast.makeText(AppClient.getInstance(), "蓝牙硬件初始化成功,尝试连接蓝牙设备", Toast.LENGTH_SHORT).show();
+            if (mProgressDialog == null) {
+                mProgressDialog = new ProgressDialog(Step2Activity.this);
+                mProgressDialog.setTitle("正在连接蓝牙...请稍后");
+                mProgressDialog.setIndeterminate(true);
+            }
+            startConnect2BL();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+            L.e(TAG, "蓝牙系统服务连接失败");
+            stopConnect2BL();
+        }
+    };
+
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                mConnected = true;
+                invalidateOptionsMenu();
+                stopConnect2BL();
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
+                    .equals(action)) {
+                mConnected = false;
+                Toast.makeText(AppClient.getInstance(), "请将平板和蓝牙设备靠近后尝试重新连接", Toast.LENGTH_SHORT).show();
+                if (mProgressDialog != null) {
+                    if (isConnectTimeOut) {
+                        stopConnect2BL();
+                    }
+                }
+                invalidateOptionsMenu();
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
+                    .equals(action)) {
+                // Show all the supported services and characteristics on the
+                // user interface.
+                displayGattServices(mBluetoothLeService
+                        .getSupportedGattServices());
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                //从蓝牙取得测试结果
+                String testResult = intent
+                        .getStringExtra(BluetoothLeService.EXTRA_DATA);
+                L.e("测试结果", testResult);
+                /**
+                 *
+                 if (!TextUtils.isEmpty(mStep.getReadKey)) {
+                 ReadAndCalculateUtil.setReadKey("");
+                 }
+                 if (!TextUtils.isEmpty(mStep.getSuggestCalcFun())) {
+                 ReadAndCalculateUtil.setCalcKey(mStep.getSuggestCalcFun());
+                 }
+                 *基于前面两条都有set的时候才能计算出建议值的结果
+                 *
+                 */
+                measDispTest.setText(testResult);
+
+                //将测量值，计算出来的建议值和服务器提供的范围分别对比，更UI上的值的提示
+
+
+                Step mStep = mStepList.getStepList().get(curStepOrder);
+                String result = testResult.replace("mm", "");
+                curValue.setStepId(Integer.parseInt(mStep.getStepId()));
+                curValue.setStepNum(Integer.parseInt(mStep.getStepOrder()));
+
+                try {
+                    checkMeasResult(mStep, result);
+                    checkSuggetCalc(mStep);
+                } catch (NumberFormatException e) {
+                    L.e(e.toString());
+                }
+
+                if (curStepOrder == mStepList.getStepList().size() - 1) {
+                    //提交测试结果
+                    if (mItem == null) {
+                        return;
+                    }
+                    int moduleId = mItem.getId();
+                    String injectorType = injectorTv.getText().toString().trim();
+                    HashMap<String, Object> mMap = new HashMap<>();
+                    mMap.put("moduleId", moduleId);
+                    mMap.put("injectorType", injectorType);
+                    mMap.put("values", values);
+                    uploadMesResult(mMap);
+                }
+            }
+        }
+    };
+
+    private void stopConnect2BL() {
+        if (mBLTimer != null) {
+            mBLTimer.cancel();
+            L.e(TAG, "已连接或连接失败,停止计时");
+        }
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter
+                .addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mOkVideoView != null) {
+            mOkVideoView.onDestroy();
+        }
+        unbindService(mServiceConnection);
+        mBluetoothLeService = null;
+    }
+
+
+    private BLTimer.TimeOut mTimeOutListener = new BLTimer.TimeOut() {
+        @Override
+        public void timeOut() {
+            L.e(TAG, "蓝牙扫描超时");
+            isConnectTimeOut = true;
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+            Toast.makeText(Step2Activity.this, "蓝牙链接超时,请点击右上角按钮手动连接", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void timing(final long mMillisUntilFinished) {
+            L.e(TAG, "蓝牙扫描:" + mMillisUntilFinished / 1000 + "秒");
+            isConnectTimeOut = false;
+        }
+    };
+
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initBL();
+
+    }
+
+
 }

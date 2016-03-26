@@ -32,9 +32,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.commonrail.mtf.util.Util;
+import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.L;
 
 import java.util.List;
@@ -78,15 +78,15 @@ public class BluetoothLeService extends Service {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
-                L.e("Connected to GATT server.");
+                L.e("连接蓝牙系统服务...");
                 // Attempts to discover services after successful connection.
-                L.e("Attempting to start service discovery:" +
+                L.e("尝试启动服务..." +
                         mBluetoothGatt.discoverServices());
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
-                L.e("Disconnected from GATT server.");
+                L.e("蓝牙系统服务连接已断开...");
                 broadcastUpdate(intentAction);
             }
         }
@@ -96,7 +96,7 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
-                L.e("onServicesDiscovered received: " + status);
+                L.e("蓝牙系统接收到服务: " + status);
             }
         }
 
@@ -133,10 +133,10 @@ public class BluetoothLeService extends Service {
             int format;
             if ((flag & 0x01) != 0) {
                 format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                L.e("Heart rate format UINT16.");
+                L.e("UINT16---心跳率,Heart rate format UINT16.");
             } else {
                 format = BluetoothGattCharacteristic.FORMAT_UINT8;
-                L.e("Heart rate format UINT8.");
+                L.e("UINT8 心跳率,Heart rate format UINT8.");
             }
             final int heartRate = characteristic.getIntValue(format, 1);
             L.e(String.format("Received heart rate: %d", heartRate));
@@ -233,14 +233,13 @@ public class BluetoothLeService extends Service {
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
-            L.e("BluetoothAdapter not initialized or unspecified address.");
+            L.e("蓝牙适配器未初始化或无法识别设备mac地址"+"BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
-
         // Previously connected device.  Try to reconnect.
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
-            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
+            L.e(TAG, "用户:" + AppUtils.getLocalMacAddress() + "尝试创建新的链接:...." + "设备MAC地址 :" + address);
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
@@ -251,13 +250,13 @@ public class BluetoothLeService extends Service {
 
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
-            Log.w(TAG, "Device not found.  Unable to connect.");
+            L.e(TAG, "用户:" + AppUtils.getLocalMacAddress() + "查找——>" + "设备MAC地址 :" + address + "未找到.  Unable to connect.");
             return false;
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        L.e("Trying to create a new connection.");
+        L.e(TAG, "用户:" + AppUtils.getLocalMacAddress() + "查找——>" + "尝试创建新的链接:...." + "设备MAC地址 :" + address);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
@@ -271,7 +270,7 @@ public class BluetoothLeService extends Service {
      */
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            L.e("BluetoothAdapter not initialized");
+            L.e(TAG,"蓝牙适配器未初始化");
             return;
         }
         mBluetoothGatt.disconnect();
@@ -286,7 +285,7 @@ public class BluetoothLeService extends Service {
      */
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            L.e(TAG, "BluetoothAdapter not initialized");
+            L.e(TAG, "蓝牙适配器未初始化");
             return;
         }
         mBluetoothGatt.readCharacteristic(characteristic);
@@ -301,7 +300,7 @@ public class BluetoothLeService extends Service {
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            L.e("BluetoothAdapter not initialized");
+            L.e(TAG,"蓝牙适配器未初始化");
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
@@ -332,4 +331,6 @@ public class BluetoothLeService extends Service {
             return BluetoothLeService.this;
         }
     }
+
+
 }

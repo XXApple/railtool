@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.util.Api.Config;
@@ -30,6 +31,7 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class BaseActivity extends AppCompatActivity {
     protected static String TAG = "BaseActivity";
     protected Toolbar toolbar;
+    protected ImageView toolbarLogo;
     protected ProgressDialog mProgressDialog = null;
     protected CompositeSubscription subscription = new CompositeSubscription();
     protected RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
@@ -54,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @SuppressWarnings("ConstantConditions")
     private void initToolBar() {
+        toolbarLogo = (ImageView) findViewById(R.id.img_toolbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar == null)
             return;
@@ -62,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setLogo(R.drawable.logo);
+//        toolbar.setLogo(R.drawable.logo);
 //        toolbar.setNavigationIcon(R.drawable.logo);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
