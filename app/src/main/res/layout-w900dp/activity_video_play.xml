@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.commonrail.common.rtplayer.view.RtVideoView
+    <com.commonrail.rtplayer.view.RtVideoView
         android:id="@+id/rt_video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

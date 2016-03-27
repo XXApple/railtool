@@ -1,3 +1,4 @@
-include ':rtgreendaogenerator', ':app', ':filedownloader', ':rtcommon'
+include ':rtgreendaogenerator', ':app',':superrecyclerview', ':rtplayer'
 
+//, ':filedownloader'
 //,':MyDaoGenerator'

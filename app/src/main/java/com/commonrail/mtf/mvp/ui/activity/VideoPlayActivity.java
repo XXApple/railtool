@@ -20,9 +20,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.commonrail.common.rtplayer.RtPlayer;
-import com.commonrail.common.rtplayer.listener.RtPlayerListener;
-import com.commonrail.common.rtplayer.view.RtVideoView;
+import com.commonrail.rtplayer.RtPlayer;
+import com.commonrail.rtplayer.listener.RtPlayerListener;
+import com.commonrail.rtplayer.view.RtVideoView;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.util.common.GlobalUtils;

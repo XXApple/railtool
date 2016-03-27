@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:background="@android:drawable/ic_media_play"/>
 
-        <com.commonrail.common.rtplayer.view.RtVideoView
+        <com.commonrail.rtplayer.view.RtVideoView
             android:id="@+id/rt_video_view"
             android:layout_width="358dp"
             android:layout_height="270dp"
