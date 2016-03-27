@@ -62,7 +62,8 @@ dependencies {
     
     compile(name: 'filedownloader-release', ext: 'aar')
     
-//    compile(name: 'rtplayer-release', ext: 'aar')
+    compile(name: 'rtplayer-release', ext: 'aar')
+
     
     compile files('libs/butterknife-7.0.1.jar')
     
@@ -72,7 +73,7 @@ dependencies {
     
     compile project(':superrecyclerview')
     
-    compile project(':rtplayer')
+
 }
 
 //    compile "com.android.support:cardview-v7:$supportVersion"
@@ -83,6 +84,6 @@ dependencies {
 //    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
 //    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 //    compile 'com.jakewharton:butterknife:7.0.1'
-   
+//    compile project(':rtplayer')
 //    compile project(':filedownloader')
 //compile 'com.malinskiy:superrecyclerview:1.1.1'
