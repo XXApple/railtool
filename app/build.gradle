@@ -62,8 +62,8 @@ dependencies {
     
     compile(name: 'filedownloader-release', ext: 'aar')
     
-    compile(name: 'rtplayer-release', ext: 'aar')
-
+//    compile(name: 'rtplayer-release', ext: 'aar')
+    compile project(':rtplayer')
     
     compile files('libs/butterknife-7.0.1.jar')
     
