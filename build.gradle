@@ -1,5 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         jcenter()
@@ -18,7 +17,46 @@ allprojects {
         maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
     }
 }
-
+ext {
+    supportVersion = "23.2.0"
+    retrofitVersion = '2.0.0'
+    leakcanaryVersion = "1.3.1"
+    reactivexVersion = "1.1.0"
+    okHttpVersion = '3.2.0'
+    frescoVersion = "0.9.0+"
+    greendaoVersion = "2.1.0"
+    nineoldandroidsVersion = "2.4.0"
+    exoplayerVersion = "r1.5.3"
+    supportDependencies = [
+            appCompat             : "com.android.support:appcompat-v7:${supportVersion}",
+            recyclerview          : "com.android.support:recyclerview-v7:${supportVersion}",
+            design                : "com.android.support:design:${supportVersion}",
+            retrofit2             : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofit2ConverterGson: "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            retrofit2AdapterRxjava: "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
+            rxandroid             : "io.reactivex:rxandroid:${reactivexVersion}",
+            rxjava                : "io.reactivex:rxjava:${reactivexVersion}",
+            fresco                : "com.facebook.fresco:fresco:${frescoVersion}",
+            frescoImagepipeline   : "com.facebook.fresco:imagepipeline-okhttp:${frescoVersion}",
+            greendao              : "de.greenrobot:greendao:${greendaoVersion}",
+            nineoldandroids       : "com.nineoldandroids:library:${nineoldandroidsVersion}",
+            exoplayer             : "com.google.android.exoplayer:exoplayer:${exoplayerVersion}",
+            leakcanaryAndroid     : "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}",
+            leakcanaryAndroidNoOp : "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
+    ]
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+//    compile "com.android.support:cardview-v7:$supportVersion"
+//    compile "com.android.support:recyclerview-v7:$supportVersion"
+//    compile "com.android.support:design:$supportVersion"
+//    compile "com.android.support:palette-v7:$supportVersion"
+//    compile "com.android.support:support-v4:$supportVersion"
+//    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+//    compile "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+//    compile 'com.jakewharton:butterknife:7.0.1'
+//    compile project(':rtplayer')
+//    compile project(':filedownloader')
+//compile 'com.malinskiy:superrecyclerview:1.1.1'
