@@ -1,9 +1,6 @@
 package com.commonrail.mtf.mvp.model.impl.module;
 
-import android.widget.Toast;
-
 import com.commonrail.mtf.AppClient;
-import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.BoschInfoModel;
 import com.commonrail.mtf.mvp.model.entity.Bosch;
 import com.commonrail.mtf.mvp.model.entity.Result;
@@ -25,7 +22,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class BoschInfoModelImpl implements BoschInfoModel {
     @Override
-    public void loadBoschInfo(CompositeSubscription subscription, RtApi api, String xh, final OnBoschInfoListener listener) {
+    public void loadBoschInfo(final CompositeSubscription subscription, RtApi api, String xh, final OnBoschInfoListener listener) {
         HashMap<String, String> map = new HashMap<>();
         map.put("xh", xh);
         subscription.add(api.searchBosch(map)
@@ -37,7 +34,8 @@ public class BoschInfoModelImpl implements BoschInfoModel {
                     public Bosch call(Result<Bosch> t) {
                         L.e("searchBosch： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+                            listener.onLoadBoschInfoError(t.getMsg());
+                            subscription.unsubscribe();
                             return null;
                         }
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());

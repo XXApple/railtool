@@ -15,14 +15,13 @@ import java.util.List;
  */
 public interface OnInjectorsListener {
     /**
-     * 成功时回调
+     * 成功或者失败时回调
      *
      * @param mInjectorDbs mInjectorDbs
+     * @param mMsg
      */
-    void onInjectorsSuccess(List<InjectorDb> mInjectorDbs);
+    void onInjectorsResult(List<InjectorDb> mInjectorDbs, final String mMsg);
 
-    /**
-     * 失败时回调，简单处理，没做什么
-     */
-    void onInjectorsError();
+    
+    
 }

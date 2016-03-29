@@ -29,6 +29,8 @@ public class UpdateResultModelImpl implements UpdateResultModel {
                     public String call(Result<String> t) {
                         L.e("uploadMesResult " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
+                            listener.onUpdateStepResultError(t.getMsg());
+                            subscription.unsubscribe();
                             return null;
                         }
                         return t.getData();

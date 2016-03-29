@@ -64,7 +64,7 @@ public class GlobalUtils {
         throw new UnsupportedOperationException("Sorry, you cannot instantiate an utility class!");
     }
 
-    public static void ShowDialog(final Activity activity, String title, String msg, boolean showDismiss, final DialogInterface.OnClickListener positive, final DialogInterface.OnClickListener negative) {
+    public static void ShowDialog(final Context activity, String title, String msg, boolean showDismiss, final DialogInterface.OnClickListener positive, final DialogInterface.OnClickListener negative) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);  //先得到构造器
         builder.setTitle(title); //设置标题
         builder.setMessage(msg); //设置内容

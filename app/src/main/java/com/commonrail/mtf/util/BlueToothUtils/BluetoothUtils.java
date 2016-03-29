@@ -8,7 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.widget.Toast;
 
-import com.commonrail.mtf.mvp.ui.activity.bluetooth.BluetoothLeService;
+import com.commonrail.mtf.mvp.ui.service.BluetoothLeService;
+import com.commonrail.mtf.util.common.L;
 
 /**
  * Created by wengyiming on 2016/3/29.
@@ -16,6 +17,7 @@ import com.commonrail.mtf.mvp.ui.activity.bluetooth.BluetoothLeService;
 public class BluetoothUtils {
     private final static String TAG = "BlueToothUtils";
     public static final int REQUEST_ENABLE_BT = 1;
+    public static BluetoothAdapter mBluetoothAdapter;
 
     public static IntentFilter getGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -30,7 +32,8 @@ public class BluetoothUtils {
     public static BluetoothAdapter getBluetoothAdapter(Context ctx) {
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) ctx.getSystemService(Context.BLUETOOTH_SERVICE);
-        return bluetoothManager.getAdapter();
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        return mBluetoothAdapter;
     }
 
 
@@ -38,11 +41,18 @@ public class BluetoothUtils {
         // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
         // fire an intent to display a dialog asking the user to grant permission to enable it.
         //弹窗申请打开蓝牙
-        if (getBluetoothAdapter(ctx) != null && !getBluetoothAdapter(ctx).isEnabled()) {
+        if (mBluetoothAdapter == null) {
+            mBluetoothAdapter = getBluetoothAdapter(ctx);
+            if (mBluetoothAdapter == null) {
+                L.e(TAG, "该设备不支持蓝牙");
+                Toast.makeText(ctx, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            L.e(TAG, "蓝牙未打开,申请打开蓝牙");
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             ctx.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        } else {
-            Toast.makeText(ctx, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
         }
     }
 }

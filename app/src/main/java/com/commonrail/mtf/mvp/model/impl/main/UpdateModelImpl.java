@@ -3,7 +3,6 @@ package com.commonrail.mtf.mvp.model.impl.main;
 import android.annotation.SuppressLint;
 
 import com.commonrail.mtf.AppClient;
-import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.UpdateModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.Update;
@@ -39,7 +38,8 @@ public class UpdateModelImpl implements UpdateModel {
                     public Update call(Result<Update> t) {
                         L.e("checkUpdate： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error));
+                            listener.onCheckUpdateError();
+                            subscription.unsubscribe();
                             return null;
                         }
                         GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());

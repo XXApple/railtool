@@ -38,7 +38,7 @@ import com.commonrail.mtf.mvp.model.entity.StepList;
 import com.commonrail.mtf.mvp.model.entity.Value;
 import com.commonrail.mtf.mvp.presenter.StepPresenter;
 import com.commonrail.mtf.mvp.presenter.impl.StepPresenterImpl;
-import com.commonrail.mtf.mvp.ui.activity.bluetooth.BluetoothLeService;
+import com.commonrail.mtf.mvp.ui.service.BluetoothLeService;
 import com.commonrail.mtf.mvp.ui.activity.bluetooth.SampleGattAttributes;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.mvp.ui.view.StepView;
@@ -847,6 +847,7 @@ public class Step2Activity extends BaseActivity implements StepView {
         }
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
+            toolbar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     }
 
@@ -870,6 +871,7 @@ public class Step2Activity extends BaseActivity implements StepView {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
+            toolbar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
             Toast.makeText(Step2Activity.this, "蓝牙链接超时,请点击右上角按钮手动连接", Toast.LENGTH_SHORT).show();
         }
 
@@ -877,6 +879,7 @@ public class Step2Activity extends BaseActivity implements StepView {
         public void timing(final long mMillisUntilFinished) {
             L.e(TAG, "蓝牙扫描:" + mMillisUntilFinished / 1000 + "秒");
             isConnectTimeOut = false;
+            toolbar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
 

@@ -28,10 +28,10 @@ public class RtGreenDaoGenerator {
         files.addIntProperty("fileStatus").notNull();//0 not downloaded,1download completed
 
         Entity homeItem = schema.addEntity("InjectorDb");
-        homeItem.addStringProperty("injectorType").notNull().unique();
-        homeItem.addIntProperty("orderNum").notNull();
+        homeItem.addStringProperty("injectorType");
+        homeItem.addIntProperty("orderNum");
         homeItem.addStringProperty("injectorName");
-        homeItem.addStringProperty("iconUrl").notNull();
+        homeItem.addStringProperty("iconUrl");
         
     }
 

@@ -42,10 +42,13 @@ dependencies {
     debugCompile supportDependencies.leakcanaryAndroid
     releaseCompile supportDependencies.leakcanaryAndroidNoOp
 
+
+    
     compile 'com.pgyersdk:sdk:2.2.2'
     compile(name: 'filedownloader-release', ext: 'aar')
     compile project(':rtplayer')
     compile files('libs/butterknife-7.0.1.jar')
+    compile files('libs/universal-image-loader-1.9.5.jar')
     compile project(':superrecyclerview')
 
 

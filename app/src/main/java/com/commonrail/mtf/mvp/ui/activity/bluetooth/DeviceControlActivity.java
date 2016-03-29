@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
+import com.commonrail.mtf.mvp.ui.service.BluetoothLeService;
 
 import java.util.ArrayList;
 import java.util.HashMap;

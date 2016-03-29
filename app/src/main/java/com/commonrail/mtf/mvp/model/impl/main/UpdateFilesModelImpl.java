@@ -45,6 +45,8 @@ public class UpdateFilesModelImpl implements UpdateFileModel {
                     public FileUpload call(Result<FileUpload> t) {
                         L.e("updateFile： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
+                            listener.onUpdateFilesError();
+                            subscription.unsubscribe();
                             return null;
                         }
                         return t.getData();

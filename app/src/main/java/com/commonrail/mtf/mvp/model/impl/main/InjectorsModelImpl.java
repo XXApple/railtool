@@ -1,8 +1,7 @@
 package com.commonrail.mtf.mvp.model.impl.main;
 
-import android.widget.Toast;
-
 import com.commonrail.mtf.AppClient;
+import com.commonrail.mtf.R;
 import com.commonrail.mtf.db.InjectorDb;
 import com.commonrail.mtf.mvp.model.InjectorsModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -37,36 +35,36 @@ public class InjectorsModelImpl implements InjectorsModel {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<List<InjectorDb>>, List<InjectorDb>>() {
+                .subscribe(new Action1<Result<List<InjectorDb>>>() {
                     @Override
-                    public List<InjectorDb> call(Result<List<InjectorDb>> t) {
+                    public void call(final Result<List<InjectorDb>> t) {
+                        if (t == null) {
+                            //请求结果为null,取缓存
+                            getFromDbCache(listener, AppClient.getInstance().getString(R.string.net_error));
+                            return;
+                        }
                         L.e("getIndexList： " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            return null;
+                        if (t.getStatus() != 200 || t.getData() == null || t.getData().isEmpty()) {
+                            //code不正确或者数据为空,取缓存返回服务器消息
+                            getFromDbCache(listener, t.getMsg());
+                            return;
                         }
-                        Toast.makeText(AppClient.getInstance(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<List<InjectorDb>>() {
-                    @Override
-                    public void call(final List<InjectorDb> t) {
-                        if (t == null) return;
-                        if (!t.isEmpty()) {
-                            DbUtil.getInjectorService().saveOrUpdate(t);
-                            listener.onInjectorsSuccess(t);
-                        } else {
-                            L.e("从缓存数据库中加载", DbUtil.getInjectorService().queryAll().size() + "");
-                            listener.onInjectorsSuccess(DbUtil.getInjectorService().queryAll());
-                        }
+                        //请求数据正常,刷新本地缓存,返回服务器消息
+                        listener.onInjectorsResult(t.getData(), t.getMsg());
+                        DbUtil.getInjectorService().saveOrUpdate(t.getData());
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
-                        listener.onInjectorsError();
-
+                        //所有的异常情况,取缓存,返回异常消息
+                        getFromDbCache(listener, throwable.toString());
                     }
                 }));
+    }
+
+    private void getFromDbCache(final OnInjectorsListener listener, String msg) {
+        L.e("从缓存数据库中加载", DbUtil.getInjectorService().queryAll().size() + "");
+        listener.onInjectorsResult(DbUtil.getInjectorService().queryAll(), msg);
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.commonrail.mtf.mvp.ui.activity.bluetooth;
+package com.commonrail.mtf.mvp.ui.service;
 
 import android.annotation.TargetApi;
 import android.app.Service;
@@ -33,6 +33,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 
+import com.commonrail.mtf.mvp.ui.activity.bluetooth.SampleGattAttributes;
 import com.commonrail.mtf.util.Util;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.L;

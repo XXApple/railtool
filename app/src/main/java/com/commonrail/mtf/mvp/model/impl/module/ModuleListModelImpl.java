@@ -26,7 +26,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ModuleListModelImpl implements ModuleListModel {
     @Override
-    public void loadModulist(CompositeSubscription subscription, RtApi api, String injectorType, final OnModuleListListener listener) {
+    public void loadModulist(final CompositeSubscription subscription, RtApi api, String injectorType, final OnModuleListListener listener) {
         HashMap<String, String> map = new HashMap<>();
         map.put("injectorType", injectorType);
         map.put("language", Constant.LANGUAGE);
@@ -40,6 +40,8 @@ public class ModuleListModelImpl implements ModuleListModel {
                     public List<Module> call(Result<List<Module>> t) {
                         L.e("getModuleList " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
+                            listener.onLoadModuleListError(t.getMsg());
+                            subscription.unsubscribe();
                             return null;
                         }
                         Toast.makeText(AppClient.getInstance(), t.getMsg(), Toast.LENGTH_SHORT).show();

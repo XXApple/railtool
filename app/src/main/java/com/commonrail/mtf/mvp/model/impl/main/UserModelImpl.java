@@ -3,7 +3,6 @@ package com.commonrail.mtf.mvp.model.impl.main;
 import android.annotation.SuppressLint;
 
 import com.commonrail.mtf.AppClient;
-import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.UserModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.User;
@@ -23,7 +22,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class UserModelImpl implements UserModel {
     @Override
-    public void loadUser(CompositeSubscription subscription, RtApi api, final OnUserListener listener) {
+    public void loadUser(final CompositeSubscription subscription, RtApi api, final OnUserListener listener) {
         subscription.add(api.getUserInfo("")
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
@@ -33,7 +32,8 @@ public class UserModelImpl implements UserModel {
                     public User call(Result<User> t) {
                         L.e("getUserInfo： " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error));
+                            listener.onError();
+                            subscription.unsubscribe();
                             return null;
                         }
 

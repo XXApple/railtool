@@ -1,9 +1,5 @@
 package com.commonrail.mtf.mvp.model.impl.Step;
 
-import android.widget.Toast;
-
-import com.commonrail.mtf.AppClient;
-import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.GetStepModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.StepList;
@@ -24,7 +20,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class GetStepImpl implements GetStepModel {
     @Override
-    public void loadStep(CompositeSubscription subscription, RtApi api, HashMap<String, Object> map, final OnRepairStepListener listener) {
+    public void loadStep(final CompositeSubscription subscription, RtApi api, HashMap<String, Object> map, final OnRepairStepListener listener) {
         subscription.add(api.getRepairStep(map)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
@@ -34,7 +30,8 @@ public class GetStepImpl implements GetStepModel {
                     public StepList call(Result<StepList> t) {
                         L.e("getRepairStep " + t.getStatus() + t.getMsg());
                         if (t.getStatus() != 200) {
-                            Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+                            listener.onLoadRepairStepError(t.getMsg());
+                            subscription.unsubscribe();
                             return null;
                         }
                         return t.getData();
