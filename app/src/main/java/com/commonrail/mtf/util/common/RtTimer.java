@@ -1,4 +1,4 @@
-package com.commonrail.mtf.util;
+package com.commonrail.mtf.util.common;
 
 import android.os.CountDownTimer;
 
@@ -11,7 +11,7 @@ import android.os.CountDownTimer;
  * 修改时间：16/3/27 上午12:46
  * 修改备注：
  */
-public class BLTimer extends CountDownTimer {
+public class RtTimer extends CountDownTimer {
     
     
     /**
@@ -21,7 +21,7 @@ public class BLTimer extends CountDownTimer {
      * @param countDownInterval The interval along the way to receive
      *                          {@link #onTick(long)} callbacks.
      */
-    public BLTimer(final long millisInFuture, final long countDownInterval) {
+    public RtTimer(final long millisInFuture, final long countDownInterval) {
         super(millisInFuture, countDownInterval);
     }
 

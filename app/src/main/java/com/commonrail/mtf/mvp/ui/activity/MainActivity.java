@@ -2,9 +2,6 @@ package com.commonrail.mtf.mvp.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +27,7 @@ import com.commonrail.mtf.mvp.ui.base.BaseActivity;
 import com.commonrail.mtf.mvp.ui.view.MainView;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
+import com.commonrail.mtf.util.BlueToothUtils.BluetoothUtils;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.ChannelUtil;
@@ -76,8 +74,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     private IndexAdapter mIndexAdapter;
     private MainPresenter mainPresenter;
 
-    private static final int REQUEST_ENABLE_BT = 1;
-    private BluetoothAdapter mBluetoothAdapter;
     final FileDownloadListener queueTarget = new FileDownloadListener() {
         @Override
         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
@@ -143,7 +139,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     protected void onResume() {
         super.onResume();
-        openBluetooth();
+        BluetoothUtils.openBluetooth(this);
         subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
     }
 
@@ -160,7 +156,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     }
 
     private void init() {
-        initBluetooth();
         DbCore.enableQueryBuilderLog();
         PgyCrashManager.register(this);
         if (toolbar != null) toolbar.setVisibility(View.GONE);
@@ -185,15 +180,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         });
     }
 
-    private void initBluetooth() {
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-        // Checks if Bluetooth is supported on the device.
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(MainActivity.this, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     public int getLayoutRes() {
@@ -230,14 +216,12 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         uname.setVisibility(View.INVISIBLE);
         Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
         L.e("showUserError", "获取用户信息失败\n");
-        GlobalUtils.showToastShort(this, "获取用户信息失败\n");
     }
 
     @Override
     public void showInjectorsError() {
         Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
         L.e("showInjectorsError", "查找设备无结果\n");
-        GlobalUtils.showToastShort(this, "查找设备型号无结果\n");
     }
 
     @Override
@@ -315,24 +299,13 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         }
     }
 
-    private void openBluetooth() {
-        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
-        // fire an intent to display a dialog asking the user to grant permission to enable it.
-        //弹窗申请打开蓝牙
-        if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-    }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+        if (requestCode == BluetoothUtils.REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(MainActivity.this, "请打开蓝牙",
                     Toast.LENGTH_SHORT).show();
-            finish();
         }
     }
 

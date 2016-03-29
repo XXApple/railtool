@@ -2,6 +2,8 @@ package com.commonrail.mtf.mvp.presenter;
 
 import com.commonrail.mtf.util.Api.RtApi;
 
+import java.util.HashMap;
+
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -14,24 +16,7 @@ import rx.subscriptions.CompositeSubscription;
  * 修改备注：
  */
 public interface StepPresenter {
+    void getRepairStep(CompositeSubscription subscription, RtApi api, HashMap<String, Object> map);
 
-    /**
-     * 获取操作步骤
-     */
-    void getRepairStep(CompositeSubscription subscription, RtApi api);
-
-    /**
-     * 初始化蓝牙
-     */
-    void initBl();
-
-    /**
-     * 重新连接蓝牙
-     */
-    void connect2Bl(CompositeSubscription subscription, RtApi api);
-
-    /**
-     * 提交结果
-     */
-    void updateFile(CompositeSubscription subscription, RtApi api);
+    void updateResult(CompositeSubscription subscription, RtApi api, HashMap<String, Object> map);
 }

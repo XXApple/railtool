@@ -10,7 +10,6 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -31,29 +30,32 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.commonrail.rtplayer.RtPlayer;
-import com.commonrail.rtplayer.listener.RtPlayerListener;
-import com.commonrail.rtplayer.view.RtVideoView;
 import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.entity.ModuleItem;
-import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.Step;
 import com.commonrail.mtf.mvp.model.entity.StepList;
 import com.commonrail.mtf.mvp.model.entity.Value;
+import com.commonrail.mtf.mvp.presenter.StepPresenter;
+import com.commonrail.mtf.mvp.presenter.impl.StepPresenterImpl;
 import com.commonrail.mtf.mvp.ui.activity.bluetooth.BluetoothLeService;
 import com.commonrail.mtf.mvp.ui.activity.bluetooth.SampleGattAttributes;
 import com.commonrail.mtf.mvp.ui.base.BaseActivity;
+import com.commonrail.mtf.mvp.ui.view.StepView;
 import com.commonrail.mtf.util.Api.Config;
 import com.commonrail.mtf.util.Api.RtApi;
-import com.commonrail.mtf.util.BLTimer;
+import com.commonrail.mtf.util.BlueToothUtils.BluetoothUtils;
 import com.commonrail.mtf.util.IntentUtils;
 import com.commonrail.mtf.util.ReadAndCalculateUtil;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;
+import com.commonrail.mtf.util.common.RtTimer;
 import com.commonrail.mtf.util.retrofit.RxUtils;
+import com.commonrail.rtplayer.RtPlayer;
+import com.commonrail.rtplayer.listener.RtPlayerListener;
+import com.commonrail.rtplayer.view.RtVideoView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
@@ -63,10 +65,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -78,7 +76,7 @@ import rx.subscriptions.CompositeSubscription;
  * 修改时间：16/1/12 下午10:48
  * 修改备注：
  */
-public class Step2Activity extends BaseActivity {
+public class Step2Activity extends BaseActivity implements StepView {
 
 
     @Bind(R.id.home_btn)
@@ -162,39 +160,35 @@ public class Step2Activity extends BaseActivity {
     private StepList mStepList;
     private int curStepOrder = 0;
     private RtApi api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
-    private ProgressDialog mProgressDialog;
     private CompositeSubscription subscription = new CompositeSubscription();
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
 
     private boolean isConnectTimeOut = false;
     private boolean mConnected = false;
-    private BLTimer mBLTimer = null;//蓝牙链接计时器,2秒触发一次,10秒结束
+    private RtTimer mBLTimer = null;//蓝牙链接计时器,2秒触发一次,10秒结束
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<>();
-
+    private StepPresenter stepPresenter;
 
     private void initView() {
         toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
-        api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
         toolbar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         String injectorType = getIntent().getStringExtra("injectorType");
         int moduleId = getIntent().getIntExtra("moduleId", 0);
         String moduleName = getIntent().getStringExtra("moduleName");
         String xh = getIntent().getStringExtra("xh");
-        progress.setVisibility(View.VISIBLE);
-        rootLine.setVisibility(View.GONE);
-
         mDeviceAddress = getIntent().getStringExtra(EXTRAS_DEVICE_ADDRESS);
         L.e("蓝牙设备:" + mDeviceAddress);
         toolbar.setTitle(" " + injectorType + "  " + moduleName);
         ReadAndCalculateUtil.init();
-        getRepairStep(injectorType, Constant.LANGUAGE, moduleId, xh);
-
+        api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
+        stepPresenter = new StepPresenterImpl(this);
         mProgressDialog = new ProgressDialog(Step2Activity.this);
         mProgressDialog.setTitle("正在连接蓝牙...请稍后");
+        getRepairStep(injectorType, moduleId, xh);
     }
 
     private void initBL() {
@@ -217,10 +211,10 @@ public class Step2Activity extends BaseActivity {
     }
 
 
-    private void getRepairStep(String injectorType, String language, int moduleId, String xh) {
+    private void getRepairStep(String injectorType, int moduleId, String xh) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("injectorType", injectorType);
-        map.put("language", language);
+        map.put("language", Constant.LANGUAGE);
         map.put("moduleId", moduleId);
         if (!TextUtils.isEmpty(xh)) {
             map.put("xh", xh);
@@ -228,51 +222,7 @@ public class Step2Activity extends BaseActivity {
         }
         injectorTv.setText(injectorType);
         L.e(map.toString());
-
-        subscription.add(api.getRepairStep(map)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<StepList>, StepList>() {
-                    @Override
-                    public StepList call(Result<StepList> t) {
-                        L.e("getRepairStep " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
-                            return null;
-                        }
-                        Toast.makeText(AppClient.getInstance(), t.getMsg(), Toast.LENGTH_SHORT).show();
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<StepList>() {
-                    @Override
-                    public void call(StepList t) {
-                        mStepList = t;
-                        if (mStepList != null) {
-                            mItem = mStepList.getModule();
-                            L.v("ModuleName:" + mItem.toString());
-                            progress.setVisibility(View.GONE);
-                            rootLine.setVisibility(View.VISIBLE);
-                            Step mStep = checkStep(curStepOrder);
-                            if (mStep == null) return;
-                            L.e("mStep.getVideoUrl()" + mStep.getVideoUrl());
-                            startVideo();
-                            setStepOrderInfo();
-
-
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        progress.setVisibility(View.GONE);
-                        rootLine.setVisibility(View.GONE);
-                        L.e("" + throwable.toString());
-                        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
-                    }
-                }));
+        stepPresenter.getRepairStep(subscription, api, map);
     }
 
     @Nullable
@@ -288,7 +238,6 @@ public class Step2Activity extends BaseActivity {
     }
 
     private void startVideo() {
-
         mOkVideoView.addListener(new RtPlayerListener() {
             @Override
             public void onStateChanged(boolean playWhenReady, int playbackState) {
@@ -306,12 +255,10 @@ public class Step2Activity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 mOkVideoView.setVisibility(View.INVISIBLE);
-
             }
 
             @Override
             public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-
             }
         });
 
@@ -484,7 +431,7 @@ public class Step2Activity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mOkVideoView.onResume(mUri);
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        registerReceiver(mGattUpdateReceiver, BluetoothUtils.getGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             L.e(TAG, "Connect request result=" + result);
@@ -632,9 +579,7 @@ public class Step2Activity extends BaseActivity {
                         mBluetoothLeService.setCharacteristicNotification(
                                 characteristic, true);
                     }
-
                 }
-
             }
 
         }.start();
@@ -687,7 +632,7 @@ public class Step2Activity extends BaseActivity {
     private void startConnect2BL() {
         isConnectTimeOut = false;
         if (mBLTimer == null) {
-            mBLTimer = new BLTimer(15000, 1000);//
+            mBLTimer = new RtTimer(15000, 1000);//
             mBLTimer.setTimeOut(mTimeOutListener);
         }
         mBLTimer.start();
@@ -702,35 +647,7 @@ public class Step2Activity extends BaseActivity {
         String mJsonObject = mGson.toJson(map);
         L.e("map2JsonString: " + mJsonObject);
         L.e("map2String: " + map.toString());
-        subscription.add(api.uploadMesResult(map)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result<String>, String>() {
-                    @Override
-                    public String call(Result<String> t) {
-                        L.e("uploadMesResult " + t.getStatus() + t.getMsg());
-                        if (t.getStatus() != 200) {
-                            GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
-                            return null;
-                        }
-                        GlobalUtils.showToastShort(AppClient.getInstance(), t.getMsg());
-                        return t.getData();
-                    }
-                })
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String t) {
-
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        rootLine.setVisibility(View.GONE);
-                        L.e("Throwable", throwable.toString());
-                        GlobalUtils.showToastShort(Step2Activity.this, getString(R.string.net_error));
-                    }
-                }));
+        stepPresenter.updateResult(subscription, api, map);
     }
 
     private void checkMeasResult(final Step mStep, final String mResult) {
@@ -811,8 +728,6 @@ public class Step2Activity extends BaseActivity {
             suggestDispTips.setText("");
             suggestDispTest.setText("0.000");
         }
-
-
     }
 
     // Handles various events fired by the Service.
@@ -840,7 +755,6 @@ public class Step2Activity extends BaseActivity {
                 mProgressDialog.setIndeterminate(true);
             }
             startConnect2BL();
-
         }
 
         @Override
@@ -937,16 +851,6 @@ public class Step2Activity extends BaseActivity {
     }
 
 
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter
-                .addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
-        return intentFilter;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -958,7 +862,7 @@ public class Step2Activity extends BaseActivity {
     }
 
 
-    private BLTimer.TimeOut mTimeOutListener = new BLTimer.TimeOut() {
+    private RtTimer.TimeOut mTimeOutListener = new RtTimer.TimeOut() {
         @Override
         public void timeOut() {
             L.e(TAG, "蓝牙扫描超时");
@@ -982,8 +886,52 @@ public class Step2Activity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         initBL();
-
     }
 
 
+    @Override
+    public void showLoading() {
+        rootLine.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        rootLine.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showRepairStepError(String error) {
+        rootLine.setVisibility(View.GONE);
+        L.e("" + error);
+        Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void setRepairStep(StepList stepList) {
+        mStepList = stepList;
+        if (mStepList != null) {
+            mItem = mStepList.getModule();
+            L.v("ModuleName:" + mItem.toString());
+            progress.setVisibility(View.GONE);
+            rootLine.setVisibility(View.VISIBLE);
+            Step mStep = checkStep(curStepOrder);
+            if (mStep == null) return;
+            L.e("mStep.getVideoUrl()" + mStep.getVideoUrl());
+            startVideo();
+            setStepOrderInfo();
+        }
+    }
+
+    @Override
+    public void showUpdateResultSuccessed() {
+
+    }
+
+    @Override
+    public void showUpdateResultError(String error) {
+
+    }
 }
