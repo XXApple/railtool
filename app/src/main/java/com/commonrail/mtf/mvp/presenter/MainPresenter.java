@@ -8,6 +8,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by wengyiming on 2016/3/1.
  */
 public interface MainPresenter {
+
     /**
      * 获取用户的逻辑
      */

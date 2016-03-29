@@ -1,4 +1,4 @@
-package com.commonrail.mtf.mvp.model.impl;
+package com.commonrail.mtf.mvp.model.impl.main;
 
 import android.annotation.SuppressLint;
 
@@ -7,7 +7,7 @@ import com.commonrail.mtf.R;
 import com.commonrail.mtf.mvp.model.UserModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
 import com.commonrail.mtf.mvp.model.entity.User;
-import com.commonrail.mtf.mvp.presenter.OnUserListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnUserListener;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.common.GlobalUtils;
 import com.commonrail.mtf.util.common.L;

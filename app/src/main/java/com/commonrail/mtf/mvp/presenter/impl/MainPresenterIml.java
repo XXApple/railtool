@@ -8,15 +8,15 @@ import com.commonrail.mtf.mvp.model.UserModel;
 import com.commonrail.mtf.mvp.model.entity.FileUpload;
 import com.commonrail.mtf.mvp.model.entity.Update;
 import com.commonrail.mtf.mvp.model.entity.User;
-import com.commonrail.mtf.mvp.model.impl.InjectorsModelImpl;
-import com.commonrail.mtf.mvp.model.impl.UpdateFilesModelImpl;
-import com.commonrail.mtf.mvp.model.impl.UpdateModelImpl;
-import com.commonrail.mtf.mvp.model.impl.UserModelImpl;
+import com.commonrail.mtf.mvp.model.impl.main.InjectorsModelImpl;
+import com.commonrail.mtf.mvp.model.impl.main.UpdateFilesModelImpl;
+import com.commonrail.mtf.mvp.model.impl.main.UpdateModelImpl;
+import com.commonrail.mtf.mvp.model.impl.main.UserModelImpl;
 import com.commonrail.mtf.mvp.presenter.MainPresenter;
-import com.commonrail.mtf.mvp.presenter.OnCheckUpdateListener;
-import com.commonrail.mtf.mvp.presenter.OnInjectorsListener;
-import com.commonrail.mtf.mvp.presenter.OnUpdateFileListener;
-import com.commonrail.mtf.mvp.presenter.OnUserListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnCheckUpdateListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnInjectorsListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnUpdateFileListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnUserListener;
 import com.commonrail.mtf.mvp.ui.view.MainView;
 import com.commonrail.mtf.util.Api.RtApi;
 
@@ -42,6 +42,8 @@ public class MainPresenterIml implements MainPresenter, OnUserListener, OnInject
         mUpdateModel = new UpdateModelImpl();
         mUpdateFileModel = new UpdateFilesModelImpl();
     }
+
+
 
     @Override
     public void getUser(CompositeSubscription subscription, RtApi api) {
@@ -111,4 +113,5 @@ public class MainPresenterIml implements MainPresenter, OnUserListener, OnInject
     public void onUpdateFilesError() {
         mainView.showUpdateFileError();
     }
+
 }

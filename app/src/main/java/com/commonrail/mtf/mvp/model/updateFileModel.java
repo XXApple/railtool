@@ -1,6 +1,6 @@
 package com.commonrail.mtf.mvp.model;
 
-import com.commonrail.mtf.mvp.presenter.OnUpdateFileListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnUpdateFileListener;
 import com.commonrail.mtf.util.Api.RtApi;
 
 import rx.subscriptions.CompositeSubscription;

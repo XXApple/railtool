@@ -1,14 +1,13 @@
 package com.commonrail.mtf.mvp.ui.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
@@ -43,8 +42,6 @@ import com.commonrail.mtf.util.common.SDCardUtils;
 import com.commonrail.mtf.util.common.SPUtils;
 import com.commonrail.mtf.util.db.DbCore;
 import com.commonrail.mtf.util.db.DbUtil;
-import com.commonrail.mtf.util.db.FilesService;
-import com.commonrail.mtf.util.db.InjectorService;
 import com.commonrail.mtf.util.retrofit.RxUtils;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.pgyersdk.crash.PgyCrashManager;
@@ -63,8 +60,6 @@ import butterknife.Bind;
 
 
 public class MainActivity extends BaseActivity implements MainView, SwipeRefreshLayout.OnRefreshListener {
-
-
     @Bind(R.id.wendu)
     TextView wendu;
     @Bind(R.id.item_list)
@@ -76,15 +71,13 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Bind(R.id.dateTime)
     TextView dateTime;
 
-
     private final static String TMP_PATH = SDCardUtils.getSDCardPath() + File.separator + "Download" + File.separator + "railTool" + File.separator;
     private final static String TARGET_PATH = SDCardUtils.getSDCardPath() + File.separator;
-
     private IndexAdapter mIndexAdapter;
-    private FilesService filesService;
-    private InjectorService injectorService;
     private MainPresenter mainPresenter;
 
+    private static final int REQUEST_ENABLE_BT = 1;
+    private BluetoothAdapter mBluetoothAdapter;
     final FileDownloadListener queueTarget = new FileDownloadListener() {
         @Override
         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
@@ -115,18 +108,17 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 File tmpFile = new File(TMP_PATH + localUrl);
                 File targetFile = new File(TARGET_PATH + localUrl);
                 SDCardUtils.copyfile(tmpFile, targetFile, true);
-                List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileLocalUrl.eq(localUrl)).build().list();
+                List<Files> mFilesList = DbUtil.getFilesService().queryBuilder().where(FilesDao.Properties.FileLocalUrl.eq(localUrl)).build().list();
                 for (Files mFiles : mFilesList) {
                     mFiles.setFileStatus(1);
                     L.e("completed", localUrl + " 标记为已完成");
-                    filesService.saveOrUpdate(mFiles);
-//                    filesService.refresh(mFiles);
+                    DbUtil.getFilesService().saveOrUpdate(mFiles);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            List<Files> mFilesList = filesService.queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
+            List<Files> mFilesList = DbUtil.getFilesService().queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
             if (mFilesList != null && mFilesList.size() > 0) {//且未完成数大于0,则继续下载
                 L.e("downloadFiles", "且未完成数大于0");
             } else {
@@ -151,6 +143,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     protected void onResume() {
         super.onResume();
+        openBluetooth();
         subscription = RxUtils.getNewCompositeSubIfUnsubscribed(subscription);
     }
 
@@ -163,52 +156,16 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 23) {
-            int internetPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
-            int readFilePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            int readLogPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS);
-            int readPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
-            int changeNetPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_NETWORK_STATE);
-            int writeExternalPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            int mountUmountFileSystemPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
-            if (internetPermission != PackageManager.PERMISSION_GRANTED
-                    && mountUmountFileSystemPermission != PackageManager.PERMISSION_GRANTED
-                    && writeExternalPermission != PackageManager.PERMISSION_GRANTED
-                    && readFilePermission != PackageManager.PERMISSION_GRANTED
-                    && readLogPermission != PackageManager.PERMISSION_GRANTED
-                    && readPhonePermission != PackageManager.PERMISSION_GRANTED
-                    && changeNetPermission != PackageManager.PERMISSION_GRANTED
-                    ) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 123);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS}, 123);
-
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_LOGS}, 123);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 123);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CHANGE_NETWORK_STATE}, 123);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-                return;
-            } else {
-                init();
-            }
-        } else {
-            init();
-        }
-        PgyCrashManager.register(this);
-        if (toolbar != null) {
-            toolbar.setVisibility(View.GONE);
-        }
-
-
+        init();
     }
 
     private void init() {
-        dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
+        initBluetooth();
         DbCore.enableQueryBuilderLog();
-        filesService = DbUtil.getFilesService();
-        injectorService = DbUtil.getInjectorService();
+        PgyCrashManager.register(this);
+        if (toolbar != null) toolbar.setVisibility(View.GONE);
+        dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
-
         mIndexAdapter = new IndexAdapter(new ArrayList<InjectorDb>());
         itemList.setAdapter(mIndexAdapter);
         itemList.setLayoutManager(new GridLayoutManager(this, 3));
@@ -226,6 +183,16 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 AppUtils.callPhone(MainActivity.this, callFb.getText().toString().trim());
             }
         });
+    }
+
+    private void initBluetooth() {
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(MainActivity.this, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -262,30 +229,26 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     public void showUserError() {
         uname.setVisibility(View.INVISIBLE);
         Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
-        L.e("showUserError", "获取用户信息失败");
-        GlobalUtils.showToastShort(this, "获取用户信息失败");
+        L.e("showUserError", "获取用户信息失败\n");
+        GlobalUtils.showToastShort(this, "获取用户信息失败\n");
     }
 
     @Override
     public void showInjectorsError() {
         Toast.makeText(AppClient.getInstance(), AppClient.getInstance().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
-        L.e("showInjectorsError", "查找设备无结果");
-        GlobalUtils.showToastShort(this, "查找设备型号无结果");
-        L.e("从缓存数据库中加载", injectorService.queryAll().size() + "");
-        fillRvData(injectorService.queryAll());
+        L.e("showInjectorsError", "查找设备无结果\n");
+        GlobalUtils.showToastShort(this, "查找设备型号无结果\n");
     }
 
     @Override
     public void showCheckUpdaterError() {
-//        Toast.makeText(AppClient.getInstance(), "当前app是最新版本", Toast.LENGTH_SHORT).show();
-        L.e("showCheckUpdaterError", "无更新");
+        L.e("showCheckUpdaterError", "无更新\n");
     }
 
     @Override
     public void showUpdateFileError() {
-//        Toast.makeText(AppClient.getInstance(), "当前数据是最新版本", Toast.LENGTH_SHORT).show();
-        GlobalUtils.showToastShort(this, "文件版本是最新的");
-        L.e("showUpdateFileError", "无新版文件");
+        GlobalUtils.showToastShort(this, "文件版本是最新的\n");
+        L.e("showUpdateFileError", "无新版文件\n");
     }
 
     @SuppressLint("SetTextI18n")
@@ -299,7 +262,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
 
     @Override
     public void setInjectors(List<InjectorDb> t) {
-        injectorService.saveOrUpdate(t);
         fillRvData(t);
     }
 
@@ -330,26 +292,47 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     public void updateFile(FileUpload t) {
         if (t == null) {
-            L.e("updateFile", "请求结果为空");
+            L.e("updateFile", "请求结果为空\n");
             return;
         }
         int localFileVersion = (int) SPUtils.get(this, Constant.FILE_VERSION, 0);
         if (localFileVersion == 0) {
             localFileVersion = Integer.parseInt(ChannelUtil.getChannel(this));
         }
-        L.e("updateFile", "请求结果不为空" + t.toString());
+        L.e("updateFile", "请求结果不为空\n" + t.toString());
         //wifi网络下自动下载最新图片和视频资源
         if (NetUtils.isWifi(MainActivity.this)) {
             if (t.getFileList() == null || t.getFileList().isEmpty()) {
-                L.e("updateFile", " 文件列表为空,当前版本即最新版本:" + localFileVersion + " 最新文件版本号为:" + t.getVersionCode());
+                L.e("updateFile", " 文件列表为空,当前版本即最新版本:" + localFileVersion + " 最新文件版本号为:" + t.getVersionCode() + "\n");
                 return;
             }
             L.e("updateFile", "本地文件版本号:" + localFileVersion + " 服务器文件版本号" + t.getVersionCode());
             if (localFileVersion < t.getVersionCode()) {//如果服务器文件版本大于本地文件版本,则有新的更新
-                L.e("updateFile", "发现新的文件");
+                L.e("updateFile", "发现新的文件\n");
                 downloadFiles(t.getFileList(), t.getVersionCode());
             }
 
+        }
+    }
+
+    private void openBluetooth() {
+        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+        // fire an intent to display a dialog asking the user to grant permission to enable it.
+        //弹窗申请打开蓝牙
+        if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(MainActivity.this, "请打开蓝牙",
+                    Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
@@ -421,7 +404,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         final FileDownloadQueueSet queueSet = new FileDownloadQueueSet(queueTarget);
         final List<BaseDownloadTask> tasks = new ArrayList<>();
 
-        List<Files> mFilesDbQuene = filesService.queryAll();
+        List<Files> mFilesDbQuene = DbUtil.getFilesService().queryAll();
 //        L.e("downloadFiles", "本地记录条数：" + mFilesDbQuene.size());
         List<Files> mFileTmpQuene = new ArrayList<>();//创建一个临时的待下载队列
         if (mFilesDbQuene == null || mFilesDbQuene.isEmpty()) {
@@ -436,10 +419,10 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
                 localFile.setFileType(mFileListItem.getFileType());
                 localFile.setFileUrl(mFileListItem.getUrl());
                 mFileTmpQuene.add(localFile);//加入待下载任务
-                filesService.save(localFile);
+                DbUtil.getFilesService().save(localFile);
             }
         } else {//如果本地有未完成的记录,将未完成的任务加入待下载队列
-            List mFiles = filesService.queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
+            List mFiles = DbUtil.getFilesService().queryBuilder().where(FilesDao.Properties.FileStatus.eq(0)).build().list();
             if (mFiles != null && mFiles.size() > 0) {//且未完成数大于0,则继续下载
                 L.e("downloadFiles", "且未完成数大于0,则继续下载");
                 mFileTmpQuene.addAll(mFiles);

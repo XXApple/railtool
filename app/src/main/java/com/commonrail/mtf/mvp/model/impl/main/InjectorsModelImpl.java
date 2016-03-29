@@ -1,4 +1,4 @@
-package com.commonrail.mtf.mvp.model.impl;
+package com.commonrail.mtf.mvp.model.impl.main;
 
 import android.widget.Toast;
 
@@ -6,11 +6,12 @@ import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.db.InjectorDb;
 import com.commonrail.mtf.mvp.model.InjectorsModel;
 import com.commonrail.mtf.mvp.model.entity.Result;
-import com.commonrail.mtf.mvp.presenter.OnInjectorsListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnInjectorsListener;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.common.AppUtils;
 import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.L;
+import com.commonrail.mtf.util.db.DbUtil;
 
 import java.util.List;
 
@@ -43,8 +44,7 @@ public class InjectorsModelImpl implements InjectorsModel {
                         if (t.getStatus() != 200) {
                             return null;
                         }
-//                        injectorService.saveOrUpdate(t.getData());
-                        Toast.makeText(AppClient.getInstance(),t.getMsg(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppClient.getInstance(), t.getMsg(), Toast.LENGTH_SHORT).show();
                         return t.getData();
                     }
                 })
@@ -53,8 +53,11 @@ public class InjectorsModelImpl implements InjectorsModel {
                     public void call(final List<InjectorDb> t) {
                         if (t == null) return;
                         if (!t.isEmpty()) {
+                            DbUtil.getInjectorService().saveOrUpdate(t);
                             listener.onInjectorsSuccess(t);
-//                            fillRvData(t, language);
+                        } else {
+                            L.e("从缓存数据库中加载", DbUtil.getInjectorService().queryAll().size() + "");
+                            listener.onInjectorsSuccess(DbUtil.getInjectorService().queryAll());
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -62,9 +65,6 @@ public class InjectorsModelImpl implements InjectorsModel {
                     public void call(Throwable throwable) {
                         L.e("" + throwable.toString());
                         listener.onInjectorsError();
-//                        GlobalUtils.showToastShort(MainActivity.this, getString(R.string.net_error));
-//                        L.e("getIndexList： load from db", injectorService.queryAll().size() + "");
-//                        fillRvData(injectorService.queryAll(), language);
 
                     }
                 }));

@@ -49,7 +49,6 @@ public class DbCore {
     }
 
     public static void enableQueryBuilderLog(){
-
         QueryBuilder.LOG_SQL = true;
         QueryBuilder.LOG_VALUES = true;
     }

@@ -16,10 +16,12 @@ public interface MainView {
     void hideLoading();
 
     void showUserError();
+
     void showInjectorsError();
+
     void showCheckUpdaterError();
+
     void showUpdateFileError();
-    
 
     void setUserInfo(User user);
 

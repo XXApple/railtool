@@ -37,6 +37,8 @@ dependencies {
     compile supportDependencies.rxandroid
     compile supportDependencies.rxjava
     compile supportDependencies.greendao
+
+
     debugCompile supportDependencies.leakcanaryAndroid
     releaseCompile supportDependencies.leakcanaryAndroidNoOp
 

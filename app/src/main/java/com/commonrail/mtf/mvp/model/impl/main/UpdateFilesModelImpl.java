@@ -1,4 +1,4 @@
-package com.commonrail.mtf.mvp.model.impl;
+package com.commonrail.mtf.mvp.model.impl.main;
 
 import android.annotation.SuppressLint;
 
@@ -6,7 +6,7 @@ import com.commonrail.mtf.AppClient;
 import com.commonrail.mtf.mvp.model.UpdateFileModel;
 import com.commonrail.mtf.mvp.model.entity.FileUpload;
 import com.commonrail.mtf.mvp.model.entity.Result;
-import com.commonrail.mtf.mvp.presenter.OnUpdateFileListener;
+import com.commonrail.mtf.mvp.presenter.listener.mainlistener.OnUpdateFileListener;
 import com.commonrail.mtf.util.Api.RtApi;
 import com.commonrail.mtf.util.common.Constant;
 import com.commonrail.mtf.util.common.L;
