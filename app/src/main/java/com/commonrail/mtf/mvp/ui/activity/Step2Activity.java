@@ -179,7 +179,7 @@ public class Step2Activity extends BaseActivity {
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.title_activity_main);
         api = RxUtils.createApi(RtApi.class, Config.BASE_URL);
-
+        toolbar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         String injectorType = getIntent().getStringExtra("injectorType");
         int moduleId = getIntent().getIntExtra("moduleId", 0);
         String moduleName = getIntent().getStringExtra("moduleName");

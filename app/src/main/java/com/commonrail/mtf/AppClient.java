@@ -38,21 +38,15 @@ public class AppClient extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        init();
+    }
+
+    private void init() {
         FileDownloader.init(this);
         L.isDebug = true;
         sInstance = this;
         DbCore.init(this);
         PgyCrashManager.register(this);
-
-//        PgyCrashManager.register(sInstance);
-//        refWatcher = LeakCanary.install(sInstance);
-//        OkHttpClientManager.getInstance();
-//        try {
-//            OkHttpClientManager.setCertificates(getAssets().open("railtoolapi.keystore"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         Fresco.initialize(sInstance, FrescoConfig.getImagePipelineConfig(sInstance));
     }
 

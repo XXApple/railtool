@@ -1,9 +1,14 @@
 package com.commonrail.mtf.mvp.ui.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
@@ -79,7 +84,7 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     private FilesService filesService;
     private InjectorService injectorService;
     private MainPresenter mainPresenter;
-    
+
     final FileDownloadListener queueTarget = new FileDownloadListener() {
         @Override
         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
@@ -158,10 +163,46 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 23) {
+            int internetPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
+            int readFilePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            int readLogPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS);
+            int readPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+            int changeNetPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_NETWORK_STATE);
+            int writeExternalPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int mountUmountFileSystemPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
+            if (internetPermission != PackageManager.PERMISSION_GRANTED
+                    && mountUmountFileSystemPermission != PackageManager.PERMISSION_GRANTED
+                    && writeExternalPermission != PackageManager.PERMISSION_GRANTED
+                    && readFilePermission != PackageManager.PERMISSION_GRANTED
+                    && readLogPermission != PackageManager.PERMISSION_GRANTED
+                    && readPhonePermission != PackageManager.PERMISSION_GRANTED
+                    && changeNetPermission != PackageManager.PERMISSION_GRANTED
+                    ) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 123);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS}, 123);
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_LOGS}, 123);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 123);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CHANGE_NETWORK_STATE}, 123);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+                return;
+            } else {
+                init();
+            }
+        } else {
+            init();
+        }
         PgyCrashManager.register(this);
         if (toolbar != null) {
             toolbar.setVisibility(View.GONE);
         }
+
+
+    }
+
+    private void init() {
         dateTime.setText(DateTimeUtil.format(DateTimeUtil.withYearFormat, new Date(System.currentTimeMillis())));
         DbCore.enableQueryBuilderLog();
         filesService = DbUtil.getFilesService();
@@ -173,7 +214,6 @@ public class MainActivity extends BaseActivity implements MainView, SwipeRefresh
         itemList.setLayoutManager(new GridLayoutManager(this, 3));
         itemList.setRefreshListener(this);
         itemList.setRefreshingColorResources(R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary);
-
 
         mainPresenter = new MainPresenterIml(this);
         mainPresenter.getUser(subscription, api);

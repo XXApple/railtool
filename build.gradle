@@ -28,6 +28,7 @@ ext {
     nineoldandroidsVersion = "2.4.0"
     exoplayerVersion = "r1.5.3"
     supportDependencies = [
+            supportV4             : "com.android.support:support-v4:${supportVersion}",
             appCompat             : "com.android.support:appcompat-v7:${supportVersion}",
             recyclerview          : "com.android.support:recyclerview-v7:${supportVersion}",
             design                : "com.android.support:design:${supportVersion}",

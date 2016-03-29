@@ -54,10 +54,12 @@
             android:id="@+id/testSpecTv2"
             android:layout_width="match_parent"
             android:layout_height="270dp"
-            android:padding="8dp"
             android:text="1 jiangjiangjiangjiang"
             android:textColor="@color/md_white"
-            android:textSize="14sp"
+            android:textSize="14.6dp"
+            android:padding="8dp"
+            android:lineSpacingExtra="7dp"
+            android:lineSpacingMultiplier="1.0"
             android:visibility="gone"
             />
 
