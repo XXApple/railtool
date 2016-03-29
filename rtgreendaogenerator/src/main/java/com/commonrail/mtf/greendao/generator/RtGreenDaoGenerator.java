@@ -32,6 +32,13 @@ public class RtGreenDaoGenerator {
         homeItem.addIntProperty("orderNum");
         homeItem.addStringProperty("injectorName");
         homeItem.addStringProperty("iconUrl");
+
+//        Entity module = schema.addEntity("Module");
+//        module.addStringProperty("id").notNull().unique();
+//        module.addIntProperty("injectorType");
+//        module.addStringProperty("moduleName");
+//        module.addStringProperty("moduleOrder");
+        
         
     }
 
