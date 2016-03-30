@@ -9,6 +9,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.yw.filedownloader.FileDownloader;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * 项目名称：
  * 类描述：本app是为android 平板写的工具app，使用rxjava,okhttp,retrofit,greendao,使用mvp设计模式进行解耦分层
@@ -47,6 +49,9 @@ public class AppClient extends Application {
         sInstance = this;//app全局上下文
         DbCore.init(this);//初始化数据库
 //        Dexter.initialize(this);//初始化运行时权限检查
+
+        JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);     		// 初始化 JPush
         PgyCrashManager.register(this);//全局运行时崩溃收集
         Fresco.initialize(sInstance, FrescoConfig.getImagePipelineConfig(sInstance));//初始化图片加载库
     }

@@ -22,35 +22,45 @@ android {
             dirs 'libs'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-
     compile supportDependencies.appCompat
+
     compile supportDependencies.retrofit2
+
     compile supportDependencies.retrofit2ConverterGson
+
     compile supportDependencies.retrofit2AdapterRxjava
+
     compile supportDependencies.fresco
+
     compile supportDependencies.frescoImagepipeline
+
     compile supportDependencies.rxandroid
+
     compile supportDependencies.rxjava
+
     compile supportDependencies.greendao
 
-
     debugCompile supportDependencies.leakcanaryAndroid
+
     releaseCompile supportDependencies.leakcanaryAndroidNoOp
 
-
-    
     compile 'com.pgyersdk:sdk:2.2.2'
     compile(name: 'filedownloader-release', ext: 'aar')
     compile project(':rtplayer')
     compile files('libs/butterknife-7.0.1.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile project(':superrecyclerview')
-
-
+    compile files('libs/jpush-android-2.1.0.jar')
 }
 
