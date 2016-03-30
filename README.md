@@ -1,53 +1,48 @@
-# railtool
-###Railtool for pad
 
-This will be a android pad app ,It's started now for my personal use,So,I think clone it is not good idea.
+#Railtool for android pad
 
 
+## 架构设计：
 
+	组合retrofit+rx+okhttp的mvp设计模式
 
+###依赖原则：
 
+	能使用本地jar就用jar，
+	能使用本地arr就用arr，
+	以上两条都不合适则使用maven依赖
+	尽可能提高编译速度。
 
-###Update Log
+###架构演变：
 
-- 2016/1/6 init project  
+	mvc-->mvp
+	
+  blog心得：	http://fanofdemo.github.io/2016/03/29/%E9%9D%9E%E5%B8%B8%E6%BC%82%E4%BA%AE%E7%9A%84mvp%E6%9E%B6%E6%9E%84/
+		
 
-- 2016/1/13 write layouts and video-player
+ ---
+###依赖库列表:
 
-- 2016/1/16 use okhttp3,add okhttp3 cache,set fresco use -okhttp3,make step2activity work
+ - [google_ExoPlayer](https://github.com/google/ExoPlayer)
 
-- 2016/1/20 add icon and logo,add bluetooth part,set - minSdkVersion=18
+ - [square_retrofit](https://github.com/square/retrofit)
 
-- 2016/1/21  change packagename ,add tips icon,add player position,add showpicurl
+ - [square_okhttp](https://github.com/square/okhttp)
 
-- 2016/1/21 add ReadAndCaculateUtil,and  some caculate code
+ - [square_leakcanary](https://github.com/square/leakcanary)
 
-- 2016/1/22-25 make ReadAndCaculateUtil work,make step2 layout better
+ - [ReactiveX_RxAndroid](https://github.com/ReactiveX/RxAndroid)
 
+ - [ReactiveX_RxJava](https://github.com/ReactiveX/RxJava)
 
-- 2016/1/25-27 add rxjava map operation,add appversion downloader and updater
+ - [jakewharton_Butterknife](https://github.com/JakeWharton/butterknife)
 
-- 2016/1/27 - 2016/2/14 use dp to match px  (px/dp = 180/160, dp = px/1.125,for this pad device)
+ - [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader/)
 
-- 2016/2/14 - 2016/3/1 start to do mvp for MainActivity,next step make other activity use mvp 
+ - [pgyersdk](http://www.pgyer.com/)
 
+ - [fanOfDemo_FileDownloader](https://github.com/fanOfDemo/FileDownloaderDemo)
 
-- 2016/3/1 - 2016/3/11 fix ui 
-
-###thanks to 
-
-
-[FileDownloader](
-https://github.com/lingochamp/FileDownloader)
-
-[ExoPlayer](https://github.com/google/ExoPlayer)
-
-[square](https://github.com/square)
-
-[ReactiveX](https://github.com/ReactiveX)
-
-[jakewharton`s butterknife](https://github.com/JakeWharton/butterknife)
-
-[facebook`s fresco](https://github.com/facebook/fresco)
-
-[pgyersdk 国内蒲公英免费内测分发平台](http://www.pgyer.com/)
+ - [fanOfDemo_SuperRecyclerView](https://github.com/fanOfDemo/SuperRecyclerView/)
+ 
+ ---
